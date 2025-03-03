@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CiCamera } from "react-icons/ci";
 
 export default function PersonalInfoForm({ user, setUser }) {
   const [avatarPreview, setAvatarPreview] = useState(user.avatar || "");
@@ -49,46 +50,58 @@ export default function PersonalInfoForm({ user, setUser }) {
   return (
     <form className="space-y-4">
       {/* Cover Upload */}
-      <div>
-        <label className="block font-medium mb-1">Cover Image</label>
-        {coverPreview && (
+      <div className="relative w-full h-80 bg-gray-200 rounded-lg overflow-hidden">
+        {coverPreview ? (
           <img
             src={coverPreview}
             alt="Cover"
-            className="w-full aspect-5/2 object-cover mb-2"
+            className="w-full h-full object-cover"
           />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full text-gray-500">
+            No Cover Photo
+          </div>
         )}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleImageUpload(e, "cover")}
-          className="block w-full border px-3 py-2 cursor-pointer"
-        />
-        {uploading && (
-          <p className="text-sm text-blue-500 mt-1">Uploading...</p>
-        )}
+        <label className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer hover:bg-gray-100 z-10">
+          <CiCamera className="w-5 h-5 text-gray-700" />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageUpload(e, "cover")}
+            className="hidden"
+          />
+        </label>
       </div>
 
       {/* Avatar Upload */}
-      <div>
-        <label className="block font-medium mb-1">Avatar</label>
-        {avatarPreview && (
-          <img
-            src={avatarPreview}
-            alt="Avatar"
-            className="w-24 h-24 rounded-full mb-2"
-          />
-        )}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleImageUpload(e, "avatar")}
-          className="block w-full border px-3 py-2 cursor-pointer"
-        />
-        {uploading && (
-          <p className="text-sm text-blue-500 mt-1">Uploading...</p>
-        )}
+      <div className="relative w-full flex justify-center -mt-12">
+        <div className="relative">
+          {avatarPreview ? (
+            <img
+              src={avatarPreview}
+              alt="Avatar"
+              className="w-24 h-24 rounded-full border-4 border-white shadow-md"
+            />
+          ) : (
+            <div className="w-24 h-24 rounded-full bg-gray-300 border-4 border-white shadow-md flex items-center justify-center text-gray-500">
+              No Avatar
+            </div>
+          )}
+          <label className="absolute bottom-1 right-1 bg-white p-2 rounded-full shadow-md cursor-pointer hover:bg-gray-100">
+            <CiCamera className="w-5 h-5 text-gray-700" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e, "avatar")}
+              className="hidden"
+            />
+          </label>
+        </div>
       </div>
+
+      {uploading && (
+        <p className="text-sm text-blue-500 mt-2 text-center">Uploading...</p>
+      )}
 
       <div>
         <label className="block font-medium mb-1">First Name</label>

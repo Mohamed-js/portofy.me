@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import PersonalInfoForm from "./PersonalInfoForm";
 import SocialLinksForm from "./SocialLinksForm";
@@ -8,19 +8,19 @@ import ProjectsForm from "./ProjectsForm";
 import SkillsExperienceForm from "./SkillsExperienceForm";
 import SeoPlanForm from "./SeoPlanForm";
 import SiteSettingsForm from "./SiteSettingsForm";
+import { toast } from "react-toastify";
 
 export default function Content({ initialUser }) {
   const [user, setUser] = useState(JSON.parse(initialUser));
+  const [saving, setSaving] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Get tab from URL or default to "personal"
   const [activeTab, setActiveTab] = useState(
     searchParams.get("tab") || "personal"
   );
 
   useEffect(() => {
-    // Update URL whenever tab changes
     const newUrl = `?tab=${activeTab}`;
     router.replace(newUrl);
   }, [activeTab, router]);
@@ -29,7 +29,6 @@ export default function Content({ initialUser }) {
     setActiveTab(tab);
   };
 
-  // Option A: Save entire user at once
   const handleSaveAll = async () => {
     try {
       console.log(user);
@@ -41,14 +40,44 @@ export default function Content({ initialUser }) {
       if (!res.ok) throw new Error("Update failed");
       const { data } = await res.json();
       setUser(data);
-      alert("All changes saved!");
+      toast.success("All changes saved!");
     } catch (err) {
       console.error(err);
       alert("Error saving changes. Check console for details.");
     }
   };
 
-  // Renders the appropriate form based on the current tab
+  const autosave = useCallback(() => {
+    const saveChanges = async () => {
+      try {
+        setSaving(true);
+        const res = await fetch("/api/portfolio", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ data: user }),
+        });
+
+        if (!res.ok) throw new Error("Failed to save changes");
+
+        const { data } = await res.json();
+        setSaving(false);
+      } catch (error) {
+        console.error("Autosave failed:", error);
+        setSaving(false);
+      }
+    };
+
+    const delay = setTimeout(() => {
+      saveChanges();
+    }, 1500);
+
+    return () => clearTimeout(delay);
+  }, [user]);
+
+  useEffect(() => {
+    autosave();
+  }, [user]);
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "personal":
@@ -97,7 +126,7 @@ export default function Content({ initialUser }) {
         </div>
 
         {/* Render the form for the active tab */}
-        <div className="p-4 pt-0 w-full">
+        <div className="p-4 w-full">
           {renderTabContent()}
           <div className="">
             <button
@@ -106,6 +135,13 @@ export default function Content({ initialUser }) {
             >
               Save All Changes
             </button>
+          </div>
+          <div
+            className={`mt-4 fixed bottom-4 right-4 text-white py-2 px-4 rounded-md font-semibold ${
+              saving ? "bg-indigo-600" : "bg-green-500"
+            }`}
+          >
+            {saving ? "Saving..." : "All changes saved ✔"}
           </div>
         </div>
       </div>

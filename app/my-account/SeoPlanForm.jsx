@@ -42,9 +42,39 @@ export default function SeoPlanForm({ user, setUser }) {
     }));
   };
 
+  // Character Limits (Best SEO Practices)
+  const titleLimit = 60;
+  const descriptionLimit = 160;
+
+  // Truncate function to simulate Google search results display
+  const truncateText = (text, limit) =>
+    text.length > limit ? text.substring(0, limit) + "..." : text;
+
   return (
-    <form className="space-y-4">
+    <form className="space-y-6">
       <h3 className="text-lg font-bold">SEO Meta</h3>
+
+      {/* SEO Live Preview */}
+      <div className="mt-6 p-4 border rounded bg-gray-100">
+        <h4 className="text-sm font-semibold text-gray-700 mb-2">
+          Google Search Preview
+        </h4>
+        <p className="text-blue-600 text-lg font-medium">
+          {truncateText(user.seoMeta?.title || user.username, titleLimit)}
+        </p>
+        <p className="text-green-700 text-sm">
+          portofy.me/@
+          {user.username.toLowerCase().replace(/\s+/g, "-") || "example-title"}
+        </p>
+        <p className="text-gray-700 max-w-[450px]">
+          {truncateText(
+            user.seoMeta?.description || "Example description",
+            descriptionLimit
+          )}
+        </p>
+      </div>
+
+      {/* SEO Title */}
       <div>
         <label className="block font-medium mb-1">SEO Title</label>
         <input
@@ -52,9 +82,15 @@ export default function SeoPlanForm({ user, setUser }) {
           type="text"
           value={user.seoMeta?.title || ""}
           onChange={handleChange}
+          maxLength={titleLimit}
           className="border border-gray-300 rounded w-full px-3 py-2"
         />
+        <p className="text-right text-sm text-gray-500 mt-1">
+          {user.seoMeta?.title?.length || 0}/{titleLimit} characters
+        </p>
       </div>
+
+      {/* SEO Description */}
       <div>
         <label className="block font-medium mb-1">SEO Description</label>
         <textarea
@@ -62,8 +98,12 @@ export default function SeoPlanForm({ user, setUser }) {
           name="seoMeta.description"
           value={user.seoMeta?.description || ""}
           onChange={handleChange}
+          maxLength={descriptionLimit}
           className="border border-gray-300 rounded w-full px-3 py-2"
         />
+        <p className="text-right text-sm text-gray-500 mt-1">
+          {user.seoMeta?.description?.length || 0}/{descriptionLimit} characters
+        </p>
       </div>
 
       {/* Keywords Management */}
