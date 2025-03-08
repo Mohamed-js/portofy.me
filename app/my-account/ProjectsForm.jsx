@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { CiCamera } from "react-icons/ci";
-import { GoGrabber, GoUpload } from "react-icons/go";
+import { CiCamera, CiTrash } from "react-icons/ci";
+import {
+  GoChevronDown,
+  GoChevronUp,
+  GoGrabber,
+  GoUpload,
+} from "react-icons/go";
 
 import {
   closestCenter,
@@ -157,6 +162,9 @@ export default function ProjectsForm({ user, setUser }) {
 
   return (
     <div className="space-y-4">
+      <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold">
+        Projects
+      </h3>
       <DndContext
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
@@ -192,7 +200,7 @@ export default function ProjectsForm({ user, setUser }) {
       <button
         type="button"
         onClick={addProject}
-        className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+        className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
       >
         + Add Project
       </button>
@@ -226,27 +234,30 @@ const Project = ({
         >
           <GoGrabber size={24} />
         </div>
-        <div className="w-full">{project.title}</div>
+        <div className="w-full uppercase">{project.title}</div>
         <p
           className="cursor-pointer"
           onClick={() => {
             setExpanded(!expanded);
           }}
         >
-          {expanded ? "Close" : "Expand"}
+          {expanded ? <GoChevronUp /> : <GoChevronDown />}
         </p>
       </div>
       {expanded && (
-        <div key={index} className="border p-4 rounded gap-4 flex relative">
+        <div
+          key={index}
+          className="bg-[#141414] p-4 rounded gap-4 flex relative"
+        >
           <div className="mb-2 relative">
-            <p className="block font-medium">Project Image</p>
+            <p className="block font-medium mb-1">Project Image</p>
             <div className="relative inline-block">
               {project.img && (
                 <div className="w-40 h-40">
                   <img
                     src={project.img}
                     alt="Icon"
-                    className="w-full h-full object-cover rounded-3xl border border-gray-300"
+                    className="w-full h-full object-cover rounded-xl"
                   />
                 </div>
               )}
@@ -299,51 +310,50 @@ const Project = ({
                 className="border border-gray-300 rounded w-full px-3 py-2"
               />
             </div>
-          </div>
+            {/* Gallery Upload */}
+            <div>
+              <p className="block font-medium">Gallery Images</p>
+              <label className="block w-fit bg-black text-white px-3 py-1 mt-1 rounded hover:bg-blue-700 cursor-pointer">
+                + Add Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => handleGalleryUpload(e, index)}
+                  className="block w-full border px-3 py-2 cursor-pointer hidden"
+                />
+              </label>
 
-          {/* Gallery Upload */}
-          <div>
-            <p className="block font-medium">Gallery Images</p>
-            <label className="block w-fit bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">
-              + Add Image
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={(e) => handleGalleryUpload(e, index)}
-                className="block w-full border px-3 py-2 cursor-pointer hidden"
-              />
-            </label>
-
-            {/* Gallery Image Previews */}
-            {project.gallery.length > 0 && (
-              <div className="grid grid-cols-3 gap-4 mt-4">
-                {project.gallery.map((img, imgIndex) => (
-                  <div key={imgIndex} className="relative w-20 h-20">
-                    <img
-                      src={img}
-                      alt="Gallery"
-                      className="w-20 h-20 object-cover rounded"
-                    />
-                    <button
-                      type="button"
-                      className="absolute -top-2 -right-2 bg-red-600/40 hover:bg-red-600 text-white w-6 h-6 rounded-full text-xs cursor-pointer"
-                      onClick={() => removeGalleryImage(index, imgIndex)}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+              {/* Gallery Image Previews */}
+              {project.gallery.length > 0 && (
+                <div className="flex flex-wrap gap-4 mt-4">
+                  {project.gallery.map((img, imgIndex) => (
+                    <div key={imgIndex} className="relative w-20 h-20">
+                      <img
+                        src={img}
+                        alt="Gallery"
+                        className="w-20 h-20 object-cover rounded"
+                      />
+                      <button
+                        type="button"
+                        className="absolute -top-2 -right-2 bg-red-600/40 hover:bg-red-600 text-white w-6 h-6 rounded-full text-xs cursor-pointer"
+                        onClick={() => removeGalleryImage(index, imgIndex)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <button
             type="button"
             onClick={() => removeProject(index)}
-            className="bg-red-600 text-white p-2 rounded-md hover:underline cursor-pointer absolute top-2 right-3"
+            className="p-2 rounded-md hover:underline cursor-pointer absolute top-2 right-3"
           >
-            Remove
+            <CiTrash className="text-red-600" size={20} />
           </button>
         </div>
       )}
@@ -353,7 +363,7 @@ const Project = ({
 
 function SortableItemOverlay({ project }) {
   return (
-    <div className="p-4 border rounded bg-white shadow">
+    <div className="p-4 border rounded shadow z-20">
       <div>
         <label className="block font-medium mb-1">{project.site}</label>
         <input
@@ -363,7 +373,6 @@ function SortableItemOverlay({ project }) {
           className="border border-gray-300 rounded w-full px-3 py-2"
         />
       </div>
-      {/* Render the rest of skill’s UI if you’d like */}
     </div>
   );
 }

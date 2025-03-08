@@ -1,5 +1,6 @@
 "use client";
 
+import Label from "@/components/Label";
 import { useState } from "react";
 import { CiCamera } from "react-icons/ci";
 
@@ -80,10 +81,10 @@ export default function PersonalInfoForm({ user, setUser }) {
             <img
               src={avatarPreview}
               alt="Avatar"
-              className="w-24 h-24 rounded-full border-4 border-white shadow-md"
+              className="w-24 h-24 rounded-full border-4 border-[#242424] shadow-md"
             />
           ) : (
-            <div className="w-24 h-24 rounded-full bg-gray-300 border-4 border-white shadow-md flex items-center justify-center text-gray-500">
+            <div className="w-24 h-24 rounded-full bg-gray-300 border-4 border-[#242424] shadow-md flex items-center justify-center text-gray-500">
               No Avatar
             </div>
           )}
@@ -105,7 +106,7 @@ export default function PersonalInfoForm({ user, setUser }) {
 
       <div className="flex gap-4">
         <div className="w-full">
-          <label className="block font-medium mb-1">First Name</label>
+          <Label>First Name</Label>
           <input
             name="firstName"
             type="text"
@@ -116,7 +117,7 @@ export default function PersonalInfoForm({ user, setUser }) {
         </div>
 
         <div className="w-full">
-          <label className="block font-medium mb-1">Last Name</label>
+          <Label>Last Name</Label>
           <input
             name="lastName"
             type="text"
@@ -128,7 +129,7 @@ export default function PersonalInfoForm({ user, setUser }) {
       </div>
       <div className="flex gap-4">
         <div className="w-full">
-          <label className="block font-medium mb-1">Email</label>
+          <Label>Email</Label>
           <input
             name="email"
             type="email"
@@ -139,9 +140,7 @@ export default function PersonalInfoForm({ user, setUser }) {
         </div>
 
         <div className="w-full">
-          <label className="block font-medium mb-1">
-            Username (used in your portfolio link)
-          </label>
+          <Label>Username</Label>
           <input
             name="username"
             type="text"
@@ -151,9 +150,19 @@ export default function PersonalInfoForm({ user, setUser }) {
           />
         </div>
       </div>
+      <div className="w-full">
+        <Label>Find your portfolio at: </Label>
+        <a
+          className="underline"
+          target="_blank"
+          href={`https://www.portofy.me/@${user.username || ""}`}
+        >
+          portofy.me@{user.username || ""}
+        </a>
+      </div>
 
       <div>
-        <label className="block font-medium mb-1">Employment</label>
+        <Label>Employment</Label>
         <input
           name="employment"
           type="text"
@@ -164,7 +173,7 @@ export default function PersonalInfoForm({ user, setUser }) {
       </div>
 
       <div>
-        <label className="block font-medium mb-1">Location</label>
+        <Label>Location</Label>
         <input
           name="location"
           type="text"
@@ -175,7 +184,7 @@ export default function PersonalInfoForm({ user, setUser }) {
       </div>
 
       <div>
-        <label className="block font-medium mb-1">Bio</label>
+        <Label className="block font-medium mb-1">Bio</Label>
         <textarea
           name="bio"
           rows={3}

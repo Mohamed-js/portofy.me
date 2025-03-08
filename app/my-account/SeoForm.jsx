@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function SeoPlanForm({ user, setUser }) {
+export default function SeoForm({ user, setUser }) {
   const [keywordInput, setKeywordInput] = useState(""); // Temp input state
 
   const handleChange = (e) => {
@@ -120,7 +120,7 @@ export default function SeoPlanForm({ user, setUser }) {
           <button
             type="button"
             onClick={addKeyword}
-            className="bg-indigo-600 text-white px-3 py-2 rounded hover:bg-blue-700 cursor-pointer"
+            className="bg-black text-white px-3 py-2 rounded hover:bg-blue-700 cursor-pointer"
           >
             + Add
           </button>
@@ -130,7 +130,7 @@ export default function SeoPlanForm({ user, setUser }) {
           {user.seoMeta?.keywords?.map((keyword, index) => (
             <span
               key={index}
-              className="bg-gray-200 px-3 py-1 rounded flex items-center space-x-2"
+              className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] rounded-full px-3 py-1 rounded flex items-center space-x-2"
             >
               {keyword}
               <button

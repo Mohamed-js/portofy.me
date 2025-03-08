@@ -19,7 +19,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 import { useState } from "react";
-import { CiCamera } from "react-icons/ci";
+import { CiCamera, CiTrash } from "react-icons/ci";
 import { GoGrabber, GoUpload } from "react-icons/go";
 
 export default function SocialLinksForm({ user, setUser }) {
@@ -108,7 +108,9 @@ export default function SocialLinksForm({ user, setUser }) {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Social Links</h3>
+      <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold">
+        Social Links
+      </h3>
       <DndContext
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
@@ -139,7 +141,7 @@ export default function SocialLinksForm({ user, setUser }) {
       <button
         type="button"
         onClick={addLink}
-        className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+        className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
       >
         + Add Social Link
       </button>
@@ -241,14 +243,14 @@ function SortableItem({
             <p className="text-sm text-blue-500 mt-1">Uploading...</p>
           )}
         </div>
-
+        <div className="border-l"></div>
         {/* Remove Button */}
         <button
           type="button"
           onClick={() => removeLink(index)}
-          className="bg-red-600 text-white p-2 rounded-md hover:underline cursor-pointer h-fit self-center"
+          className="text-white p-2 rounded-md hover:underline cursor-pointer h-fit self-center "
         >
-          Remove
+          <CiTrash size={20} className="font-bold text-red-600" />
         </button>
       </div>
     </div>

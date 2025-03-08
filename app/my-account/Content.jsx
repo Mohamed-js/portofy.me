@@ -5,10 +5,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import PersonalInfoForm from "./PersonalInfoForm";
 import SocialLinksForm from "./SocialLinksForm";
 import ProjectsForm from "./ProjectsForm";
-import SkillsExperienceForm from "./SkillsExperienceForm";
-import SeoPlanForm from "./SeoPlanForm";
+import ExperienceForm from "./ExperienceForm";
+import SkillsForm from "./SkillsForm";
+import SeoForm from "./SeoForm";
 import SiteSettingsForm from "./SiteSettingsForm";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 export default function Content({ initialUser }) {
   const [user, setUser] = useState(JSON.parse(initialUser));
@@ -29,25 +30,52 @@ export default function Content({ initialUser }) {
     setActiveTab(tab);
   };
 
-  const handleSaveAll = async () => {
-    try {
-      console.log(user);
-      const res = await fetch("/api/portfolio", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: user }),
-      });
-      if (!res.ok) throw new Error("Update failed");
-      const { data } = await res.json();
-      setUser(data);
-      toast.success("All changes saved!");
-    } catch (err) {
-      console.error(err);
-      alert("Error saving changes. Check console for details.");
-    }
-  };
+  // const handleSaveAll = async () => {
+  //   try {
+  //     const res = await fetch("/api/portfolio", {
+  //       method: "PATCH",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ data: user }),
+  //     });
+  //     if (!res.ok) throw new Error("Update failed");
+  //     const { data } = await res.json();
+  //     setUser(data);
+  //     toast.success("All changes saved!");
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Error saving changes. Check console for details.");
+  //   }
+  // };
 
-  const autosave = useCallback(() => {
+  // const autosave = useCallback(() => {
+  //   const saveChanges = async () => {
+  //     try {
+  //       setSaving(true);
+  //       const res = await fetch("/api/portfolio", {
+  //         method: "PATCH",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({ data: user }),
+  //       });
+
+  //       if (!res.ok) throw new Error("Failed to save changes");
+
+  //       const { data } = await res.json();
+  //       setSaving(false);
+  //     } catch (error) {
+  //       console.error("Autosave failed:", error);
+  //       setSaving(false);
+  //     }
+  //   };
+
+  //   const delay = setTimeout(() => {
+  //     saveChanges();
+  //   }, 3000);
+
+  //   return () => clearTimeout(delay);
+  // }, [user]);
+
+  useEffect(() => {
+    // autosave();
     const saveChanges = async () => {
       try {
         setSaving(true);
@@ -66,16 +94,11 @@ export default function Content({ initialUser }) {
         setSaving(false);
       }
     };
-
     const delay = setTimeout(() => {
       saveChanges();
-    }, 1500);
+    }, 2000);
 
     return () => clearTimeout(delay);
-  }, [user]);
-
-  useEffect(() => {
-    autosave();
   }, [user]);
 
   const renderTabContent = () => {
@@ -86,10 +109,12 @@ export default function Content({ initialUser }) {
         return <SocialLinksForm user={user} setUser={setUser} />;
       case "projects":
         return <ProjectsForm user={user} setUser={setUser} />;
-      case "skills-exp":
-        return <SkillsExperienceForm user={user} setUser={setUser} />;
+      case "experience":
+        return <ExperienceForm user={user} setUser={setUser} />;
+      case "skills":
+        return <SkillsForm user={user} setUser={setUser} />;
       case "seo":
-        return <SeoPlanForm user={user} setUser={setUser} />;
+        return <SeoForm user={user} setUser={setUser} />;
       case "settings":
         return <SiteSettingsForm user={user} setUser={setUser} />;
       default:
@@ -99,22 +124,23 @@ export default function Content({ initialUser }) {
 
   return (
     <div>
-      <div className="flex">
-        <div className="min-h-screen bg-indigo-900">
-          <nav className="flex flex-col items-start gap-4 p-4 sticky top-5 min-w-[200px]">
+      <div>
+        <div>
+          <nav className="flex items-center gap-4 p-2 px-4 md:px-8 fixed top-16 left-[calc(50%)] -translate-x-[50%] min-w-[200px] w-max max-w-[90vw] overflow-x-auto z-50 bg-linear-to-bl from-neutral-800 via-neutral-900 to-neutral-950 rounded-full">
             {[
               { key: "personal", label: "Personal Info" },
               { key: "social", label: "Social Links" },
               { key: "projects", label: "Projects" },
-              { key: "skills-exp", label: "Skills & Experience" },
+              { key: "experience", label: "Experience" },
+              { key: "skills", label: "Skills" },
               { key: "seo", label: "SEO" },
               { key: "settings", label: "Site Setting & Plan" },
             ].map(({ key, label }) => (
               <button
                 key={key}
-                className={`pb-2 cursor-pointer ${
+                className={`cursor-pointer min-w-fit ${
                   activeTab === key
-                    ? "border-b-2 border-blue-500 font-bold text-white"
+                    ? "p-1 px-3 bg-linear-to-bl from-[#e45053] to-[#fd9c46] rounded-full"
                     : "text-white"
                 }`}
                 onClick={() => handleTabChange(key)}
@@ -126,19 +152,19 @@ export default function Content({ initialUser }) {
         </div>
 
         {/* Render the form for the active tab */}
-        <div className="p-4 w-full max-w-4xl mx-auto">
+        <div className="py-4 pb-8 w-full max-w-4xl mx-auto">
           {renderTabContent()}
-          <div className="">
+          {/* <div className="">
             <button
-              className="bg-indigo-600 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700 cursor-pointer"
+              className="bg-[#5e0ca1] text-white px-4 py-2 mt-4 rounded hover:bg-blue-700 cursor-pointer"
               onClick={handleSaveAll}
             >
               Save All Changes
             </button>
-          </div>
+          </div> */}
           <div
             className={`mt-4 fixed bottom-4 right-4 text-white py-2 px-4 rounded-md font-semibold ${
-              saving ? "bg-indigo-600" : "bg-green-500"
+              saving ? "bg-green-700" : "bg-[#5e0ca1]"
             }`}
           >
             {saving ? "Saving..." : "All changes saved ✔"}

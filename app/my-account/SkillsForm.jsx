@@ -21,14 +21,11 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { CiCamera, CiTrash } from "react-icons/ci";
 
-export default function SkillsExperienceForm({ user, setUser }) {
+export default function SkillsForm({ user, setUser }) {
   const [skills, setSkills] = useState(user.skills || []);
-  const [experience, setExperience] = useState(user.experience || []);
   const [uploading, setUploading] = useState(false);
-
   const [activeId, setActiveId] = useState(null);
 
-  // Handle skill changes
   const handleSkillChange = (idx, field, value) => {
     const updated = [...skills];
     updated[idx][field] = value;
@@ -49,7 +46,6 @@ export default function SkillsExperienceForm({ user, setUser }) {
     setUser((prev) => ({ ...prev, skills: updated }));
   };
 
-  // Function to handle skill image upload
   const handleSkillImageUpload = async (e, idx) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -75,57 +71,6 @@ export default function SkillsExperienceForm({ user, setUser }) {
     } finally {
       setUploading(false);
     }
-  };
-
-  // Handle experience changes
-  const handleExpChange = (idx, field, value) => {
-    const updated = [...experience];
-    updated[idx][field] = value;
-    setExperience(updated);
-    setUser((prev) => ({ ...prev, experience: updated }));
-  };
-
-  const addExperience = () => {
-    const newExp = {
-      company: "",
-      role: "",
-      location: "",
-      startDate: "",
-      endDate: "",
-      description: [],
-    };
-
-    const updated = [...experience, newExp];
-    setExperience(updated);
-    setUser((prevUser) => ({ ...prevUser, experience: updated }));
-  };
-
-  const removeExperience = (idx) => {
-    const updated = experience.filter((_, i) => i !== idx);
-    setExperience(updated);
-    setUser((prev) => ({ ...prev, experience: updated }));
-  };
-
-  // Handle Description Bullet Points
-  const addBulletPoint = (expIdx) => {
-    const updated = [...experience];
-    updated[expIdx].description.push("");
-    setExperience(updated);
-    setUser((prev) => ({ ...prev, experience: updated }));
-  };
-
-  const updateBulletPoint = (expIdx, bulletIdx, value) => {
-    const updated = [...experience];
-    updated[expIdx].description[bulletIdx] = value;
-    setExperience(updated);
-    setUser((prev) => ({ ...prev, experience: updated }));
-  };
-
-  const removeBulletPoint = (expIdx, bulletIdx) => {
-    const updated = [...experience];
-    updated[expIdx].description.splice(bulletIdx, 1);
-    setExperience(updated);
-    setUser((prev) => ({ ...prev, experience: updated }));
   };
 
   function handleDragStart(event) {
@@ -160,7 +105,6 @@ export default function SkillsExperienceForm({ user, setUser }) {
 
   return (
     <div className="space-y-8">
-      {/* SKILLS */}
       <div>
         <h3 className="text-lg font-bold mb-4">Skills</h3>
         <div className="space-y-4">
@@ -198,98 +142,9 @@ export default function SkillsExperienceForm({ user, setUser }) {
           <button
             type="button"
             onClick={addSkill}
-            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+            className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
           >
             + Add Skill
-          </button>
-        </div>
-      </div>
-
-      {/* EXPERIENCE */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">
-          Experience{" "}
-          <span className="text-sm text-gray-400 font-normal">
-            (automatically listed in reverse chronological order)
-          </span>
-        </h3>
-        <div className="space-y-4">
-          {experience.map((exp, idx) => (
-            <div key={idx} className="border p-4 rounded space-y-2">
-              <div>
-                <label className="block font-medium">Company</label>
-                <input
-                  type="text"
-                  value={exp.company}
-                  onChange={(e) =>
-                    handleExpChange(idx, "company", e.target.value)
-                  }
-                  className="border border-gray-300 rounded w-full px-3 py-2"
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Role</label>
-                <input
-                  type="text"
-                  value={exp.role}
-                  onChange={(e) => handleExpChange(idx, "role", e.target.value)}
-                  className="border border-gray-300 rounded w-full px-3 py-2"
-                />
-              </div>
-
-              {/* Bullet Points for Description */}
-              <div>
-                <label className="block font-medium">
-                  Achievements/Responsibilities
-                </label>
-                <div className="space-y-2">
-                  {exp.description.map((desc, bulletIdx) => (
-                    <div
-                      key={bulletIdx}
-                      className="flex items-center space-x-2"
-                    >
-                      <input
-                        type="text"
-                        value={desc}
-                        onChange={(e) =>
-                          updateBulletPoint(idx, bulletIdx, e.target.value)
-                        }
-                        className="border border-gray-300 rounded w-full px-3 py-2"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeBulletPoint(idx, bulletIdx)}
-                        className="text-red-600 hover:underline cursor-pointer"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => addBulletPoint(idx)}
-                    className="text-blue-600 hover:underline cursor-pointer"
-                  >
-                    + Add Bullet Point
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => removeExperience(idx)}
-                className="text-red-600 hover:underline cursor-pointer"
-              >
-                Remove Experience
-              </button>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={addExperience}
-            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
-          >
-            + Add Experience
           </button>
         </div>
       </div>
@@ -339,7 +194,7 @@ function SortableItem({
               <img
                 src={skill.image}
                 alt="Icon"
-                className="w-full h-full object-cover rounded-md border border-gray-300"
+                className="w-full h-full object-cover rounded-md"
               />
             </div>
           )}
@@ -370,14 +225,15 @@ function SortableItem({
         <button
           type="button"
           onClick={() => removeSkill(idx)}
-          className="text-red-600 hover:underline mt-2 cursor-pointer"
+          className=" border-l pl-4 hover:underline mt-2 cursor-pointer"
         >
-          <CiTrash />
+          <CiTrash className="text-red-600" size={20} />
         </button>
       </div>
     </div>
   );
 }
+
 function SortableItemOverlay({ skill }) {
   return (
     <div className="p-4 border rounded bg-white shadow">
@@ -390,7 +246,6 @@ function SortableItemOverlay({ skill }) {
           className="border border-gray-300 rounded w-full px-3 py-2"
         />
       </div>
-      {/* Render the rest of skill’s UI if you’d like */}
     </div>
   );
 }

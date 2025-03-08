@@ -7,7 +7,7 @@ const Navbar = async () => {
   const user = cookieStore.get("user")?.value;
 
   return (
-    <nav className="flex items-center justify-between p-4 bg-indigo-900 text-white">
+    <nav className="flex items-center justify-between p-4 px-8 text-white fixed top-0 w-full left-0 shadow-md z-50 backdrop-blur">
       <Link href="/">Portofy.me</Link>
 
       <span>

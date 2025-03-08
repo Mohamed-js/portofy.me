@@ -17,9 +17,15 @@ export default function SiteSettingsForm({ user, setUser }) {
           onChange={handleChange}
           className="border border-gray-300 rounded w-full px-3 py-2"
         >
-          <option value="minimal">Minimal</option>
-          <option value="modern">Modern</option>
-          <option value="classic">Classic</option>
+          <option value="minimal" className="bg-black">
+            Minimal
+          </option>
+          <option value="modern" className="bg-black">
+            Modern
+          </option>
+          <option value="classic" className="bg-black">
+            Classic
+          </option>
         </select>
       </div>
       <div>
