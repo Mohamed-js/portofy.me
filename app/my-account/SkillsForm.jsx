@@ -20,6 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { CiCamera, CiTrash } from "react-icons/ci";
+import Label from "@/components/Label";
 
 export default function SkillsForm({ user, setUser }) {
   const [skills, setSkills] = useState(user.skills || []);
@@ -178,19 +179,10 @@ function SortableItem({
         <GoGrabber size={24} />
       </div>
       <div className="border p-4 rounded flex w-full gap-4">
-        <div className="w-full">
-          <label className="block font-medium mb-1">Skill Name</label>
-          <input
-            type="text"
-            value={skill.name}
-            onChange={(e) => handleSkillChange(idx, "name", e.target.value)}
-            className="border border-gray-300 rounded w-full px-3 py-2"
-          />
-        </div>
-        <div className="relative inline-block w-[100px]">
-          <label className="block font-medium mb-1">Skill Image</label>
+        <div className="relative inline-block w-10">
+          <Label>Image</Label>
           {skill.image && (
-            <div className="w-12 h-12">
+            <div className="w-10 h-10">
               <img
                 src={skill.image}
                 alt="Icon"
@@ -200,8 +192,8 @@ function SortableItem({
           )}
 
           {skill.image ? (
-            <label className="absolute -bottom-1 right-2 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
-              <CiCamera className="text-gray-700 p-1" size={24} />
+            <label className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
+              <CiCamera className="text-gray-700 p-1" size={20} />
               <input
                 type="file"
                 accept="image/*"
@@ -220,6 +212,15 @@ function SortableItem({
               />
             </label>
           )}
+        </div>
+        <div className="w-full">
+          <Label className="block font-medium mb-1">Skill Name</Label>
+          <input
+            type="text"
+            value={skill.name}
+            onChange={(e) => handleSkillChange(idx, "name", e.target.value)}
+            className="border border-gray-300 rounded w-full px-3 py-2"
+          />
         </div>
 
         <button

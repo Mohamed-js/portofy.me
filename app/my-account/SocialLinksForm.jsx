@@ -1,5 +1,6 @@
 "use client";
 
+import Label from "@/components/Label";
 import {
   closestCenter,
   DndContext,
@@ -174,40 +175,10 @@ function SortableItem({
       >
         <GoGrabber size={24} />
       </div>
-      <div className="border border-gray-200 p-4 py-2 rounded flex gap-2 md:gap-4 w-full">
-        {/* Site Selection */}
-        <div className="mb-2">
-          <p className="block text-sm mb-1">Site</p>
-          <select
-            value={link.site}
-            onChange={(e) => handleLinkChange(index, "site", e.target.value)}
-            className="border border-gray-300 rounded w-full px-3 py-2"
-          >
-            <option value="">Select Site</option>
-            <option value="github">GitHub</option>
-            <option value="behance">Behance</option>
-            <option value="dribbble">Dribbble</option>
-            <option value="linkedin">LinkedIn</option>
-            <option value="instagram">Instagram</option>
-            <option value="twitter">Twitter</option>
-            <option value="youtube">YouTube</option>
-          </select>
-        </div>
-
-        {/* URL Input */}
-        <div className="mb-2 flex-grow">
-          <p className="block text-sm mb-1">URL</p>
-          <input
-            type="text"
-            value={link.url}
-            onChange={(e) => handleLinkChange(index, "url", e.target.value)}
-            className="border border-gray-300 rounded w-full px-3 py-2"
-          />
-        </div>
-
+      <div className="border border-gray-200 p-2 md:p-4 py-2 rounded flex gap-2 md:gap-4 w-full justify-between">
         {/* Icon Upload & Preview */}
         <div className="mb-2 relative">
-          <p className="block text-sm mb-1">Icon</p>
+          <Label>Icon</Label>
           <div className="relative inline-block">
             {link.icon && (
               <img
@@ -243,15 +214,47 @@ function SortableItem({
             <p className="text-sm text-blue-500 mt-1">Uploading...</p>
           )}
         </div>
-        <div className="border-l"></div>
+        <div className="flex flex-col md:flex-row md:gap-2 md:w-full">
+          {/* Site Selection */}
+          <div className="mb-2">
+            <Label>Site</Label>
+            <select
+              value={link.site}
+              onChange={(e) => handleLinkChange(index, "site", e.target.value)}
+              className="border border-gray-300 rounded w-full px-3 py-2"
+            >
+              <option value="">Select Site</option>
+              <option value="github">GitHub</option>
+              <option value="behance">Behance</option>
+              <option value="dribbble">Dribbble</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="instagram">Instagram</option>
+              <option value="twitter">Twitter</option>
+              <option value="youtube">YouTube</option>
+            </select>
+          </div>
+
+          {/* URL Input */}
+          <div className="mb-2 flex-grow">
+            <Label>URL</Label>
+            <input
+              type="text"
+              value={link.url}
+              onChange={(e) => handleLinkChange(index, "url", e.target.value)}
+              className="border border-gray-300 rounded w-full px-3 py-2"
+            />
+          </div>
+        </div>
         {/* Remove Button */}
-        <button
-          type="button"
-          onClick={() => removeLink(index)}
-          className="text-white p-2 rounded-md hover:underline cursor-pointer h-fit self-center "
-        >
-          <CiTrash size={20} className="font-bold text-red-600" />
-        </button>
+        <div className="border-l flex items-center justify-center pl-2 md:pl-4">
+          <button
+            type="button"
+            onClick={() => removeLink(index)}
+            className="text-white rounded-md hover:underline cursor-pointer h-fit self-center"
+          >
+            <CiTrash size={20} className="font-bold text-red-600" />
+          </button>
+        </div>
       </div>
     </div>
   );

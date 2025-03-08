@@ -8,6 +8,10 @@ export default function PersonalInfoForm({ user, setUser }) {
   const [avatarPreview, setAvatarPreview] = useState(user.avatar || "");
   const [coverPreview, setCoverPreview] = useState(user.cover || "");
   const [uploading, setUploading] = useState(false);
+  const liveLink =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://www.portofy.me";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -152,12 +156,13 @@ export default function PersonalInfoForm({ user, setUser }) {
       </div>
       <div className="w-full">
         <Label>Find your portfolio at: </Label>
+
         <a
           className="underline"
           target="_blank"
-          href={`https://www.portofy.me/@${user.username || ""}`}
+          href={`${liveLink}/@${user.username}`}
         >
-          portofy.me@{user.username || ""}
+          portofy.me/@{user.username || ""}
         </a>
       </div>
 

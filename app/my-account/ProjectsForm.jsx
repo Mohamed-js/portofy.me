@@ -26,6 +26,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import Label from "@/components/Label";
 
 export default function ProjectsForm({ user, setUser }) {
   const [projects, setProjects] = useState(user.projects || []);
@@ -247,10 +248,10 @@ const Project = ({
       {expanded && (
         <div
           key={index}
-          className="bg-[#141414] p-4 rounded gap-4 flex relative"
+          className="bg-[#141414] p-4 rounded gap-4 flex flex-col md:flex-row relative"
         >
           <div className="mb-2 relative">
-            <p className="block font-medium mb-1">Project Image</p>
+            <Label className="block font-medium mb-1">Project Image</Label>
             <div className="relative inline-block">
               {project.img && (
                 <div className="w-40 h-40">
@@ -288,7 +289,7 @@ const Project = ({
           {/* Title & Description */}
           <div className="w-full md:max-w-[600px]">
             <div className="mb-2">
-              <label className="block font-medium">Project Title</label>
+              <Label className="block font-medium">Project Title</Label>
               <input
                 type="text"
                 value={project.title}
@@ -299,8 +300,8 @@ const Project = ({
               />
             </div>
 
-            <div>
-              <label className="block font-medium">Project Description</label>
+            <div className="mt-2">
+              <Label className="block font-medium">Project Description</Label>
               <textarea
                 rows={3}
                 value={project.description}
@@ -311,18 +312,8 @@ const Project = ({
               />
             </div>
             {/* Gallery Upload */}
-            <div>
-              <p className="block font-medium">Gallery Images</p>
-              <label className="block w-fit bg-black text-white px-3 py-1 mt-1 rounded hover:bg-blue-700 cursor-pointer">
-                + Add Image
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={(e) => handleGalleryUpload(e, index)}
-                  className="block w-full border px-3 py-2 cursor-pointer hidden"
-                />
-              </label>
+            <div className="mt-2">
+              <Label className="block font-medium">Gallery Images</Label>
 
               {/* Gallery Image Previews */}
               {project.gallery.length > 0 && (
@@ -343,6 +334,18 @@ const Project = ({
                       </button>
                     </div>
                   ))}
+                  <label className="block text-center text-xs bg-[#414141] text-white px-3 flex items-center justify-center md:py-1 mt-1 rounded hover:bg-blue-700 cursor-pointer w-20 h-20">
+                    + <br />
+                    Add <br />
+                    Image
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={(e) => handleGalleryUpload(e, index)}
+                      className="block w-full border px-3 py-2 cursor-pointer hidden"
+                    />
+                  </label>
                 </div>
               )}
             </div>
