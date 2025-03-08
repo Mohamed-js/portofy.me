@@ -9,8 +9,6 @@ export async function PATCH(req) {
 
     const { data } = await req.json();
 
-    console.log("data", data);
-
     const cookieStore = await cookies();
 
     const userId = cookieStore.get("userId");

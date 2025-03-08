@@ -143,7 +143,7 @@ export default function SocialLinksForm({ user, setUser }) {
       <button
         type="button"
         onClick={addLink}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+        className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
       >
         + Add Social Link
       </button>
@@ -211,19 +211,15 @@ function SortableItem({
         <div className="mb-2 relative">
           <p className="block text-sm mb-1">Icon</p>
           <div className="relative inline-block">
-            {link.icon ? (
+            {link.icon && (
               <img
                 src={link.icon}
                 alt="Icon"
                 className="w-10 h-10 object-cover rounded-full border border-gray-300"
               />
-            ) : (
-              <div className="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full">
-                <GoUpload className="text-gray-500" size={24} />
-              </div>
             )}
 
-            {link.icon && (
+            {link.icon ? (
               <label className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
                 <CiCamera className="w-3 h-3 text-gray-700" />
                 <input
@@ -232,6 +228,16 @@ function SortableItem({
                   onChange={(e) => handleIconUpload(e, index)}
                   className="hidden"
                 />
+              </label>
+            ) : (
+              <label className="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleIconUpload(e, index)}
+                  className="hidden"
+                />
+                <GoUpload className="text-gray-500 cursor-pointer" size={24} />
               </label>
             )}
           </div>
@@ -244,7 +250,7 @@ function SortableItem({
         <button
           type="button"
           onClick={() => removeLink(index)}
-          className="text-red-600 hover:underline cursor-pointer"
+          className="bg-red-600 text-white p-2 rounded-md hover:underline cursor-pointer h-fit self-center"
         >
           Remove
         </button>

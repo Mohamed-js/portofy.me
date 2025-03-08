@@ -120,7 +120,7 @@ export default function SeoPlanForm({ user, setUser }) {
           <button
             type="button"
             onClick={addKeyword}
-            className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 cursor-pointer"
+            className="bg-indigo-600 text-white px-3 py-2 rounded hover:bg-blue-700 cursor-pointer"
           >
             + Add
           </button>

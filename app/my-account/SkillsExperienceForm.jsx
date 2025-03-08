@@ -197,7 +197,7 @@ export default function SkillsExperienceForm({ user, setUser }) {
           <button
             type="button"
             onClick={addSkill}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
           >
             + Add Skill
           </button>
@@ -286,7 +286,7 @@ export default function SkillsExperienceForm({ user, setUser }) {
           <button
             type="button"
             onClick={addExperience}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
           >
             + Add Experience
           </button>
