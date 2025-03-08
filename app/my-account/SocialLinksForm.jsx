@@ -90,10 +90,6 @@ export default function SocialLinksForm({ user, setUser }) {
       const oldIndex = links.findIndex((link) => link._id === active.id);
       const newIndex = links.findIndex((link) => link._id === over.id);
       const updated = arrayMove(links, oldIndex, newIndex);
-      console.log(active.id);
-      console.log(over.id);
-      console.log(oldIndex);
-      console.log(newIndex);
       setLinks(updated);
       setUser((prev) => ({ ...prev, links: updated }));
 

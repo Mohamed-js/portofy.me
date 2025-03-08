@@ -103,48 +103,53 @@ export default function PersonalInfoForm({ user, setUser }) {
         <p className="text-sm text-blue-500 mt-2 text-center">Uploading...</p>
       )}
 
-      <div>
-        <label className="block font-medium mb-1">First Name</label>
-        <input
-          name="firstName"
-          type="text"
-          value={user.firstName || ""}
-          onChange={handleChange}
-          className="border border-gray-300 rounded w-full px-3 py-2"
-        />
-      </div>
+      <div className="flex gap-4">
+        <div className="w-full">
+          <label className="block font-medium mb-1">First Name</label>
+          <input
+            name="firstName"
+            type="text"
+            value={user.firstName || ""}
+            onChange={handleChange}
+            className="border border-gray-300 rounded w-full px-3 py-2"
+          />
+        </div>
 
-      <div>
-        <label className="block font-medium mb-1">Last Name</label>
-        <input
-          name="lastName"
-          type="text"
-          value={user.lastName || ""}
-          onChange={handleChange}
-          className="border border-gray-300 rounded w-full px-3 py-2"
-        />
+        <div className="w-full">
+          <label className="block font-medium mb-1">Last Name</label>
+          <input
+            name="lastName"
+            type="text"
+            value={user.lastName || ""}
+            onChange={handleChange}
+            className="border border-gray-300 rounded w-full px-3 py-2"
+          />
+        </div>
       </div>
+      <div className="flex gap-4">
+        <div className="w-full">
+          <label className="block font-medium mb-1">Email</label>
+          <input
+            name="email"
+            type="email"
+            value={user.email || ""}
+            onChange={handleChange}
+            className="border border-gray-300 rounded w-full px-3 py-2"
+          />
+        </div>
 
-      <div>
-        <label className="block font-medium mb-1">Email</label>
-        <input
-          name="email"
-          type="email"
-          value={user.email || ""}
-          onChange={handleChange}
-          className="border border-gray-300 rounded w-full px-3 py-2"
-        />
-      </div>
-
-      <div>
-        <label className="block font-medium mb-1">Username</label>
-        <input
-          name="username"
-          type="text"
-          value={user.username || ""}
-          onChange={handleChange}
-          className="border border-gray-300 rounded w-full px-3 py-2"
-        />
+        <div className="w-full">
+          <label className="block font-medium mb-1">
+            Username (used in your portfolio link)
+          </label>
+          <input
+            name="username"
+            type="text"
+            value={user.username || ""}
+            onChange={handleChange}
+            className="border border-gray-300 rounded w-full px-3 py-2"
+          />
+        </div>
       </div>
 
       <div>

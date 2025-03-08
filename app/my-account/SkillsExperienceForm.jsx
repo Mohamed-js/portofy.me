@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { GoGrabber } from "react-icons/go";
+import { GoGrabber, GoUpload } from "react-icons/go";
 import {
   closestCenter,
   DndContext,
@@ -19,6 +19,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { CiCamera, CiTrash } from "react-icons/ci";
 
 export default function SkillsExperienceForm({ user, setUser }) {
   const [skills, setSkills] = useState(user.skills || []);
@@ -303,6 +304,7 @@ function SortableItem({
   idx,
   handleSkillImageUpload,
   removeSkill,
+  handleSkillChange,
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -312,7 +314,7 @@ function SortableItem({
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="flex">
+    <div ref={setNodeRef} style={style} className="flex w-full">
       <div
         className="inline-flex items-center cursor-grab"
         {...listeners}
@@ -320,8 +322,8 @@ function SortableItem({
       >
         <GoGrabber size={24} />
       </div>
-      <div className="border p-4 rounded">
-        <div>
+      <div className="border p-4 rounded flex w-full gap-4">
+        <div className="w-full">
           <label className="block font-medium mb-1">Skill Name</label>
           <input
             type="text"
@@ -330,31 +332,47 @@ function SortableItem({
             className="border border-gray-300 rounded w-full px-3 py-2"
           />
         </div>
-        <div>
+        <div className="relative inline-block w-[100px]">
           <label className="block font-medium mb-1">Skill Image</label>
           {skill.image && (
-            <img
-              src={skill.image}
-              alt="Skill"
-              className="w-16 h-16 object-cover mb-2"
-            />
+            <div className="w-12 h-12">
+              <img
+                src={skill.image}
+                alt="Icon"
+                className="w-full h-full object-cover rounded-md border border-gray-300"
+              />
+            </div>
           )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleSkillImageUpload(e, idx)}
-            className="block w-full border px-3 py-2 cursor-pointer"
-          />
-          {uploading && (
-            <p className="text-sm text-blue-500 mt-1">Uploading...</p>
+
+          {skill.image ? (
+            <label className="absolute -bottom-1 right-2 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
+              <CiCamera className="text-gray-700 p-1" size={24} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleSkillImageUpload(e, idx)}
+                className="hidden"
+              />
+            </label>
+          ) : (
+            <label className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-3xl cursor-pointer">
+              <GoUpload className="text-gray-500" size={24} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleSkillImageUpload(e, idx)}
+                className="hidden"
+              />
+            </label>
           )}
         </div>
+
         <button
           type="button"
           onClick={() => removeSkill(idx)}
           className="text-red-600 hover:underline mt-2 cursor-pointer"
         >
-          Remove Skill
+          <CiTrash />
         </button>
       </div>
     </div>

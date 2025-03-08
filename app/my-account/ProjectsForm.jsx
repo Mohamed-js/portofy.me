@@ -2,11 +2,30 @@
 
 import { useState } from "react";
 import { CiCamera } from "react-icons/ci";
-import { GoUpload } from "react-icons/go";
+import { GoGrabber, GoUpload } from "react-icons/go";
+
+import {
+  closestCenter,
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export default function ProjectsForm({ user, setUser }) {
   const [projects, setProjects] = useState(user.projects || []);
   const [uploading, setUploading] = useState(false);
+  const [activeId, setActiveId] = useState(null);
 
   const handleProjectChange = (index, field, value) => {
     const updated = [...projects];
@@ -17,7 +36,7 @@ export default function ProjectsForm({ user, setUser }) {
 
   const addProject = () => {
     const newProj = {
-      title: "",
+      title: "New Project...",
       description: "",
       img: "",
       gallery: [],
@@ -105,11 +124,70 @@ export default function ProjectsForm({ user, setUser }) {
     handleProjectChange(projectIndex, "gallery", updatedGallery);
   };
 
+  function handleDragStart(event) {
+    const { active } = event;
+
+    setActiveId(active.id);
+  }
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = projects.findIndex(
+        (project) => project._id === active.id
+      );
+      const newIndex = projects.findIndex((project) => project._id === over.id);
+      const updated = arrayMove(projects, oldIndex, newIndex);
+      setProjects(updated);
+      setUser((prev) => ({ ...prev, projects: updated }));
+
+      return;
+    }
+
+    setActiveId(null);
+  }
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   return (
     <div className="space-y-4">
-      {projects.map((project, index) => (
-        <Project key={project._id} project={project} index={index} />
-      ))}
+      <DndContext
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+        collisionDetection={closestCenter}
+        sensors={sensors}
+      >
+        <SortableContext
+          items={projects}
+          strategy={verticalListSortingStrategy}
+        >
+          {projects.map((project, index) => (
+            <Project
+              key={`${project._id}` + index}
+              project={project}
+              index={index}
+              handleProjectChange={handleProjectChange}
+              handleImageUpload={handleImageUpload}
+              handleGalleryUpload={handleGalleryUpload}
+              removeGalleryImage={removeGalleryImage}
+              removeProject={removeProject}
+            />
+          ))}
+        </SortableContext>
+        {activeId && (
+          <DragOverlay>
+            <SortableItemOverlay
+              project={projects.find((s) => s._id === activeId)}
+            />
+          </DragOverlay>
+        )}
+      </DndContext>
 
       <button
         type="button"
@@ -122,12 +200,33 @@ export default function ProjectsForm({ user, setUser }) {
   );
 }
 
-const Project = ({ project, index }) => {
+const Project = ({
+  project,
+  index,
+  handleImageUpload,
+  handleGalleryUpload,
+  removeGalleryImage,
+  removeProject,
+  handleProjectChange,
+}) => {
   const [expanded, setExpanded] = useState(false);
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: project._id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
   return (
-    <div>
+    <div ref={setNodeRef} style={style}>
       <div className="border p-4 rounded gap-4 flex relative justify-between">
-        <div>{project.title}</div>
+        <div
+          className="inline-flex items-center cursor-grab"
+          {...listeners}
+          {...attributes}
+        >
+          <GoGrabber size={24} />
+        </div>
+        <div className="w-full">{project.title}</div>
         <p
           className="cursor-pointer"
           onClick={() => {
@@ -143,11 +242,13 @@ const Project = ({ project, index }) => {
             <p className="block font-medium">Project Image</p>
             <div className="relative inline-block">
               {project.img && (
-                <img
-                  src={project.img}
-                  alt="Icon"
-                  className="w-40 h-40 object-cover rounded-3xl border border-gray-300"
-                />
+                <div className="w-40 h-40">
+                  <img
+                    src={project.img}
+                    alt="Icon"
+                    className="w-full h-full object-cover rounded-3xl border border-gray-300"
+                  />
+                </div>
               )}
 
               {project.img ? (
@@ -174,7 +275,7 @@ const Project = ({ project, index }) => {
             </div>
           </div>
           {/* Title & Description */}
-          <div className="w-full md:max-w-[700px]">
+          <div className="w-full md:max-w-[600px]">
             <div className="mb-2">
               <label className="block font-medium">Project Title</label>
               <input
@@ -249,3 +350,20 @@ const Project = ({ project, index }) => {
     </div>
   );
 };
+
+function SortableItemOverlay({ project }) {
+  return (
+    <div className="p-4 border rounded bg-white shadow">
+      <div>
+        <label className="block font-medium mb-1">{project.site}</label>
+        <input
+          type="text"
+          value={project.site}
+          disabled // so user can't type into the floating item
+          className="border border-gray-300 rounded w-full px-3 py-2"
+        />
+      </div>
+      {/* Render the rest of skill’s UI if you’d like */}
+    </div>
+  );
+}

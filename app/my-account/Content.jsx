@@ -126,7 +126,7 @@ export default function Content({ initialUser }) {
         </div>
 
         {/* Render the form for the active tab */}
-        <div className="p-4 w-full">
+        <div className="p-4 w-full max-w-4xl mx-auto">
           {renderTabContent()}
           <div className="">
             <button
