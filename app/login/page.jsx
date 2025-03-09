@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -20,7 +21,6 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Basic client-side validation
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
       toast.error("Invalid email format");
       setLoading(false);
@@ -57,51 +57,96 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <form className="max-w-sm mx-auto w-full p-4" onSubmit={handleSubmit}>
-        <div className="mb-5">
-          <label
-            htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-900"
+      <div className="w-full max-w-md p-4 mx-4 bg-white/10 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-semibold text-center text-white mb-6">
+          Login to Portofy.me
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-200 mb-1"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-3 py-2 text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none"
+              placeholder="example@gmail.com"
+              required
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-200 mb-1"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-3 py-2 text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full px-5 py-2.5 text-sm font-semibold cursor-pointer text-white bg-linear-to-bl from-[#e45053] to-[#fd9c46] rounded-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-orange-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Your email
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="example@gmail.com"
-            required
-          />
-        </div>
-        <div className="mb-5">
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900"
+            {loading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                  />
+                </svg>
+                Logging In...
+              </>
+            ) : (
+              "Login"
+            )}
+          </button>
+        </form>
+
+        {/* Sign Up Link */}
+        <p className="mt-4 text-center text-sm text-gray-300">
+          Don’t have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-[#e45053] hover:text-[#fd9c46] font-medium underline"
           >
-            Your password
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="********"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-black dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50 cursor-pointer"
-        >
-          {loading ? "Logging In..." : "Login"}
-        </button>
-      </form>
+            Sign Up
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

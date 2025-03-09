@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const SignUp = () => {
   const router = useRouter();
@@ -69,162 +70,197 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <form className="max-w-md mx-auto w-full" onSubmit={handleSubmit}>
-        <div className="relative z-0 w-full mb-5 group">
-          <input
-            type="text"
-            name="username"
-            id="username"
-            value={formData.username}
-            onChange={handleChange}
-            className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            htmlFor="username"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Username (must be unique)
-          </label>
-        </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            htmlFor="email"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Email address
-          </label>
-        </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            htmlFor="password"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Password
-          </label>
-        </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input
-            type="password"
-            name="confirm_password"
-            id="confirm_password"
-            value={formData.confirm_password}
-            onChange={handleChange}
-            className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            htmlFor="confirm_password"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Confirm password
-          </label>
-        </div>
-        <div className="grid md:grid-cols-2 md:gap-6">
-          <div className="relative z-0 w-full mb-5 group">
+    <div className="flex items-center justify-center min-h-screen mt-24">
+      <div className="w-full max-w-md p-4 mx-4 bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20">
+        <h2 className="text-3xl font-bold text-center text-white mb-8">
+          Sign Up for Portofy.me
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Username */}
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-200 mb-2"
+            >
+              Username (must be unique)
+            </label>
             <input
               type="text"
-              name="firstName"
-              id="firstName"
-              value={formData.firstName}
+              name="username"
+              id="username"
+              value={formData.username}
               onChange={handleChange}
-              className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
+              className="w-full px-4 py-2.5 text-gray-900 bg-gray-50/80 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none placeholder-gray-400"
+              placeholder="johndoe"
               required
             />
-            <label
-              htmlFor="firstName"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              First name
-            </label>
           </div>
-          <div className="relative z-0 w-full mb-5 group">
+
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-200 mb-2"
+            >
+              Email
+            </label>
             <input
-              type="text"
-              name="lastName"
-              id="lastName"
-              value={formData.lastName}
+              type="email"
+              name="email"
+              id="email"
+              value={formData.email}
               onChange={handleChange}
-              className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
+              className="w-full px-4 py-2.5 text-gray-900 bg-gray-50/80 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none placeholder-gray-400"
+              placeholder="example@gmail.com"
               required
             />
-            <label
-              htmlFor="lastName"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Last name
-            </label>
           </div>
-        </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input
-            type="tel"
-            name="phone"
-            id="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            htmlFor="phone"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+
+          {/* Password */}
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-200 mb-2"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 text-gray-900 bg-gray-50/80 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none placeholder-gray-400"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label
+              htmlFor="confirm_password"
+              className="block text-sm font-medium text-gray-200 mb-2"
+            >
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              name="confirm_password"
+              id="confirm_password"
+              value={formData.confirm_password}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 text-gray-900 bg-gray-50/80 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none placeholder-gray-400"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          {/* First Name & Last Name */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="firstName"
+                className="block text-sm font-medium text-gray-200 mb-2"
+              >
+                First Name
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                id="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 text-gray-900 bg-gray-50/80 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none placeholder-gray-400"
+                placeholder="John"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="lastName"
+                className="block text-sm font-medium text-gray-200 mb-2"
+              >
+                Last Name
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                id="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 text-gray-900 bg-gray-50/80 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none placeholder-gray-400"
+                placeholder="Doe"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-200 mb-2"
+            >
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              id="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 text-gray-900 bg-gray-50/80 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none placeholder-gray-400"
+              placeholder="123-456-7890"
+              required
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full px-5 py-2.5 text-sm font-semibold text-white bg-linear-to-bl from-[#e45053] to-[#fd9c46] rounded-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-orange-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-200"
           >
-            Phone number (123-456-7890)
-          </label>
-        </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input
-            type="text"
-            name="employment"
-            id="employment"
-            value={formData.employment}
-            onChange={handleChange}
-            className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            htmlFor="employment"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            {loading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                  />
+                </svg>
+                Signing Up...
+              </>
+            ) : (
+              "Sign Up"
+            )}
+          </button>
+        </form>
+
+        {/* Login Link */}
+        <p className="mt-6 text-center text-sm text-gray-300">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-[#e45053] hover:text-[#fd9c46] font-medium underline transition-colors duration-200"
           >
-            Employment (Ex. Freelancer, Microsoft, Google)
-          </label>
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-black dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50"
-        >
-          {loading ? "Signing Up..." : "Sign Up"}
-        </button>
-      </form>
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

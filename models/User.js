@@ -4,7 +4,7 @@ const UserSchema = new mongoose.Schema(
   {
     firstName: String,
     lastName: String,
-    employment: String,
+    phone: String,
     location: String,
     email: {
       type: String,
@@ -127,6 +127,7 @@ const UserSchema = new mongoose.Schema(
       keywords: { type: [String], default: [] },
     },
     plan: { type: String, enum: ["free", "pro"], default: "free" },
+    storageUsed: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

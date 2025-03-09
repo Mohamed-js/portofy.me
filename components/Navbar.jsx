@@ -3,6 +3,7 @@ import Link from "next/link";
 import dbConnect from "@/lib/db"; // Your DB connection utility
 import User from "@/models/User"; // Your User model
 import Logout from "./Logout";
+import Image from "next/image";
 
 const Navbar = async () => {
   // Get userId from cookies
@@ -21,14 +22,14 @@ const Navbar = async () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-md shadow-md p-4 md:px-8 text-white">
+    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-md p-4 md:px-8 text-white">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
           className="text-lg font-bold hover:text-blue-400 transition-colors"
         >
-          Portofy.me
+          <Image src="/portofy.webp" alt="logo" height={20} width={100} />
         </Link>
 
         {/* Navigation Links */}

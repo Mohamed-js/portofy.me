@@ -14,7 +14,7 @@ export async function POST(req) {
 
   try {
     await dbConnect();
-    const { firstName, lastName, email, password, employment, username } =
+    const { firstName, lastName, email, password, phone, username } =
       await req.json();
 
     // Basic input validation
@@ -46,7 +46,7 @@ export async function POST(req) {
       lastName,
       email,
       password: hashedPassword,
-      employment,
+      phone,
       username,
     });
 
