@@ -1,16 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import Label from "@/components/Label";
 
 export default function SeoForm({ user, setUser }) {
-  const [keywordInput, setKeywordInput] = useState(""); // Temp input state
+  const [keywordInput, setKeywordInput] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name.startsWith("seoMeta.")) {
-      // e.g. "seoMeta.title"
-      const key = name.split(".")[1]; // "title"
+      const key = name.split(".")[1];
       setUser((prev) => ({
         ...prev,
         seoMeta: { ...prev.seoMeta, [key]: value },
@@ -18,7 +17,6 @@ export default function SeoForm({ user, setUser }) {
     }
   };
 
-  // Handle adding a new keyword
   const addKeyword = () => {
     if (!keywordInput.trim()) return;
     setUser((prev) => ({
@@ -28,10 +26,9 @@ export default function SeoForm({ user, setUser }) {
         keywords: [...(prev.seoMeta?.keywords || []), keywordInput.trim()],
       },
     }));
-    setKeywordInput(""); // Reset input field
+    setKeywordInput("");
   };
 
-  // Handle removing a keyword
   const removeKeyword = (index) => {
     setUser((prev) => ({
       ...prev,
@@ -42,33 +39,38 @@ export default function SeoForm({ user, setUser }) {
     }));
   };
 
-  // Character Limits (Best SEO Practices)
+  // Character Limits (SEO Best Practices)
   const titleLimit = 60;
   const descriptionLimit = 160;
 
-  // Truncate function to simulate Google search results display
+  // Truncate function for preview
   const truncateText = (text, limit) =>
     text.length > limit ? text.substring(0, limit) + "..." : text;
 
   return (
-    <form className="space-y-6">
-      <h3 className="text-lg font-bold">SEO Meta</h3>
+    <div className="space-y-6">
+      <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold">
+        SEO Meta
+      </h3>
 
       {/* SEO Live Preview */}
-      <div className="mt-6 p-4 border rounded bg-gray-100">
+      <div className="p-4 border border-gray-200 rounded bg-gray-100">
         <h4 className="text-sm font-semibold text-gray-700 mb-2">
           Google Search Preview
         </h4>
         <p className="text-blue-600 text-lg font-medium">
-          {truncateText(user.seoMeta?.title || user.username, titleLimit)}
+          {truncateText(
+            user.seoMeta?.title || user.username || "Your Portfolio",
+            titleLimit
+          )}
         </p>
         <p className="text-green-700 text-sm">
           portofy.me/@
-          {user.username.toLowerCase().replace(/\s+/g, "-") || "example-title"}
+          {user.username?.toLowerCase().replace(/\s+/g, "-") || "your-username"}
         </p>
         <p className="text-gray-700 max-w-[450px]">
           {truncateText(
-            user.seoMeta?.description || "Example description",
+            user.seoMeta?.description || "A showcase of my work and skills.",
             descriptionLimit
           )}
         </p>
@@ -76,8 +78,9 @@ export default function SeoForm({ user, setUser }) {
 
       {/* SEO Title */}
       <div>
-        <label className="block font-medium mb-1">SEO Title</label>
+        <Label htmlFor="seo-title">SEO Title</Label>
         <input
+          id="seo-title"
           name="seoMeta.title"
           type="text"
           value={user.seoMeta?.title || ""}
@@ -92,8 +95,9 @@ export default function SeoForm({ user, setUser }) {
 
       {/* SEO Description */}
       <div>
-        <label className="block font-medium mb-1">SEO Description</label>
+        <Label htmlFor="seo-description">SEO Description</Label>
         <textarea
+          id="seo-description"
           rows={2}
           name="seoMeta.description"
           value={user.seoMeta?.description || ""}
@@ -108,35 +112,35 @@ export default function SeoForm({ user, setUser }) {
 
       {/* Keywords Management */}
       <div>
-        <label className="block font-medium mb-1">SEO Keywords</label>
-        <div className="flex space-x-2 mb-2">
+        <Label>SEO Keywords</Label>
+        <div className="flex gap-2 mb-2">
           <input
             type="text"
             value={keywordInput}
             onChange={(e) => setKeywordInput(e.target.value)}
-            className="border border-gray-300 rounded px-3 py-2 flex-grow"
+            onKeyPress={(e) => e.key === "Enter" && addKeyword()}
+            className="border border-gray-300 rounded w-full px-3 py-2"
             placeholder="Enter keyword..."
           />
           <button
             type="button"
             onClick={addKeyword}
-            className="bg-black text-white px-3 py-2 rounded hover:bg-blue-700 cursor-pointer"
+            className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer min-w-fit"
           >
             + Add
           </button>
         </div>
-        {/* Display keyword tags */}
         <div className="flex flex-wrap gap-2">
           {user.seoMeta?.keywords?.map((keyword, index) => (
             <span
               key={index}
-              className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] rounded-full px-3 py-1 rounded flex items-center space-x-2"
+              className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-3 py-1 rounded-full flex items-center gap-2"
             >
               {keyword}
               <button
                 type="button"
                 onClick={() => removeKeyword(index)}
-                className="text-red-600 ml-2 hover:text-red-800 cursor-pointer"
+                className="text-white hover:text-gray-200 cursor-pointer"
               >
                 ✕
               </button>
@@ -144,6 +148,6 @@ export default function SeoForm({ user, setUser }) {
           ))}
         </div>
       </div>
-    </form>
+    </div>
   );
 }

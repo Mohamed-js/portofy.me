@@ -8,7 +8,6 @@ import {
   GoGrabber,
   GoUpload,
 } from "react-icons/go";
-
 import {
   closestCenter,
   DndContext,
@@ -27,11 +26,19 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Label from "@/components/Label";
+import { toast } from "react-toastify";
 
 export default function ProjectsForm({ user, setUser }) {
   const [projects, setProjects] = useState(user.projects || []);
   const [uploading, setUploading] = useState(false);
   const [activeId, setActiveId] = useState(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const handleProjectChange = (index, field, value) => {
     const updated = [...projects];
@@ -48,10 +55,9 @@ export default function ProjectsForm({ user, setUser }) {
       gallery: [],
       links: [],
     };
-
     const updated = [...projects, newProj];
     setProjects(updated);
-    setUser((prevUser) => ({ ...prevUser, projects: updated }));
+    setUser((prev) => ({ ...prev, projects: updated }));
   };
 
   const removeProject = (index) => {
@@ -60,10 +66,14 @@ export default function ProjectsForm({ user, setUser }) {
     setUser((prev) => ({ ...prev, projects: updated }));
   };
 
-  // Function to upload the main project image to Cloudinary
   const handleImageUpload = async (e, projectIndex, field) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
 
     setUploading(true);
     const formData = new FormData();
@@ -74,21 +84,22 @@ export default function ProjectsForm({ user, setUser }) {
         method: "POST",
         body: formData,
       });
-
       const data = await res.json();
+
       if (data.success) {
         handleProjectChange(projectIndex, field, data.url);
+        toast.success("Project image uploaded successfully");
       } else {
-        console.error("Upload failed:", data.error || data.message);
+        toast.error(data.error || "Upload failed");
       }
     } catch (error) {
       console.error("Image upload error:", error);
+      toast.error("An error occurred during upload");
     } finally {
       setUploading(false);
     }
   };
 
-  // Function to upload multiple gallery images
   const handleGalleryUpload = async (e, projectIndex) => {
     const files = e.target.files;
     if (!files.length) return;
@@ -97,6 +108,11 @@ export default function ProjectsForm({ user, setUser }) {
     const updatedGallery = [...projects[projectIndex].gallery];
 
     for (let file of files) {
+      if (!file.type.startsWith("image/")) {
+        toast.error(`Skipping ${file.name}: Please upload image files only`);
+        continue;
+      }
+
       const formData = new FormData();
       formData.append("file", file);
 
@@ -105,24 +121,24 @@ export default function ProjectsForm({ user, setUser }) {
           method: "POST",
           body: formData,
         });
-
         const data = await res.json();
+
         if (data.success) {
           updatedGallery.push(data.url);
+          toast.success(`Gallery image ${file.name} uploaded successfully`);
         } else {
-          console.error("Upload failed:", data.error || data.message);
+          toast.error(data.error || `Failed to upload ${file.name}`);
         }
       } catch (error) {
-        console.error("Image upload error:", error);
+        console.error("Gallery upload error:", error);
+        toast.error(`Error uploading ${file.name}`);
       }
     }
 
-    // Update the state with the new gallery images
     handleProjectChange(projectIndex, "gallery", updatedGallery);
     setUploading(false);
   };
 
-  // Function to remove a gallery image
   const removeGalleryImage = (projectIndex, imgIndex) => {
     const updatedGallery = projects[projectIndex].gallery.filter(
       (_, i) => i !== imgIndex
@@ -130,55 +146,76 @@ export default function ProjectsForm({ user, setUser }) {
     handleProjectChange(projectIndex, "gallery", updatedGallery);
   };
 
-  function handleDragStart(event) {
-    const { active } = event;
+  // New link management functions
+  const addLink = (projectIndex) => {
+    const updated = [...projects];
+    updated[projectIndex].links.push({ type: "", url: "" });
+    setProjects(updated);
+    setUser((prev) => ({ ...prev, projects: updated }));
+  };
 
-    setActiveId(active.id);
-  }
+  const removeLink = (projectIndex, linkIndex) => {
+    const updated = [...projects];
+    updated[projectIndex].links = updated[projectIndex].links.filter(
+      (_, i) => i !== linkIndex
+    );
+    setProjects(updated);
+    setUser((prev) => ({ ...prev, projects: updated }));
+  };
 
-  function handleDragEnd(event) {
+  const handleLinkChange = (projectIndex, linkIndex, field, value) => {
+    const updated = [...projects];
+    updated[projectIndex].links[linkIndex][field] = value;
+    setProjects(updated);
+    setUser((prev) => ({ ...prev, projects: updated }));
+  };
+
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
+  const handleDragEnd = (event) => {
     const { active, over } = event;
-
-    if (active.id !== over.id) {
-      const oldIndex = projects.findIndex(
-        (project) => project._id === active.id
-      );
-      const newIndex = projects.findIndex((project) => project._id === over.id);
+    if (active.id !== over?.id) {
+      const oldIndex = projects.findIndex((_, i) => i === active.id);
+      const newIndex = projects.findIndex((_, i) => i === over.id);
       const updated = arrayMove(projects, oldIndex, newIndex);
       setProjects(updated);
       setUser((prev) => ({ ...prev, projects: updated }));
-
-      return;
     }
-
     setActiveId(null);
-  }
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  };
 
   return (
-    <div className="space-y-4">
+    <div className="relative space-y-4">
+      {/* Full-screen loader during upload */}
+      {uploading && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center text-white">
+            <div className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin" />
+            <p className="mt-4 text-lg">Uploading...</p>
+          </div>
+        </div>
+      )}
+
       <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold">
         Projects
       </h3>
+
       <DndContext
-        onDragEnd={handleDragEnd}
-        onDragStart={handleDragStart}
-        collisionDetection={closestCenter}
         sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={projects}
+          items={projects.map((_, i) => i)}
           strategy={verticalListSortingStrategy}
         >
           {projects.map((project, index) => (
             <Project
-              key={`${project._id}` + index}
+              key={index}
+              id={index}
               project={project}
               index={index}
               handleProjectChange={handleProjectChange}
@@ -186,14 +223,16 @@ export default function ProjectsForm({ user, setUser }) {
               handleGalleryUpload={handleGalleryUpload}
               removeGalleryImage={removeGalleryImage}
               removeProject={removeProject}
+              addLink={addLink}
+              removeLink={removeLink}
+              handleLinkChange={handleLinkChange}
+              uploading={uploading}
             />
           ))}
         </SortableContext>
-        {activeId && (
+        {activeId !== null && (
           <DragOverlay>
-            <SortableItemOverlay
-              project={projects.find((s) => s._id === activeId)}
-            />
+            <SortableItemOverlay project={projects[activeId]} />
           </DragOverlay>
         )}
       </DndContext>
@@ -210,6 +249,7 @@ export default function ProjectsForm({ user, setUser }) {
 }
 
 const Project = ({
+  id,
   project,
   index,
   handleImageUpload,
@@ -217,17 +257,22 @@ const Project = ({
   removeGalleryImage,
   removeProject,
   handleProjectChange,
+  addLink,
+  removeLink,
+  handleLinkChange,
+  uploading,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: project._id });
+    useSortable({ id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
   return (
     <div ref={setNodeRef} style={style}>
-      <div className="border p-4 rounded gap-4 flex relative justify-between">
+      <div className="border border-[#141414] p-4 rounded-tl-md rounded-tr-md gap-4 flex relative justify-between">
         <div
           className="inline-flex items-center cursor-grab"
           {...listeners}
@@ -236,43 +281,24 @@ const Project = ({
           <GoGrabber size={24} />
         </div>
         <div className="w-full uppercase">{project.title}</div>
-        <p
-          className="cursor-pointer"
-          onClick={() => {
-            setExpanded(!expanded);
-          }}
-        >
+        <p className="cursor-pointer" onClick={() => setExpanded(!expanded)}>
           {expanded ? <GoChevronUp /> : <GoChevronDown />}
         </p>
       </div>
       {expanded && (
-        <div
-          key={index}
-          className="bg-[#141414] p-4 rounded gap-4 flex flex-col md:flex-row relative"
-        >
+        <div className="bg-[#141414] p-4 rounded-bl-md rounded-br-md gap-4 flex flex-col relative">
+          {/* Project Image */}
           <div className="mb-2 relative">
             <Label className="block font-medium mb-1">Project Image</Label>
             <div className="relative inline-block">
-              {project.img && (
+              {project.img ? (
                 <div className="w-40 h-40">
                   <img
                     src={project.img}
-                    alt="Icon"
+                    alt="Project image"
                     className="w-full h-full object-cover rounded-xl"
                   />
                 </div>
-              )}
-
-              {project.img ? (
-                <label className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
-                  <CiCamera className="text-gray-700 p-1" size={40} />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, index, "img")}
-                    className="hidden"
-                  />
-                </label>
               ) : (
                 <label className="w-40 h-40 flex items-center justify-center bg-gray-200 rounded-3xl cursor-pointer">
                   <GoUpload className="text-gray-500" size={24} />
@@ -280,14 +306,28 @@ const Project = ({
                     type="file"
                     accept="image/*"
                     onChange={(e) => handleImageUpload(e, index, "img")}
+                    disabled={uploading}
+                    className="hidden"
+                  />
+                </label>
+              )}
+              {project.img && (
+                <label className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
+                  <CiCamera className="text-gray-700 p-1" size={40} />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, index, "img")}
+                    disabled={uploading}
                     className="hidden"
                   />
                 </label>
               )}
             </div>
           </div>
-          {/* Title & Description */}
-          <div className="w-full md:max-w-[600px]">
+
+          {/* Title, Description, Gallery, Links */}
+          <div className="w-full">
             <div className="mb-2">
               <Label className="block font-medium">Project Title</Label>
               <input
@@ -299,7 +339,6 @@ const Project = ({
                 className="border border-gray-300 rounded w-full px-3 py-2"
               />
             </div>
-
             <div className="mt-2">
               <Label className="block font-medium">Project Description</Label>
               <textarea
@@ -311,46 +350,133 @@ const Project = ({
                 className="border border-gray-300 rounded w-full px-3 py-2"
               />
             </div>
-            {/* Gallery Upload */}
+
+            {/* Gallery */}
             <div className="mt-2">
               <Label className="block font-medium">Gallery Images</Label>
-
-              {/* Gallery Image Previews */}
-              {project.gallery.length > 0 && (
-                <div className="flex flex-wrap gap-4 mt-4">
-                  {project.gallery.map((img, imgIndex) => (
-                    <div key={imgIndex} className="relative w-20 h-20">
-                      <img
-                        src={img}
-                        alt="Gallery"
-                        className="w-20 h-20 object-cover rounded"
-                      />
-                      <button
-                        type="button"
-                        className="absolute -top-2 -right-2 bg-red-600/40 hover:bg-red-600 text-white w-6 h-6 rounded-full text-xs cursor-pointer"
-                        onClick={() => removeGalleryImage(index, imgIndex)}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                  <label className="block text-center text-xs bg-[#414141] text-white px-3 flex items-center justify-center md:py-1 mt-1 rounded hover:bg-blue-700 cursor-pointer w-20 h-20">
-                    + <br />
-                    Add <br />
-                    Image
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={(e) => handleGalleryUpload(e, index)}
-                      className="block w-full border px-3 py-2 cursor-pointer hidden"
+              <div className="flex flex-wrap gap-4 mt-4">
+                {project.gallery.map((img, imgIndex) => (
+                  <div key={imgIndex} className="relative w-20 h-20">
+                    <img
+                      src={img}
+                      alt={`Gallery image ${imgIndex + 1}`}
+                      className="w-20 h-20 object-cover rounded"
                     />
-                  </label>
-                </div>
-              )}
+                    <button
+                      type="button"
+                      className="absolute -top-2 -right-2 bg-red-600/40 hover:bg-red-600 text-white w-6 h-6 rounded-full text-xs cursor-pointer"
+                      onClick={() => removeGalleryImage(index, imgIndex)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                <label className="block text-center text-xs bg-[#414141] text-white px-3 flex items-center justify-center md:py-1 rounded hover:bg-black cursor-pointer w-20 h-20">
+                  + <br />
+                  Add <br />
+                  Image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => handleGalleryUpload(e, index)}
+                    disabled={uploading}
+                    className="block w-full border px-3 py-2 cursor-pointer hidden"
+                  />
+                </label>
+              </div>
+            </div>
+
+            {/* Links */}
+            <div className="mt-4">
+              <Label className="block font-medium">Project Links</Label>
+              <div className="space-y-2 mt-2">
+                {project.links.map((link, linkIndex) => (
+                  <div key={linkIndex} className="flex gap-2 items-center">
+                    <div className="w-1/3">
+                      <Label className="sr-only">Type</Label>
+                      <select
+                        value={link.type}
+                        onChange={(e) =>
+                          handleLinkChange(
+                            index,
+                            linkIndex,
+                            "type",
+                            e.target.value
+                          )
+                        }
+                        className="border border-gray-300 rounded w-full px-3 py-2"
+                      >
+                        <option value="">Select Type</option>
+                        {[
+                          "github",
+                          "gitlab",
+                          "bitbucket",
+                          "live",
+                          "figma",
+                          "adobexd",
+                          "sketch",
+                          "youtube",
+                          "vimeo",
+                          "dribbble",
+                          "behance",
+                          "instagram",
+                          "codepen",
+                          "codesandbox",
+                          "replit",
+                          "playstore",
+                          "appstore",
+                          "download",
+                          "website",
+                        ].map((type) => (
+                          <option
+                            key={type}
+                            value={type}
+                            className="capitalize"
+                          >
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex-grow">
+                      <Label className="sr-only">URL</Label>
+                      <input
+                        type="text"
+                        value={link.url}
+                        onChange={(e) =>
+                          handleLinkChange(
+                            index,
+                            linkIndex,
+                            "url",
+                            e.target.value
+                          )
+                        }
+                        className="border border-gray-300 rounded w-full px-3 py-2"
+                        placeholder="https://example.com"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeLink(index, linkIndex)}
+                      className="text-red-600 hover:underline cursor-pointer"
+                    >
+                      <CiTrash size={20} />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => addLink(index)}
+                  className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-3 py-1 rounded hover:bg-blue-700 cursor-pointer mt-2"
+                >
+                  + Add Link
+                </button>
+              </div>
             </div>
           </div>
 
+          {/* Remove Project */}
           <button
             type="button"
             onClick={() => removeProject(index)}
@@ -368,11 +494,11 @@ function SortableItemOverlay({ project }) {
   return (
     <div className="p-4 border rounded shadow z-20">
       <div>
-        <label className="block font-medium mb-1">{project.site}</label>
+        <label className="block font-medium mb-1">{project.title}</label>
         <input
           type="text"
-          value={project.site}
-          disabled // so user can't type into the floating item
+          value={project.title}
+          disabled
           className="border border-gray-300 rounded w-full px-3 py-2"
         />
       </div>

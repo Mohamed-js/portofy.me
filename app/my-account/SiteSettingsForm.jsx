@@ -1,5 +1,7 @@
 "use client";
 
+import Label from "@/components/Label";
+
 export default function SiteSettingsForm({ user, setUser }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -7,40 +9,46 @@ export default function SiteSettingsForm({ user, setUser }) {
   };
 
   return (
-    <form className="space-y-4">
-      <h3 className="text-lg font-bold">Site Settings</h3>
+    <div className="space-y-6">
+      <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold">
+        Site Settings
+      </h3>
+
+      {/* Theme */}
       <div>
-        <label className="block font-medium mb-1">Theme</label>
+        <Label htmlFor="theme">Theme</Label>
         <select
+          id="theme"
           name="theme"
           value={user.theme || "minimal"}
           onChange={handleChange}
           className="border border-gray-300 rounded w-full px-3 py-2"
         >
-          <option value="minimal" className="bg-black">
-            Minimal
-          </option>
-          <option value="modern" className="bg-black">
-            Modern
-          </option>
-          <option value="classic" className="bg-black">
-            Classic
-          </option>
+          <option value="minimal">Minimal</option>
+          <option value="modern">Modern</option>
+          <option value="classic">Classic</option>
         </select>
       </div>
+
+      {/* Custom Domain */}
       <div>
-        <label className="block font-medium mb-1">Custom Domain</label>
+        <Label htmlFor="customDomain">Custom Domain</Label>
         <input
+          id="customDomain"
           name="customDomain"
           type="text"
           value={user.customDomain || ""}
           onChange={handleChange}
+          placeholder="e.g., yourdomain.com"
           className="border border-gray-300 rounded w-full px-3 py-2"
         />
       </div>
+
+      {/* Plan */}
       <div>
-        <label className="block font-medium mb-1">Plan</label>
+        <Label htmlFor="plan">Plan</Label>
         <select
+          id="plan"
           name="plan"
           value={user.plan || "free"}
           onChange={handleChange}
@@ -50,6 +58,6 @@ export default function SiteSettingsForm({ user, setUser }) {
           <option value="pro">Pro</option>
         </select>
       </div>
-    </form>
+    </div>
   );
 }

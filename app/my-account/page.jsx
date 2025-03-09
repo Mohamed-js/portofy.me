@@ -5,21 +5,33 @@ import { notFound } from "next/navigation";
 import Content from "./Content";
 
 export default async function MyAccount() {
-  await dbConnect();
-  const cookieStore = await cookies();
+  try {
+    await dbConnect();
+    const cookieStore = await cookies();
+    const userId = cookieStore.get("userId")?.value;
 
-  const userId = cookieStore.get("userId");
-  if (!userId) {
-    notFound();
-  }
-  const user = await User.findById(userId.value);
-  if (!user) {
-    notFound();
-  }
+    if (!userId) {
+      notFound();
+    }
 
-  return (
-    <div>
-      <Content initialUser={JSON.stringify(user)} />
-    </div>
-  );
+    const user = await User.findById(userId).select("-password").lean();
+    if (!user) {
+      notFound();
+    }
+
+    // Convert MongoDB _id to string and remove sensitive fields
+    const sanitizedUser = {
+      ...user,
+      _id: user._id.toString(),
+    };
+
+    return (
+      <div>
+        <Content initialUser={JSON.stringify(sanitizedUser)} />
+      </div>
+    );
+  } catch (error) {
+    console.error("Error loading MyAccount:", error);
+    notFound(); // Or redirect to an error page if preferred
+  }
 }
