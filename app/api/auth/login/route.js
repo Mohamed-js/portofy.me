@@ -47,6 +47,7 @@ export async function POST(req) {
       secure: process.env.NODE_ENV === "production", // HTTPS in production
       sameSite: "strict", // CSRF protection
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      sameSite: "lax",
     });
 
     return NextResponse.json({

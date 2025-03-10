@@ -41,7 +41,11 @@ export default function PersonalInfoForm({ user, setUser }) {
       const data = await res.json();
 
       if (data.success) {
-        setUser((prev) => ({ ...prev, [field]: data.url }));
+        setUser((prev) => ({
+          ...prev,
+          [field]: data.url,
+          storageUsed: data.storageUsed,
+        }));
         if (field === "avatar") setAvatarPreview(data.url);
         if (field === "cover") setCoverPreview(data.url);
         toast.success(

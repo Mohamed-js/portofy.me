@@ -117,6 +117,7 @@ const UserSchema = new mongoose.Schema(
       default: "minimal",
     },
     customDomain: String,
+    domainVerified: { type: Boolean, default: false },
     bio: String,
     seoMeta: {
       title: { type: String, default: "John Doe | Software Engineer" },
@@ -126,8 +127,18 @@ const UserSchema = new mongoose.Schema(
       },
       keywords: { type: [String], default: [] },
     },
-    plan: { type: String, enum: ["free", "pro"], default: "free" },
     storageUsed: { type: Number, default: 0 },
+    plan: { type: String, enum: ["free", "pro"], default: "free" },
+    stripeCustomerId: String,
+    billingPeriod: {
+      type: String,
+      enum: ["monthly", "annual", null],
+      default: null,
+    },
+    subscriptionEnd: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

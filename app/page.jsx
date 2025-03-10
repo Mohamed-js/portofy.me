@@ -1,33 +1,36 @@
+import AppLayout from "@/components/AppLayout";
 import { Pricing } from "@/components/Pricing";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="">
-      <div className="relative isolate px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl py-32 sm:py-36">
-          <div className="text-center">
-            <h1 className="text-5xl font-semibold tracking-tight text-balance text-white sm:text-7xl">
-              Showcase Your Brilliance Online
-            </h1>
-            <p className="mt-8 text-lg font-medium text-pretty text-gray-300 sm:text-xl/8">
-              Create a stunning portfolio in minutes. Highlight your skills,
-              projects, and experience with ease—no coding required.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link
-                href="/signup"
-                className="capitalize w-full max-w-[300px] rounded-full bg-linear-to-bl from-[#e45053] to-[#fd9c46] px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Get started for free
-              </Link>
+    <AppLayout>
+      <div className="">
+        <div className="relative isolate px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl py-32 sm:py-36">
+            <div className="text-center">
+              <h1 className="text-5xl font-semibold tracking-tight text-balance text-white sm:text-7xl">
+                Showcase Your Brilliance Online
+              </h1>
+              <p className="mt-8 text-lg font-medium text-pretty text-gray-300 sm:text-xl/8">
+                Create a stunning portfolio in minutes. Highlight your skills,
+                projects, and experience with ease—no coding required.
+              </p>
+              <div className="mt-10 flex items-center justify-center gap-x-6">
+                <Link
+                  href="/signup"
+                  className="capitalize w-full max-w-[300px] rounded-full bg-linear-to-bl from-[#e45053] to-[#fd9c46] px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Get started for free
+                </Link>
+              </div>
             </div>
           </div>
         </div>
+        <Pricing />
+        <ContactUs />
       </div>
-      <Pricing />
-      <ContactUs />
-    </div>
+    </AppLayout>
   );
 }
 

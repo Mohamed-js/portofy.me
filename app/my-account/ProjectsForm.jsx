@@ -88,6 +88,10 @@ export default function ProjectsForm({ user, setUser }) {
 
       if (data.success) {
         handleProjectChange(projectIndex, field, data.url);
+        setUser((prev) => ({
+          ...prev,
+          storageUsed: data.storageUsed,
+        }));
         toast.success("Project image uploaded successfully");
       } else {
         toast.error(data.error || "Upload failed");
@@ -125,6 +129,10 @@ export default function ProjectsForm({ user, setUser }) {
 
         if (data.success) {
           updatedGallery.push(data.url);
+          setUser((prev) => ({
+            ...prev,
+            storageUsed: data.storageUsed,
+          }));
           toast.success(`Gallery image ${file.name} uploaded successfully`);
         } else {
           toast.error(data.error || `Failed to upload ${file.name}`);

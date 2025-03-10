@@ -88,6 +88,7 @@ export function Pricing() {
             </p>
             <ul className="text-left text-gray-300 space-y-3 mb-8">
               <li>Unlimited Visitors</li>
+              <li>Unlimited Projects</li>
               <li>Animated Page</li>
               <li>QR Code Access</li>
               <li>All Themes</li>

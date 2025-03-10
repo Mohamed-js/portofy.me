@@ -19,10 +19,17 @@ export default async function MyAccount() {
       notFound();
     }
 
-    // Convert MongoDB _id to string and remove sensitive fields
+    const effectivePlan =
+      user.plan === "pro" &&
+      user.subscriptionEnd &&
+      new Date(user.subscriptionEnd) > new Date()
+        ? "pro"
+        : "free";
+
     const sanitizedUser = {
       ...user,
       _id: user._id.toString(),
+      effectivePlan, // Add this to user object
     };
 
     return (

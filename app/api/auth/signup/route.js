@@ -1,42 +1,52 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
 export async function POST(req) {
-  if (req.method !== "POST") {
-    return NextResponse.json(
-      { success: false, error: "Method not allowed" },
-      { status: 405 }
-    );
-  }
-
   try {
     await dbConnect();
-    const { firstName, lastName, email, password, phone, username } =
-      await req.json();
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      phone,
+      username,
+      plan = "free",
+      billingPeriod,
+      confirm_password,
+    } = await req.json();
 
-    // Basic input validation
-    if (!firstName || !lastName || !email || !password || !username) {
+    // Validation
+    if (password !== confirm_password) {
       return NextResponse.json(
-        { success: false, error: "All required fields must be provided" },
+        { success: false, message: "Passwords don't match" },
+        { status: 400 }
+      );
+    }
+    if (!/^[a-zA-Z0-9._-]{3,}$/.test(username)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Username must be at least 3 characters (letters, numbers, ._- only)",
+        },
+        { status: 400 }
+      );
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid email format" },
         { status: 400 }
       );
     }
 
-    // Check for existing user
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
       return NextResponse.json(
-        {
-          success: false,
-          error:
-            existingUser.email === email
-              ? "Email already in use"
-              : "Username already taken",
-        },
-        { status: 409 }
+        { success: false, message: "User already exists" },
+        { status: 400 }
       );
     }
 
@@ -48,32 +58,42 @@ export async function POST(req) {
       password: hashedPassword,
       phone,
       username,
+      plan,
+      billingPeriod: plan === "pro" ? billingPeriod : null,
+      subscriptionEnd:
+        plan === "pro"
+          ? new Date(
+              Date.now() +
+                (billingPeriod === "annual" ? 365 : 30) * 24 * 60 * 60 * 1000
+            )
+          : null,
     });
 
-    // Set secure cookie
-    const cookieStore = await cookies();
-    cookieStore.set("userId", user._id, {
-      httpOnly: true, // Prevents client-side JS access
-      secure: process.env.NODE_ENV === "production", // Only HTTPS in production
-      sameSite: "strict", // CSRF protection
-      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-    });
-
-    return NextResponse.json({
+    // Set cookie in response
+    const response = NextResponse.json({
       success: true,
       message: "User registered successfully",
       data: { userId: user._id, username: user.username },
     });
+    response.cookies.set("userId", user._id.toString(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      sameSite: "lax",
+    });
+
+    return response;
   } catch (error) {
     console.error("Signup error:", error);
     if (error.name === "ValidationError") {
       return NextResponse.json(
-        { success: false, error: error.message },
+        { success: false, message: error.message },
         { status: 400 }
       );
     }
     return NextResponse.json(
-      { success: false, error: "Server error. Please try again later." },
+      { success: false, message: "Server error. Please try again later." },
       { status: 500 }
     );
   }

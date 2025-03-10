@@ -77,6 +77,10 @@ export default function SocialLinksForm({ user, setUser }) {
 
       if (data.success) {
         handleLinkChange(index, "icon", data.url);
+        setUser((prev) => ({
+          ...prev,
+          storageUsed: data.storageUsed,
+        }));
         toast.success("Icon uploaded successfully");
       } else {
         toast.error(data.error || "Upload failed");

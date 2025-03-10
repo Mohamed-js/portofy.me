@@ -77,6 +77,10 @@ export default function SkillsForm({ user, setUser }) {
 
       if (data.success) {
         handleSkillChange(idx, "image", data.url);
+        setUser((prev) => ({
+          ...prev,
+          storageUsed: data.storageUsed,
+        }));
         toast.success("Skill image uploaded successfully");
       } else {
         toast.error(data.error || "Upload failed");
