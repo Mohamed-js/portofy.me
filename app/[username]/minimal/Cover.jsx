@@ -6,7 +6,21 @@ import {
   FaXTwitter,
   FaGithub,
   FaBehance,
-  FaChevronRight,
+  FaLink,
+  FaChevronDown,
+  FaGitlab,
+  FaBitbucket,
+  FaYoutube,
+  FaVimeo,
+  FaTiktok,
+  FaTwitch,
+  FaMedium,
+  FaStackOverflow,
+  FaPinterest,
+  FaSoundcloud,
+  FaSpotify,
+  FaPatreon,
+  FaLocationArrow,
 } from "react-icons/fa6";
 
 const Cover = ({ user }) => {
@@ -22,63 +36,93 @@ const Cover = ({ user }) => {
     behance: FaBehance,
     facebook: FaLinkedin,
     linkedin: FaFacebookF,
-    Dribbble: FaDribbble,
-    Instagram: FaInstagram,
-    X: FaXTwitter,
-    Twitter: FaXTwitter, // Fallback for older "Twitter" labels
+    dribbble: FaDribbble,
+    instagram: FaInstagram,
+    twitter: FaXTwitter,
+    gitlab: FaGitlab,
+    bitbucket: FaBitbucket,
+    youtube: FaYoutube,
+    vimeo: FaVimeo,
+    tiktok: FaTiktok,
+    twitch: FaTwitch,
+    medium: FaMedium,
+    stackoverflow: FaStackOverflow,
+    pinterest: FaPinterest,
+    soundcloud: FaSoundcloud,
+    spotify: FaSpotify,
+    patreon: FaPatreon,
+    website: FaLocationArrow,
   };
 
   return (
-    <div
-      className="relative bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${user.cover})` }}
-    >
-      <div className="absolute inset-0 z-20 bg-gradient-to-r from-gray-900/80 to-gray-700/80 bg-cover bg-center bg-no-repeat"></div>
-
-      <div className="container relative z-30 flex items-center justify-center mx-auto max-w-7xl min-h-screen">
+    <div className="relative p-4">
+      <div className="relative w-full h-50 md:h-100 bg-gray-200 rounded-xl md:rounded-3xl ">
+        <div className="h-full rounded-lg md:rounded-3xl overflow-hidden">
+          <img
+            alt="Cover photo"
+            className="w-full h-full object-cover"
+            src={user.cover}
+          />
+        </div>
+        <img
+          src={avatar}
+          className="h-30 rounded-full sm:h-56 z-10 mx-auto -translate-y-20 md:-translate-y-30 border-5 md:border-6 border-[#242424]"
+          alt={`${user.username}'s avatar`}
+        />
+      </div>
+      {/* sadasdasd */}
+      <div className="container relative z-30 flex max-w-7xl mt-16 md:mt-32 justify-center pb-10">
         <div className="flex flex-col items-center justify-center lg:flex-row">
-          <div className="rounded-full border-8 border-[#e45053] shadow-xl">
-            <img
-              src={avatar}
-              className="h-48 rounded-full sm:h-56 scale-x-[-1]"
-              alt={`${user.username}'s avatar`}
-            />
-          </div>
-          <div className="pt-8 sm:pt-10 lg:pl-8 lg:pt-0 text-center lg:text-left">
+          <div className="text-center">
             <h1 className="font-header text-4xl text-white sm:text-5xl md:text-6xl">
               Hello, I'm {name}!
             </h1>
-            <div className="flex flex-col justify-center pt-3 sm:flex-row sm:pt-5 lg:justify-start">
+            <div className="text-center mt-2 mb-6 md:mt-4 md:mb-8">
+              <p className="max-w-xl mx-auto text-lg">{user.bio}</p>
+            </div>
+            <hr className="py-2 md:hidden" />
+            <div className="flex flex-col items-center justify-center pt-3 ">
               <div className="flex items-center justify-center pl-0 sm:justify-start md:pl-1">
-                <p className="font-body text-lg uppercase text-white">
-                  Let's connect
-                </p>
-                <div className="hidden sm:block ml-2">
-                  <FaChevronRight />
+                <div className="font-body text-lg uppercase text-white flex flex-col items-center justify-center">
+                  <span>Let's connect</span>
+
+                  <FaChevronDown className="animate-bounce mt-4" />
                 </div>
               </div>
-              <div className="flex items-center justify-center pt-5 md:pl-2 sm:justify-start sm:pt-0 ml-4">
+              <div className="flex flex-wrap max-w-[300px] gap-6 items-center justify-center mt-10">
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
                   return (
                     <a
                       key={index}
-                      href={url}
-                      className={`pl-${index !== 0 ? 4 : 0}`}
+                      href={
+                        url
+                          ? url.startsWith("http")
+                            ? url
+                            : "https://" + url
+                          : "#"
+                      }
                       aria-label={site}
+                      target="_blank"
                     >
-                      {!icon ? (
+                      {IconComponent ? (
+                        <IconComponent
+                          size={34}
+                          className="text-2xl text-white hover:text-yellow-300"
+                        />
+                      ) : icon ? (
                         <img
                           src={icon}
-                          className="w-6 h-6 text-white hover:text-yellow-300"
+                          className="w-8 h-8 object-contain text-white hover:text-yellow-300 rounded-full border-3 hover:border-yellow-300"
                           alt={`${site} icon`}
                         />
-                      ) : IconComponent ? (
-                        <IconComponent className="text-2xl text-white hover:text-yellow-300" />
                       ) : (
-                        <span className="text-2xl text-white hover:text-yellow-300">
-                          {site}
-                        </span>
+                        <>
+                          <FaLink
+                            size={34}
+                            className="text-2xl text-white hover:text-yellow-300"
+                          />
+                        </>
                       )}
                     </a>
                   );

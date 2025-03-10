@@ -4,6 +4,7 @@ import User from "@/models/User";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import Cover from "./minimal/Cover"; // Import the client component
+import Navbar from "./minimal/Navbar";
 
 export default async function Portfolio({ params }) {
   await dbConnect();
@@ -35,6 +36,7 @@ export default async function Portfolio({ params }) {
 
   return (
     <>
+      <Navbar user={user} />
       <Cover user={user} />
     </>
   );

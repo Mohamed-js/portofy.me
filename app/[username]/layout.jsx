@@ -2,7 +2,7 @@
 export default async function PortfolioLayout({ children, params }) {
   return (
     <html lang="en" className="!p-0">
-      <body className={`min-h-screen`}>
+      <body>
         <div className="relative">
           <div
             aria-hidden="true"

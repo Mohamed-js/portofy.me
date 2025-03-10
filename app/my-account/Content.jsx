@@ -20,7 +20,7 @@ export default function Content({ initialUser }) {
   const [activeTab, setActiveTab] = useState(
     searchParams.get("tab") || "personal"
   );
-  const effectivePlan = user.effectivePlan || "free"; // From MyAccount
+  const effectivePlan = user.effectivePlan || "free";
 
   // Sync tab with URL
   useEffect(() => {
