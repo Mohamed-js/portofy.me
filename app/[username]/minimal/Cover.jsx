@@ -80,7 +80,7 @@ const Cover = ({ user }) => {
         <div className="flex flex-col items-center justify-center lg:flex-row">
           <div className="text-center">
             <h1
-              className="font-header text-4xl text-white sm:text-5xl md:text-6xl"
+              className="font-header text-4xl text-white sm:text-5xl md:text-6xl capitalize"
               data-aos="fade-left"
               data-aos-duration={2000}
             >

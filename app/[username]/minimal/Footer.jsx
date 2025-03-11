@@ -25,7 +25,8 @@ export default function Footer({ user }) {
               href={`/@${user.username}`}
               className="text-lg font-semibold text-white hover:text-[#fd9c46] transition-colors duration-200"
             >
-              {user.firstName} {user.lastName}
+              {user.firstName[0].toUpperCase() + user.firstName.substring(1)}{" "}
+              {user.lastName[0].toUpperCase() + user.lastName.substring(1)}
             </Link>
           )}
 
@@ -33,7 +34,11 @@ export default function Footer({ user }) {
             © {new Date().getFullYear()}{" "}
             {effectivePlan === "free"
               ? "Portofy.me"
-              : `${user.firstName} ${user.lastName}`}
+              : `${
+                  user.firstName[0].toUpperCase() + user.firstName.substring(1)
+                } ${
+                  user.lastName[0].toUpperCase() + user.lastName.substring(1)
+                }`}
             . All rights reserved.
           </p>
         </div>

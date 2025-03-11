@@ -27,7 +27,8 @@ const Navbar = async ({ user }) => {
             <div className="w-10 h-10 relative rounded-full overflow-hidden">
               <Image src={user.avatar} alt={user.firstName} fill />
             </div>
-            {user.firstName} {user.lastName}
+            {user.firstName[0].toUpperCase() + user.firstName.substring(1)}{" "}
+            {user.lastName[0].toUpperCase() + user.lastName.substring(1)}
           </Link>
         )}
 

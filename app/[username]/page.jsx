@@ -49,19 +49,25 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: `${user.firstName} ${user.lastName}`,
+    title: `${user.firstName[0].toUpperCase() + user.firstName.substring(1)} ${
+      user.lastName[0].toUpperCase() + user.lastName.substring(1)
+    }`,
     description: user.bio,
     icons: {
       icon: user.avatar,
     },
     openGraph: {
-      title: `${user.firstName} ${user.lastName}`,
+      title: `${
+        user.firstName[0].toUpperCase() + user.firstName.substring(1)
+      } ${user.lastName[0].toUpperCase() + user.lastName.substring(1)}`,
       description: user.bio,
       images: [user.avatar],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${user.firstName} ${user.lastName}`,
+      title: `${
+        user.firstName[0].toUpperCase() + user.firstName.substring(1)
+      } ${user.lastName[0].toUpperCase() + user.lastName.substring(1)}`,
       description: user.bio,
       images: [user.avatar],
     },
