@@ -24,7 +24,6 @@ import {
 } from "react-icons/fa6";
 
 const Cover = ({ user }) => {
-  //   const backgroundImage = "/assets/bg-hero.jpg"; // Static, adjust if dynamic
   const avatar = user.avatar;
   const name =
     `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.username;
@@ -56,8 +55,12 @@ const Cover = ({ user }) => {
 
   return (
     <div className="relative p-4">
-      <div className="relative w-full h-50 md:h-100 bg-gray-200 rounded-xl md:rounded-3xl ">
-        <div className="h-full rounded-lg md:rounded-3xl overflow-hidden">
+      <div className="relative w-full h-50 md:h-100 rounded-xl md:rounded-3xl ">
+        <div
+          className="h-full rounded-lg md:rounded-3xl overflow-hidden"
+          data-aos="fade-down"
+          data-aos-duration={1000}
+        >
           <img
             alt="Cover photo"
             className="w-full h-full object-cover"
@@ -68,30 +71,49 @@ const Cover = ({ user }) => {
           src={avatar}
           className="h-30 rounded-full sm:h-56 z-10 mx-auto -translate-y-20 md:-translate-y-30 border-5 md:border-6 border-[#242424]"
           alt={`${user.username}'s avatar`}
+          data-aos="fade-in"
+          data-aos-delay={1200}
         />
       </div>
       {/* sadasdasd */}
       <div className="container relative z-30 flex max-w-7xl mt-16 md:mt-32 justify-center pb-10">
         <div className="flex flex-col items-center justify-center lg:flex-row">
           <div className="text-center">
-            <h1 className="font-header text-4xl text-white sm:text-5xl md:text-6xl">
+            <h1
+              className="font-header text-4xl text-white sm:text-5xl md:text-6xl"
+              data-aos="fade-left"
+              data-aos-duration={2000}
+            >
               Hello, I'm {name}!
             </h1>
             <div className="text-center mt-2 mb-6 md:mt-4 md:mb-8">
-              <p className="max-w-xl mx-auto text-lg">{user.bio}</p>
+              <p
+                className="max-w-xl mx-auto text-lg text-balance"
+                data-aos="fade-up"
+                data-aos-duration={2000}
+              >
+                {user.bio}
+              </p>
             </div>
             <hr className="py-2 md:hidden" />
             <div className="flex flex-col items-center justify-center pt-3 ">
               <div className="flex items-center justify-center pl-0 sm:justify-start md:pl-1">
                 <div className="font-body text-lg uppercase text-white flex flex-col items-center justify-center">
-                  <span>Let's connect</span>
+                  <span data-aos="fade-right" data-aos-duration={2000}>
+                    Let's connect
+                  </span>
 
-                  <FaChevronDown className="animate-bounce mt-4" />
+                  <FaChevronDown
+                    className="animate-bounce mt-4"
+                    data-aos="fade-down"
+                    data-aos-dalay={2000}
+                  />
                 </div>
               </div>
               <div className="flex flex-wrap max-w-[300px] gap-6 items-center justify-center mt-10">
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
+                  const time = (index + 2) * 200;
                   return (
                     <a
                       key={index}
@@ -104,6 +126,9 @@ const Cover = ({ user }) => {
                       }
                       aria-label={site}
                       target="_blank"
+                      data-aos="flip-right"
+                      data-aos-delay={time}
+                      data-aos-duration={2000}
                     >
                       {IconComponent ? (
                         <IconComponent

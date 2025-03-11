@@ -1,7 +1,10 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Portofy.me",
+  title: {
+    template: "%s | Portofy.me",
+    default: "Portofy.me", // Default title when no specific title is provided
+  },
   description: "Generating portfolios by us for you!",
 };
 

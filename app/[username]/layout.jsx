@@ -1,7 +1,9 @@
+import Animator from "./animator";
+
 // app/[username]/layout.js
 export default async function PortfolioLayout({ children, params }) {
   return (
-    <html lang="en" className="!p-0">
+    <html lang="en" style={{ padding: "0px !important" }}>
       <body>
         <div className="relative">
           <div
@@ -17,6 +19,7 @@ export default async function PortfolioLayout({ children, params }) {
             />
           </div>
         </div>
+        <Animator />
         <main className="min-h-screen">{children}</main>
         <div className="relative">
           <div

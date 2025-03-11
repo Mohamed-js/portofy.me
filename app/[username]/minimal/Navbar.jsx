@@ -21,7 +21,7 @@ const Navbar = async ({ user }) => {
           </Link>
         ) : (
           <Link
-            href="/@samiha"
+            href={`/@${user.username}`}
             className="font-bold text-sm transition-colors flex gap-2 items-center"
           >
             <div className="w-10 h-10 relative rounded-full overflow-hidden">
@@ -36,9 +36,9 @@ const Navbar = async ({ user }) => {
           <div className="flex items-center gap-4">
             <Link
               href="/signup"
-              className="hover:text-blue-400 transition-colors min-w-fit"
+              className="hover:text-blue-400 transition-colors min-w-fit text-sm"
             >
-              Create free account now!
+              Create free account!
             </Link>
           </div>
         )}
