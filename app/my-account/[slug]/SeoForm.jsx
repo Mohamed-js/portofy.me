@@ -9,7 +9,7 @@ export default function SeoForm({ portfolio, setPortfolio, saving }) {
 
   // Set the liveLink once the component mounts in the browser
   useEffect(() => {
-    const baseUrl = `${window.location.protocol}//${window.location.hostname}${
+    const baseUrl = `${window.location.hostname}${
       window.location.port ? `:${window.location.port}` : ""
     }`;
     setLiveLink(baseUrl);
