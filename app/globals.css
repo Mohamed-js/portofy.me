@@ -24,3 +24,7 @@ option {
   background-color: #242424 !important;
   color: white;
 }
+
+button {
+  cursor: pointer;
+}

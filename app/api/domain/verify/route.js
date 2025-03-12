@@ -1,7 +1,6 @@
-// app/api/domain/verify/route.js
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
-import Portfolio from "@/models/Portfolio"; // Use Portfolio instead of User
+import Portfolio from "@/models/Portfolio";
 import User from "@/models/User";
 import { cookies } from "next/headers";
 import dns from "dns";
@@ -9,10 +8,14 @@ import { promisify } from "util";
 
 const resolveTxt = promisify(dns.resolveTxt);
 
+// Vercel API config (store these in .env)
+const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
+const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID;
+
 export async function POST(req) {
   try {
     await dbConnect();
-    const { domain, portfolioId } = await req.json(); // Add portfolioId
+    const { domain, portfolioId } = await req.json();
     const cookieStore = await cookies();
     const userId = cookieStore.get("userId")?.value;
 
@@ -48,7 +51,6 @@ export async function POST(req) {
       );
     }
 
-    // Find and update the portfolio
     const portfolio = await Portfolio.findOne({
       _id: portfolioId,
       user: userId,
@@ -61,10 +63,9 @@ export async function POST(req) {
     }
 
     portfolio.customDomain = domain;
-    portfolio.domainVerified = false; // Reset until verified
+    portfolio.domainVerified = false;
     await portfolio.save();
 
-    // Generate TXT record
     const txtValue = `portofy-verification-${portfolio._id}`;
     const instructions = {
       type: "TXT",
@@ -73,13 +74,39 @@ export async function POST(req) {
       message: `Add a TXT record to ${domain} with host "_verify.${domain}" and value "${txtValue}"`,
     };
 
-    // Check DNS
     try {
       const records = await resolveTxt(`_verify.${domain}`);
       const isVerified = records.some((record) => record.includes(txtValue));
       if (isVerified) {
         portfolio.domainVerified = true;
         await portfolio.save();
+
+        // Add domain to Vercel
+        const vercelResponse = await fetch(
+          `https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/domains`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${VERCEL_TOKEN}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: domain }),
+          }
+        );
+
+        const vercelData = await vercelResponse.json();
+        if (!vercelResponse.ok) {
+          console.error("Vercel API error:", vercelData);
+          return NextResponse.json(
+            {
+              success: true,
+              verified: true,
+              message: "Domain verified, but failed to add to Vercel",
+            },
+            { status: 200 }
+          );
+        }
+
         return NextResponse.json({ success: true, verified: true });
       }
     } catch (error) {
