@@ -106,6 +106,16 @@ export async function PATCH(req, { params }) {
       }
     }
 
+    if (data.customDomain) {
+      const currentPortfolio = await Portfolio.findById(data._id);
+      if (
+        currentPortfolio &&
+        data.customDomain !== currentPortfolio.customDomain
+      ) {
+        data.domainVerified = false; // Reset verification status
+      }
+    }
+
     // Update the portfolio by _id
     const portfolio = await Portfolio.findOneAndUpdate(
       { _id: data._id },

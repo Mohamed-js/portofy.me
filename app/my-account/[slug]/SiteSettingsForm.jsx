@@ -13,7 +13,17 @@ export default function SiteSettingsForm({ portfolio, setPortfolio, saving }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPortfolio((prev) => ({ ...prev, [name]: value }));
+    if (name === "customDomain" && value !== portfolio.customDomain) {
+      // Reset domainVerified when customDomain changes
+      setPortfolio((prev) => ({
+        ...prev,
+        [name]: value,
+        domainVerified: false, // Reset verification status
+      }));
+      setVerificationInstructions(null); // Clear old instructions
+    } else {
+      setPortfolio((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleVerifyDomain = async () => {

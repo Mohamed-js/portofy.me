@@ -17,6 +17,7 @@ export default async function MyAccount() {
     }
 
     const user = await User.findById(userId).select("-password").lean();
+    console.log(user);
     if (!user) {
       notFound();
     }
