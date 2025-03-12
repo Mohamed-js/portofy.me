@@ -11,10 +11,15 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
   const [uploading, setUploading] = useState(false);
   const [slugError, setSlugError] = useState(""); // Track slug validation error
 
-  const liveLink =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://www.portofy.me";
+  const [liveLink, setLiveLink] = useState("");
+
+  // Set the liveLink once the component mounts in the browser
+  useEffect(() => {
+    const baseUrl = `${window.location.protocol}//${window.location.hostname}${
+      window.location.port ? `:${window.location.port}` : ""
+    }`;
+    setLiveLink(baseUrl);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -201,14 +206,18 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
 
         <div>
           <Label className="text-white">Portfolio Link</Label>
-          <a
-            href={`${liveLink}/${portfolio.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 underline hover:text-blue-700"
-          >
-            {`portofy.me/${portfolio.slug || ""}`}
-          </a>
+          {liveLink && portfolio && (
+            <a
+              href={`${liveLink}/${portfolio.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline hover:text-blue-700"
+            >
+              {`${liveLink.replace(/^https?:\/\//, "")}/${
+                portfolio.slug || ""
+              }`}
+            </a>
+          )}
         </div>
 
         <div>
