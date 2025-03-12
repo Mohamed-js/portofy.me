@@ -1,7 +1,5 @@
-// middleware.js
 import { NextResponse } from "next/server";
 import Portfolio from "@/models/Portfolio";
-import dbConnect from "./lib/db";
 
 export async function middleware(request) {
   const { pathname, host } = request.nextUrl;
@@ -38,3 +36,17 @@ export async function middleware(request) {
 export const config = {
   matcher: ["/((?!api|_next|.*\\..*).*)"],
 };
+
+async function dbConnect() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
+      return mongoose;
+    });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
