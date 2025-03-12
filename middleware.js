@@ -1,3 +1,4 @@
+// middleware.js
 import { NextResponse } from "next/server";
 
 export async function middleware(request) {
@@ -7,24 +8,21 @@ export async function middleware(request) {
 
   console.log("Middleware triggered for:", { pathname, host });
   console.log("Default Domain:", defaultDomain);
+  console.log("Host:", host);
 
   if (host === defaultDomain) {
     console.log("Host is default domain, skipping...");
     return NextResponse.next();
   }
 
-  try {
-    if (pathname === `/custom-domain`) {
-      console.log("Rewriting", pathname, "to / for", host);
-      return NextResponse.rewrite(new URL("/", request.url));
-    }
-
-    console.log("No rewrite needed for:", pathname);
-    return NextResponse.next();
-  } catch (error) {
-    console.error("Middleware error:", error);
-    return NextResponse.next();
+  // Rewrite root path to /custom-domain for custom domains
+  if (pathname === "/" && pathname !== "/custom-domain") {
+    console.log("Rewriting", pathname, "to /custom-domain for", host);
+    return NextResponse.rewrite(new URL("/custom-domain", request.url));
   }
+
+  console.log("No rewrite needed for:", pathname);
+  return NextResponse.next();
 }
 
 export const config = {
