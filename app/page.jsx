@@ -1,8 +1,38 @@
 import AppLayout from "@/components/AppLayout";
 import { Pricing } from "@/components/Pricing";
+import Portfolio from "@/models/Portfolio";
+import { headers } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const defaultDomain =
+    process.env.NEXT_PUBLIC_DEFAULT_DOMAIN || "portofyme.vercel.app";
+  if (host === defaultDomain) {
+    return <LandingPage />;
+  }
+  await dbConnect();
+
+  const portfolio = await Portfolio.findOne({
+    customDomain: host,
+    domainVerified: true,
+  }).lean();
+
+  if (!portfolio) {
+    // If no portfolio matches the custom domain, show an error or redirect
+    return (
+      <div>
+        <h1>Domain Not Found</h1>
+        <p>No portfolio is associated with this domain.</p>
+      </div>
+    );
+  }
+  redirect(`/${portfolio.slug}`);
+}
+
+export function LandingPage() {
   return (
     <AppLayout>
       <div className="">
