@@ -1,5 +1,6 @@
 import AppLayout from "@/components/AppLayout";
 import { Pricing } from "@/components/Pricing";
+import dbConnect from "@/lib/db";
 import Portfolio from "@/models/Portfolio";
 import { headers } from "next/headers";
 import Link from "next/link";
