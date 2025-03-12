@@ -32,7 +32,7 @@ export default async function Home() {
     );
   }
 
-  return <Slug />;
+  redirect(`/${portfolio.slug}`);
 }
 
 export function LandingPage() {
