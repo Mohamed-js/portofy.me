@@ -1,65 +1,32 @@
 import { NextResponse } from "next/server";
-import Portfolio from "@/models/Portfolio";
-import mongoose from "mongoose";
-
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable");
-}
-
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
 
 export async function middleware(request) {
   const { pathname, host } = request.nextUrl;
   const defaultDomain =
     process.env.NEXT_PUBLIC_DEFAULT_DOMAIN || "portofyme.vercel.app";
 
-  console.log("defaultDomain", defaultDomain);
+  console.log("Middleware triggered for:", { pathname, host });
+  console.log("Default Domain:", defaultDomain);
 
   if (host === defaultDomain) {
+    console.log("Host is default domain, skipping...");
     return NextResponse.next();
   }
 
-  // Connect to DB
-  await dbConnect();
+  try {
+    if (pathname === `/custom-domain`) {
+      console.log("Rewriting", pathname, "to / for", host);
+      return NextResponse.rewrite(new URL("/", request.url));
+    }
 
-  // Check if it's a custom domain
-  const portfolio = await Portfolio.findOne({
-    customDomain: host,
-    domainVerified: true,
-  }).lean();
-
-  if (!portfolio) {
-    return NextResponse.next(); // Let it 404 or handle in page
+    console.log("No rewrite needed for:", pathname);
+    return NextResponse.next();
+  } catch (error) {
+    console.error("Middleware error:", error);
+    return NextResponse.next();
   }
-
-  // If path includes the slug, rewrite to root
-  if (pathname === `/${portfolio.slug}`) {
-    return NextResponse.rewrite(new URL("/", request.url));
-  }
-
-  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|.*\\..*).*)"],
+  matcher: ["/((?!api|_next|.*\\..*).*)"], // Match all except API, _next, static files
 };
-
-async function dbConnect() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
-      return mongoose;
-    });
-  }
-  cached.conn = await cached.promise;
-  return cached.conn;
-}
