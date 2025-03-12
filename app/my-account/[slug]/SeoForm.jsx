@@ -1,10 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Label from "@/components/Label";
 
 export default function SeoForm({ portfolio, setPortfolio, saving }) {
   const [keywordInput, setKeywordInput] = useState("");
+  const [liveLink, setLiveLink] = useState("");
+
+  // Set the liveLink once the component mounts in the browser
+  useEffect(() => {
+    const baseUrl = `${window.location.protocol}//${window.location.hostname}${
+      window.location.port ? `:${window.location.port}` : ""
+    }`;
+    setLiveLink(baseUrl);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,9 +74,7 @@ export default function SeoForm({ portfolio, setPortfolio, saving }) {
           )}
         </p>
         <p className="text-green-600 text-sm">
-          portofy.me/@
-          {portfolio.slug?.toLowerCase().replace(/\s+/g, "-") ||
-            "your-username"}
+          {liveLink && portfolio && `${liveLink}/${portfolio.slug}`}
         </p>
         <p className="text-gray-300 max-w-[450px]">
           {truncateText(

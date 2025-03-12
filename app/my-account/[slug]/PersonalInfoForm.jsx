@@ -205,7 +205,7 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
         </div>
 
         <div>
-          <Label className="text-white">Portfolio Link</Label>
+          <Label className="text-white">Live Link</Label>
           {liveLink && portfolio && (
             <a
               href={`${liveLink}/${portfolio.slug}`}
