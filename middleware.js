@@ -8,6 +8,7 @@ export async function middleware(request) {
   const defaultDomain =
     process.env.NEXT_PUBLIC_DEFAULT_DOMAIN || "portofyme.vercel.app";
 
+  console.log("defaultDomain", defaultDomain);
   // Skip if it's the default domain
   if (host === defaultDomain) {
     return NextResponse.next();
@@ -35,5 +36,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: "/:path*", // Apply to all paths
+  matcher: ["/((?!api|_next|.*\\..*).*)"],
 };
