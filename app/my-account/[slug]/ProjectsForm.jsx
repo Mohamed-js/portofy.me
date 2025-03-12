@@ -28,9 +28,9 @@ import { CSS } from "@dnd-kit/utilities";
 import Label from "@/components/Label";
 import { toast } from "react-toastify";
 
-export default function ProjectsForm({ user, setUser }) {
-  const [projects, setProjects] = useState(user.projects || []);
-  const [uploading, setUploading] = useState(false);
+export default function ProjectsForm({ portfolio, setPortfolio, saving }) {
+  const [projects, setProjects] = useState(portfolio.projects || []);
+  const [uploading, setUploading] = useState({}); // Track per-project uploads
   const [activeId, setActiveId] = useState(null);
 
   const sensors = useSensors(
@@ -44,7 +44,7 @@ export default function ProjectsForm({ user, setUser }) {
     const updated = [...projects];
     updated[index][field] = value;
     setProjects(updated);
-    setUser((prev) => ({ ...prev, projects: updated }));
+    setPortfolio((prev) => ({ ...prev, projects: updated }));
   };
 
   const addProject = () => {
@@ -57,13 +57,13 @@ export default function ProjectsForm({ user, setUser }) {
     };
     const updated = [...projects, newProj];
     setProjects(updated);
-    setUser((prev) => ({ ...prev, projects: updated }));
+    setPortfolio((prev) => ({ ...prev, projects: updated }));
   };
 
   const removeProject = (index) => {
     const updated = projects.filter((_, i) => i !== index);
     setProjects(updated);
-    setUser((prev) => ({ ...prev, projects: updated }));
+    setPortfolio((prev) => ({ ...prev, projects: updated }));
   };
 
   const handleImageUpload = async (e, projectIndex, field) => {
@@ -75,7 +75,7 @@ export default function ProjectsForm({ user, setUser }) {
       return;
     }
 
-    setUploading(true);
+    setUploading((prev) => ({ ...prev, [`${projectIndex}-${field}`]: true }));
     const formData = new FormData();
     formData.append("file", file);
 
@@ -88,7 +88,7 @@ export default function ProjectsForm({ user, setUser }) {
 
       if (data.success) {
         handleProjectChange(projectIndex, field, data.url);
-        setUser((prev) => ({
+        setPortfolio((prev) => ({
           ...prev,
           storageUsed: data.storageUsed,
         }));
@@ -100,7 +100,10 @@ export default function ProjectsForm({ user, setUser }) {
       console.error("Image upload error:", error);
       toast.error("An error occurred during upload");
     } finally {
-      setUploading(false);
+      setUploading((prev) => ({
+        ...prev,
+        [`${projectIndex}-${field}`]: false,
+      }));
     }
   };
 
@@ -108,7 +111,7 @@ export default function ProjectsForm({ user, setUser }) {
     const files = e.target.files;
     if (!files.length) return;
 
-    setUploading(true);
+    setUploading((prev) => ({ ...prev, [`${projectIndex}-gallery`]: true }));
     const updatedGallery = [...projects[projectIndex].gallery];
 
     for (let file of files) {
@@ -129,7 +132,7 @@ export default function ProjectsForm({ user, setUser }) {
 
         if (data.success) {
           updatedGallery.push(data.url);
-          setUser((prev) => ({
+          setPortfolio((prev) => ({
             ...prev,
             storageUsed: data.storageUsed,
           }));
@@ -144,7 +147,7 @@ export default function ProjectsForm({ user, setUser }) {
     }
 
     handleProjectChange(projectIndex, "gallery", updatedGallery);
-    setUploading(false);
+    setUploading((prev) => ({ ...prev, [`${projectIndex}-gallery`]: false }));
   };
 
   const removeGalleryImage = (projectIndex, imgIndex) => {
@@ -154,12 +157,11 @@ export default function ProjectsForm({ user, setUser }) {
     handleProjectChange(projectIndex, "gallery", updatedGallery);
   };
 
-  // New link management functions
   const addLink = (projectIndex) => {
     const updated = [...projects];
     updated[projectIndex].links.push({ type: "", url: "" });
     setProjects(updated);
-    setUser((prev) => ({ ...prev, projects: updated }));
+    setPortfolio((prev) => ({ ...prev, projects: updated }));
   };
 
   const removeLink = (projectIndex, linkIndex) => {
@@ -168,14 +170,14 @@ export default function ProjectsForm({ user, setUser }) {
       (_, i) => i !== linkIndex
     );
     setProjects(updated);
-    setUser((prev) => ({ ...prev, projects: updated }));
+    setPortfolio((prev) => ({ ...prev, projects: updated }));
   };
 
   const handleLinkChange = (projectIndex, linkIndex, field, value) => {
     const updated = [...projects];
     updated[projectIndex].links[linkIndex][field] = value;
     setProjects(updated);
-    setUser((prev) => ({ ...prev, projects: updated }));
+    setPortfolio((prev) => ({ ...prev, projects: updated }));
   };
 
   const handleDragStart = (event) => {
@@ -189,24 +191,14 @@ export default function ProjectsForm({ user, setUser }) {
       const newIndex = projects.findIndex((_, i) => i === over.id);
       const updated = arrayMove(projects, oldIndex, newIndex);
       setProjects(updated);
-      setUser((prev) => ({ ...prev, projects: updated }));
+      setPortfolio((prev) => ({ ...prev, projects: updated }));
     }
     setActiveId(null);
   };
 
   return (
     <div className="relative space-y-4">
-      {/* Full-screen loader during upload */}
-      {uploading && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="flex flex-col items-center text-white">
-            <div className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin" />
-            <p className="mt-4 text-lg">Uploading...</p>
-          </div>
-        </div>
-      )}
-
-      <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold">
+      <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold text-white">
         Projects
       </h3>
 
@@ -235,6 +227,7 @@ export default function ProjectsForm({ user, setUser }) {
               removeLink={removeLink}
               handleLinkChange={handleLinkChange}
               uploading={uploading}
+              saving={saving}
             />
           ))}
         </SortableContext>
@@ -248,7 +241,8 @@ export default function ProjectsForm({ user, setUser }) {
       <button
         type="button"
         onClick={addProject}
-        className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+        disabled={saving}
+        className="bg-gradient-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         + Add Project
       </button>
@@ -269,6 +263,7 @@ const Project = ({
   removeLink,
   handleLinkChange,
   uploading,
+  saving,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -280,53 +275,117 @@ const Project = ({
 
   return (
     <div ref={setNodeRef} style={style}>
-      <div className="border border-[#141414] p-4 rounded-tl-md rounded-tr-md gap-4 flex relative justify-between">
+      <div className="border border-[#141414] p-4 rounded-tl-md rounded-tr-md gap-4 flex relative justify-between bg-white/10">
         <div
-          className="inline-flex items-center cursor-grab"
+          className="inline-flex items-center cursor-grab text-white"
           {...listeners}
           {...attributes}
+          aria-label="Drag to reorder"
         >
           <GoGrabber size={24} />
         </div>
-        <div className="w-full uppercase">{project.title}</div>
-        <p className="cursor-pointer" onClick={() => setExpanded(!expanded)}>
+        <div className="w-full uppercase text-white">{project.title}</div>
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-white focus:outline-none"
+          aria-expanded={expanded}
+          aria-controls={`project-details-${index}`}
+        >
           {expanded ? <GoChevronUp /> : <GoChevronDown />}
-        </p>
+        </button>
       </div>
       {expanded && (
-        <div className="bg-[#141414] p-4 rounded-bl-md rounded-br-md gap-4 flex flex-col relative">
+        <div
+          id={`project-details-${index}`}
+          className="bg-[#141414] p-4 rounded-bl-md rounded-br-md gap-4 flex flex-col relative text-white"
+        >
           {/* Project Image */}
           <div className="mb-2 relative">
-            <Label className="block font-medium mb-1">Project Image</Label>
+            <Label
+              htmlFor={`project-img-${index}`}
+              className="block font-medium mb-1"
+            >
+              Project Image
+            </Label>
             <div className="relative inline-block">
               {project.img ? (
                 <div className="w-40 h-40">
                   <img
                     src={project.img}
-                    alt="Project image"
+                    alt={`${project.title} image`}
                     className="w-full h-full object-cover rounded-xl"
                   />
                 </div>
               ) : (
-                <label className="w-40 h-40 flex items-center justify-center bg-gray-200 rounded-3xl cursor-pointer">
-                  <GoUpload className="text-gray-500" size={24} />
+                <label
+                  htmlFor={`project-img-${index}`}
+                  className="w-40 h-40 flex items-center justify-center bg-gray-200 rounded-3xl cursor-pointer"
+                >
+                  {uploading[`${index}-img`] ? (
+                    <svg
+                      className="animate-spin h-5 w-5 text-gray-500"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        className="opacity-25"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                        className="opacity-75"
+                      />
+                    </svg>
+                  ) : (
+                    <GoUpload className="text-gray-500" size={24} />
+                  )}
                   <input
+                    id={`project-img-${index}`}
                     type="file"
                     accept="image/*"
                     onChange={(e) => handleImageUpload(e, index, "img")}
-                    disabled={uploading}
+                    disabled={uploading[`${index}-img`] || saving}
                     className="hidden"
                   />
                 </label>
               )}
               {project.img && (
-                <label className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
-                  <CiCamera className="text-gray-700 p-1" size={40} />
+                <label
+                  htmlFor={`project-img-${index}`}
+                  className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100"
+                >
+                  {uploading[`${index}-img`] ? (
+                    <svg
+                      className="animate-spin h-8 w-8 text-gray-700"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        className="opacity-25"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                        className="opacity-75"
+                      />
+                    </svg>
+                  ) : (
+                    <CiCamera className="text-gray-700 p-1" size={40} />
+                  )}
                   <input
+                    id={`project-img-${index}`}
                     type="file"
                     accept="image/*"
                     onChange={(e) => handleImageUpload(e, index, "img")}
-                    disabled={uploading}
+                    disabled={uploading[`${index}-img`] || saving}
                     className="hidden"
                   />
                 </label>
@@ -337,25 +396,39 @@ const Project = ({
           {/* Title, Description, Gallery, Links */}
           <div className="w-full">
             <div className="mb-2">
-              <Label className="block font-medium">Project Title</Label>
+              <Label
+                htmlFor={`project-title-${index}`}
+                className="block font-medium"
+              >
+                Project Title
+              </Label>
               <input
+                id={`project-title-${index}`}
                 type="text"
                 value={project.title}
                 onChange={(e) =>
                   handleProjectChange(index, "title", e.target.value)
                 }
-                className="border border-gray-300 rounded w-full px-3 py-2"
+                disabled={saving}
+                className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
               />
             </div>
             <div className="mt-2">
-              <Label className="block font-medium">Project Description</Label>
+              <Label
+                htmlFor={`project-desc-${index}`}
+                className="block font-medium"
+              >
+                Project Description
+              </Label>
               <textarea
+                id={`project-desc-${index}`}
                 rows={3}
                 value={project.description}
                 onChange={(e) =>
                   handleProjectChange(index, "description", e.target.value)
                 }
-                className="border border-gray-300 rounded w-full px-3 py-2"
+                disabled={saving}
+                className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
               />
             </div>
 
@@ -367,29 +440,57 @@ const Project = ({
                   <div key={imgIndex} className="relative w-20 h-20">
                     <img
                       src={img}
-                      alt={`Gallery image ${imgIndex + 1}`}
+                      alt={`${project.title} gallery image ${imgIndex + 1}`}
                       className="w-20 h-20 object-cover rounded"
                     />
                     <button
                       type="button"
-                      className="absolute -top-2 -right-2 bg-red-600/40 hover:bg-red-600 text-white w-6 h-6 rounded-full text-xs cursor-pointer"
+                      className="absolute -top-2 -right-2 bg-red-600/40 hover:bg-red-600 text-white w-6 h-6 rounded-full text-xs cursor-pointer disabled:opacity-50"
                       onClick={() => removeGalleryImage(index, imgIndex)}
+                      disabled={saving}
                     >
                       ✕
                     </button>
                   </div>
                 ))}
-                <label className="block text-center text-xs bg-[#414141] text-white px-3 flex items-center justify-center md:py-1 rounded hover:bg-black cursor-pointer w-20 h-20">
-                  + <br />
-                  Add <br />
-                  Image
+                <label
+                  htmlFor={`gallery-upload-${index}`}
+                  className="block text-center text-xs bg-[#414141] text-white px-3 flex items-center justify-center md:py-1 rounded hover:bg-black cursor-pointer w-20 h-20 disabled:opacity-50"
+                >
+                  {uploading[`${index}-gallery`] ? (
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        className="opacity-25"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                        className="opacity-75"
+                      />
+                    </svg>
+                  ) : (
+                    <>
+                      + <br />
+                      Add <br />
+                      Image
+                    </>
+                  )}
                   <input
+                    id={`gallery-upload-${index}`}
                     type="file"
                     accept="image/*"
                     multiple
                     onChange={(e) => handleGalleryUpload(e, index)}
-                    disabled={uploading}
-                    className="block w-full border px-3 py-2 cursor-pointer hidden"
+                    disabled={uploading[`${index}-gallery`] || saving}
+                    className="hidden"
                   />
                 </label>
               </div>
@@ -402,8 +503,14 @@ const Project = ({
                 {project.links.map((link, linkIndex) => (
                   <div key={linkIndex} className="flex gap-2 items-center">
                     <div className="w-1/3">
-                      <Label className="sr-only">Type</Label>
+                      <Label
+                        htmlFor={`link-type-${index}-${linkIndex}`}
+                        className="sr-only"
+                      >
+                        Type
+                      </Label>
                       <select
+                        id={`link-type-${index}-${linkIndex}`}
                         value={link.type}
                         onChange={(e) =>
                           handleLinkChange(
@@ -413,7 +520,8 @@ const Project = ({
                             e.target.value
                           )
                         }
-                        className="border border-gray-300 rounded w-full px-3 py-2"
+                        disabled={saving}
+                        className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
                       >
                         <option value="">Select Type</option>
                         {[
@@ -448,8 +556,14 @@ const Project = ({
                       </select>
                     </div>
                     <div className="flex-grow">
-                      <Label className="sr-only">URL</Label>
+                      <Label
+                        htmlFor={`link-url-${index}-${linkIndex}`}
+                        className="sr-only"
+                      >
+                        URL
+                      </Label>
                       <input
+                        id={`link-url-${index}-${linkIndex}`}
                         type="text"
                         value={link.url}
                         onChange={(e) =>
@@ -460,14 +574,16 @@ const Project = ({
                             e.target.value
                           )
                         }
-                        className="border border-gray-300 rounded w-full px-3 py-2"
+                        disabled={saving}
+                        className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
                         placeholder="https://example.com"
                       />
                     </div>
                     <button
                       type="button"
                       onClick={() => removeLink(index, linkIndex)}
-                      className="text-red-600 hover:underline cursor-pointer"
+                      disabled={saving}
+                      className="text-red-600 hover:underline cursor-pointer disabled:opacity-50"
                     >
                       <CiTrash size={20} />
                     </button>
@@ -476,7 +592,8 @@ const Project = ({
                 <button
                   type="button"
                   onClick={() => addLink(index)}
-                  className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-3 py-1 rounded hover:bg-blue-700 cursor-pointer mt-2"
+                  disabled={saving}
+                  className="bg-gradient-to-bl from-[#e45053] to-[#fd9c46] text-white px-3 py-1 rounded hover:bg-blue-700 cursor-pointer mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   + Add Link
                 </button>
@@ -488,7 +605,8 @@ const Project = ({
           <button
             type="button"
             onClick={() => removeProject(index)}
-            className="p-2 rounded-md hover:underline cursor-pointer absolute top-2 right-3"
+            disabled={saving}
+            className="p-2 rounded-md hover:underline cursor-pointer absolute top-2 right-3 disabled:opacity-50"
           >
             <CiTrash className="text-red-600" size={20} />
           </button>
@@ -500,14 +618,14 @@ const Project = ({
 
 function SortableItemOverlay({ project }) {
   return (
-    <div className="p-4 border rounded shadow z-20">
+    <div className="p-4 border rounded shadow z-20 bg-white/10 text-white">
       <div>
         <label className="block font-medium mb-1">{project.title}</label>
         <input
           type="text"
           value={project.title}
           disabled
-          className="border border-gray-300 rounded w-full px-3 py-2"
+          className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80"
         />
       </div>
     </div>

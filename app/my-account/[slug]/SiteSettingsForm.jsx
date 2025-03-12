@@ -22,7 +22,10 @@ export default function SiteSettingsForm({ portfolio, setPortfolio, saving }) {
       const res = await fetch("/api/domain/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ domain: portfolio.customDomain }),
+        body: JSON.stringify({
+          domain: portfolio.customDomain,
+          portfolioId: portfolio._id,
+        }),
       });
       const result = await res.json();
       if (result.success) {
@@ -48,6 +51,11 @@ export default function SiteSettingsForm({ portfolio, setPortfolio, saving }) {
       <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold text-white">
         Site Settings
       </h3>
+
+      {/* Type */}
+      <p className="capitalize mb-4">
+        <Label>App Type: {portfolio.type.split("-").join(" ")}</Label>
+      </p>
 
       {/* Theme */}
       <div>

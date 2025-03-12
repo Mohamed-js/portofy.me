@@ -41,10 +41,14 @@ export default function Content({ initialPortfolio }) {
         if (!res.ok) {
           const errorData = await res.json();
           if (res.status === 409) {
-            throw new Error(errorData.message || "Slug already taken");
+            throw new Error(
+              errorData.message || errorData.error || "Slug already taken"
+            );
           } else if (res.status === 403) {
             throw new Error(
-              errorData.message || "Upgrade to Pro to save these changes"
+              errorData.message ||
+                errorData.error ||
+                "Upgrade to Pro to save these changes"
             );
           }
           throw new Error(errorData.message || "Failed to save changes");

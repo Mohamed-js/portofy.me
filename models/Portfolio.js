@@ -17,6 +17,8 @@ const PortfolioSchema = new mongoose.Schema(
       index: true,
     },
     title: String, // e.g., "John's Developer Portfolio"
+    subTitle: String, // e.g., "Software Engineer"
+    description: String,
     cover: String, // Cover image URL
     avatar: String, // Override user's avatar if needed
     socialLinks: [
@@ -24,10 +26,29 @@ const PortfolioSchema = new mongoose.Schema(
         site: {
           type: String,
           enum: [
-            "github", "behance", "facebook", "linkedin", "dribbble", "instagram",
-            "twitter", "gitlab", "bitbucket", "youtube", "vimeo", "tiktok",
-            "twitch", "medium", "devto", "stackoverflow", "pinterest",
-            "soundcloud", "spotify", "patreon", "website", "other", "",
+            "github",
+            "behance",
+            "facebook",
+            "linkedin",
+            "dribbble",
+            "instagram",
+            "twitter",
+            "gitlab",
+            "bitbucket",
+            "youtube",
+            "vimeo",
+            "tiktok",
+            "twitch",
+            "medium",
+            "devto",
+            "stackoverflow",
+            "pinterest",
+            "soundcloud",
+            "spotify",
+            "patreon",
+            "website",
+            "other",
+            "",
           ],
         },
         url: String,
@@ -45,10 +66,26 @@ const PortfolioSchema = new mongoose.Schema(
             type: {
               type: String,
               enum: [
-                "github", "gitlab", "bitbucket", "live", "figma", "adobexd",
-                "sketch", "youtube", "vimeo", "dribbble", "behance", "instagram",
-                "codepen", "codesandbox", "replit", "playstore", "appstore",
-                "download", "website", "",
+                "github",
+                "gitlab",
+                "bitbucket",
+                "live",
+                "figma",
+                "adobexd",
+                "sketch",
+                "youtube",
+                "vimeo",
+                "dribbble",
+                "behance",
+                "instagram",
+                "codepen",
+                "codesandbox",
+                "replit",
+                "playstore",
+                "appstore",
+                "download",
+                "website",
+                "",
               ],
             },
             url: String,
@@ -94,4 +131,5 @@ const PortfolioSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.Portfolio || mongoose.model("Portfolio", PortfolioSchema);
+export default mongoose.models.Portfolio ||
+  mongoose.model("Portfolio", PortfolioSchema);

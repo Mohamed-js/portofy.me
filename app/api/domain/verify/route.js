@@ -1,9 +1,10 @@
 // app/api/domain/verify/route.js
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
+import Portfolio from "@/models/Portfolio"; // Use Portfolio instead of User
 import User from "@/models/User";
 import { cookies } from "next/headers";
-import dns from "dns"; // Node.js DNS module
+import dns from "dns";
 import { promisify } from "util";
 
 const resolveTxt = promisify(dns.resolveTxt);
@@ -11,7 +12,7 @@ const resolveTxt = promisify(dns.resolveTxt);
 export async function POST(req) {
   try {
     await dbConnect();
-    const { domain } = await req.json();
+    const { domain, portfolioId } = await req.json(); // Add portfolioId
     const cookieStore = await cookies();
     const userId = cookieStore.get("userId")?.value;
 
@@ -47,13 +48,24 @@ export async function POST(req) {
       );
     }
 
-    // Set the custom domain
-    user.customDomain = domain;
-    user.domainVerified = false; // Reset until verified
-    await user.save();
+    // Find and update the portfolio
+    const portfolio = await Portfolio.findOne({
+      _id: portfolioId,
+      user: userId,
+    });
+    if (!portfolio) {
+      return NextResponse.json(
+        { success: false, message: "Portfolio not found" },
+        { status: 404 }
+      );
+    }
 
-    // Generate a unique TXT record value for verification
-    const txtValue = `portofy-verification-${userId}`;
+    portfolio.customDomain = domain;
+    portfolio.domainVerified = false; // Reset until verified
+    await portfolio.save();
+
+    // Generate TXT record
+    const txtValue = `portofy-verification-${portfolio._id}`;
     const instructions = {
       type: "TXT",
       host: `_verify.${domain}`,
@@ -61,13 +73,13 @@ export async function POST(req) {
       message: `Add a TXT record to ${domain} with host "_verify.${domain}" and value "${txtValue}"`,
     };
 
-    // Check DNS (async, we'll poll later)
+    // Check DNS
     try {
       const records = await resolveTxt(`_verify.${domain}`);
       const isVerified = records.some((record) => record.includes(txtValue));
       if (isVerified) {
-        user.domainVerified = true;
-        await user.save();
+        portfolio.domainVerified = true;
+        await portfolio.save();
         return NextResponse.json({ success: true, verified: true });
       }
     } catch (error) {

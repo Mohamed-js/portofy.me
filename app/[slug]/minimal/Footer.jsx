@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import { BottomBlur } from "../BgBlur";
 
 export default function Footer({ portfolio, user }) {
   const effectivePlan =
@@ -13,7 +14,7 @@ export default function Footer({ portfolio, user }) {
 
   return (
     <footer className="w-full border-t border-white/10 py-6 mt-10">
-      <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between md:items-center text-gray-300">
+      <div className="mx-auto px-6 flex flex-col md:flex-row justify-between md:items-center text-gray-300">
         {/* Left: Branding */}
         <div className="mb-4 md:mb-0">
           {effectivePlan === "free" ? (
@@ -28,7 +29,8 @@ export default function Footer({ portfolio, user }) {
               href={`/${portfolio.slug}`}
               className="text-lg font-semibold text-white hover:text-[#fd9c46] transition-colors duration-200"
             >
-              {portfolio.title}
+              {portfolio.title[0].toUpperCase()}
+              {portfolio.title.substring(1)}
             </Link>
           )}
 
@@ -63,6 +65,7 @@ export default function Footer({ portfolio, user }) {
           </nav>
         )}
       </div>
+      <BottomBlur colors={["#e45053", "#fd9c46"]} />
     </footer>
   );
 }

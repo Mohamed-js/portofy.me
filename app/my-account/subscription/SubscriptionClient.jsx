@@ -17,7 +17,7 @@ export default function SubscriptionClient({ initialUser }) {
   const searchParams = useSearchParams();
 
   const effectivePlan = user.effectivePlan || "free";
-  console.log(user);
+
   useEffect(() => {
     if (searchParams.get("success") === "true") {
       toast.success("Upgrade successful! You’re now on Pro.");
@@ -115,7 +115,7 @@ export default function SubscriptionClient({ initialUser }) {
               </p>
               <button
                 onClick={handleManageSubscription}
-                className="mt-4 px-5 py-2.5 text-sm font-semibold text-white bg-gray-700 rounded-md hover:bg-gray-600 transition-all duration-200"
+                className="bg-gradient-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed my-4 transition-all duration-200"
               >
                 Manage Subscription
               </button>

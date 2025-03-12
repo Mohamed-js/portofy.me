@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { TopBlur } from "../BgBlur";
 
 const Navbar = ({ portfolio, user }) => {
   const effectivePlan =
@@ -13,8 +14,9 @@ const Navbar = ({ portfolio, user }) => {
       : "free";
 
   return (
-    <nav className="top-0 left-0 w-full z-50 backdrop-blur-md p-4 md:px-8 text-white">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+    <nav className="top-0 left-0 w-full z-50 backdrop-blur-md p-4 md:px-4 text-white">
+      <TopBlur colors={["#e45053", "#fd9c46"]} />
+      <div className="mx-auto flex items-center justify-between">
         {/* Logo */}
         {effectivePlan === "free" ? (
           <Link
@@ -28,14 +30,15 @@ const Navbar = ({ portfolio, user }) => {
             href={`/${portfolio.slug}`}
             className="font-bold text-sm transition-colors flex gap-2 items-center"
           >
-            <div className="w-10 h-10 relative rounded-full overflow-hidden">
+            <div className="w-10 h-10 relative rounded-md overflow-hidden">
               <Image
                 src={portfolio.avatar || "/default-avatar.png"}
                 alt={portfolio.title}
                 fill
               />
             </div>
-            {portfolio.title}
+            {portfolio.title[0].toUpperCase()}
+            {portfolio.title.substring(1)}
           </Link>
         )}
 

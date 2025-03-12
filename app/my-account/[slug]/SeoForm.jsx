@@ -3,14 +3,14 @@
 import { useState } from "react";
 import Label from "@/components/Label";
 
-export default function SeoForm({ user, setUser }) {
+export default function SeoForm({ portfolio, setPortfolio, saving }) {
   const [keywordInput, setKeywordInput] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name.startsWith("seoMeta.")) {
       const key = name.split(".")[1];
-      setUser((prev) => ({
+      setPortfolio((prev) => ({
         ...prev,
         seoMeta: { ...prev.seoMeta, [key]: value },
       }));
@@ -19,7 +19,7 @@ export default function SeoForm({ user, setUser }) {
 
   const addKeyword = () => {
     if (!keywordInput.trim()) return;
-    setUser((prev) => ({
+    setPortfolio((prev) => ({
       ...prev,
       seoMeta: {
         ...prev.seoMeta,
@@ -30,7 +30,7 @@ export default function SeoForm({ user, setUser }) {
   };
 
   const removeKeyword = (index) => {
-    setUser((prev) => ({
+    setPortfolio((prev) => ({
       ...prev,
       seoMeta: {
         ...prev.seoMeta,
@@ -49,28 +49,30 @@ export default function SeoForm({ user, setUser }) {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold">
+      <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold text-white">
         SEO Meta
       </h3>
 
       {/* SEO Live Preview */}
-      <div className="p-4 border border-gray-200 rounded bg-gray-100">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">
+      <div className="p-4 border border-white/20 rounded bg-white/10">
+        <h4 className="text-sm font-semibold text-gray-300 mb-2">
           Google Search Preview
         </h4>
-        <p className="text-blue-600 text-lg font-medium">
+        <p className="text-blue-500 text-lg font-medium">
           {truncateText(
-            user.seoMeta?.title || user.username || "Your Portfolio",
+            portfolio.seoMeta?.title || portfolio.username || "Your Portfolio",
             titleLimit
           )}
         </p>
-        <p className="text-green-700 text-sm">
+        <p className="text-green-600 text-sm">
           portofy.me/@
-          {user.username?.toLowerCase().replace(/\s+/g, "-") || "your-username"}
+          {portfolio.slug?.toLowerCase().replace(/\s+/g, "-") ||
+            "your-username"}
         </p>
-        <p className="text-gray-700 max-w-[450px]">
+        <p className="text-gray-300 max-w-[450px]">
           {truncateText(
-            user.seoMeta?.description || "A showcase of my work and skills.",
+            portfolio.seoMeta?.description ||
+              "A showcase of my work and skills.",
             descriptionLimit
           )}
         </p>
@@ -78,69 +80,80 @@ export default function SeoForm({ user, setUser }) {
 
       {/* SEO Title */}
       <div>
-        <Label htmlFor="seo-title">SEO Title</Label>
+        <Label htmlFor="seo-title" className="text-white">
+          SEO Title
+        </Label>
         <input
           id="seo-title"
           name="seoMeta.title"
           type="text"
-          value={user.seoMeta?.title || ""}
+          value={portfolio.seoMeta?.title || ""}
           onChange={handleChange}
           maxLength={titleLimit}
-          className="border border-gray-300 rounded w-full px-3 py-2"
+          disabled={saving}
+          className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
         />
-        <p className="text-right text-sm text-gray-500 mt-1">
-          {user.seoMeta?.title?.length || 0}/{titleLimit} characters
+        <p className="text-right text-sm text-gray-400 mt-1">
+          {portfolio.seoMeta?.title?.length || 0}/{titleLimit} characters
         </p>
       </div>
 
       {/* SEO Description */}
       <div>
-        <Label htmlFor="seo-description">SEO Description</Label>
+        <Label htmlFor="seo-description" className="text-white">
+          SEO Description
+        </Label>
         <textarea
           id="seo-description"
           rows={2}
           name="seoMeta.description"
-          value={user.seoMeta?.description || ""}
+          value={portfolio.seoMeta?.description || ""}
           onChange={handleChange}
           maxLength={descriptionLimit}
-          className="border border-gray-300 rounded w-full px-3 py-2"
+          disabled={saving}
+          className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
         />
-        <p className="text-right text-sm text-gray-500 mt-1">
-          {user.seoMeta?.description?.length || 0}/{descriptionLimit} characters
+        <p className="text-right text-sm text-gray-400 mt-1">
+          {portfolio.seoMeta?.description?.length || 0}/{descriptionLimit}{" "}
+          characters
         </p>
       </div>
 
       {/* Keywords Management */}
       <div>
-        <Label>SEO Keywords</Label>
+        <Label className="text-white">SEO Keywords</Label>
         <div className="flex gap-2 mb-2">
           <input
             type="text"
             value={keywordInput}
             onChange={(e) => setKeywordInput(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && addKeyword()}
-            className="border border-gray-300 rounded w-full px-3 py-2"
+            disabled={saving}
+            className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
             placeholder="Enter keyword..."
           />
           <button
             type="button"
             onClick={addKeyword}
-            className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer min-w-fit"
+            disabled={saving}
+            className="bg-gradient-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer min-w-fit disabled:opacity-50 disabled:cursor-not-allowed"
           >
             + Add
           </button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {user.seoMeta?.keywords?.map((keyword, index) => (
+          {portfolio.seoMeta?.keywords?.map((keyword, index) => (
             <span
               key={index}
-              className="bg-linear-to-bl from-[#e45053] to-[#fd9c46] text-white px-3 py-1 rounded-full flex items-center gap-2"
+              className="bg-gradient-to-bl from-[#e45053] to-[#fd9c46] text-white px-3 py-1 rounded-full flex items-center gap-2"
             >
               {keyword}
               <button
                 type="button"
                 onClick={() => removeKeyword(index)}
-                className="text-white hover:text-gray-200 cursor-pointer"
+                disabled={saving}
+                className="text-white hover:text-gray-200 cursor-pointer disabled:opacity-50"
+                aria-label={`Remove ${keyword}`}
               >
                 ✕
               </button>

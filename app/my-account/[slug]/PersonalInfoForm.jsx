@@ -9,6 +9,7 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
   const [avatarPreview, setAvatarPreview] = useState(portfolio.avatar || "");
   const [coverPreview, setCoverPreview] = useState(portfolio.cover || "");
   const [uploading, setUploading] = useState(false);
+  const [slugError, setSlugError] = useState(""); // Track slug validation error
 
   const liveLink =
     process.env.NODE_ENV === "development"
@@ -17,7 +18,23 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPortfolio((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "slug") {
+      // Clean and validate slug
+      const cleanedSlug = value.toLowerCase().replace(/[^a-z0-9-]/g, "");
+      setPortfolio((prev) => ({ ...prev, [name]: cleanedSlug }));
+
+      // Validate slug format
+      if (value && !/^[a-z0-9-]+$/.test(value)) {
+        setSlugError(
+          "Slug must be lowercase, contain only letters, numbers, or hyphens, and no spaces"
+        );
+      } else {
+        setSlugError("");
+      }
+    } else {
+      setPortfolio((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleImageUpload = async (e, field) => {
@@ -64,7 +81,7 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
 
   return (
     <div className="relative">
-      {/* Full-screen loader during upload */}
+      {/* Full-screen loader during upload or saving */}
       {(uploading || saving) && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="flex flex-col items-center text-white">
@@ -133,33 +150,57 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
 
         {/* Portfolio Details */}
         <div>
-          <Label htmlFor="title">Title</Label>
+          <Label htmlFor="title" className="text-white">
+            Title
+          </Label>
           <input
             id="title"
             name="title"
             type="text"
             value={portfolio.title || ""}
             onChange={handleChange}
-            className="border border-gray-300 rounded w-full px-3 py-2"
+            disabled={saving}
+            className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="subTitle" className="text-white">
+            Sub Title
+          </Label>
+          <input
+            id="subTitle"
+            name="subTitle"
+            type="text"
+            value={portfolio.subTitle || ""}
+            onChange={handleChange}
+            disabled={saving}
+            className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
             required
           />
         </div>
 
         <div>
-          <Label htmlFor="slug">Slug</Label>
+          <Label htmlFor="slug" className="text-white">
+            Slug
+          </Label>
           <input
             id="slug"
             name="slug"
             type="text"
             value={portfolio.slug || ""}
             onChange={handleChange}
-            className="border border-gray-300 rounded w-full px-3 py-2"
+            disabled={saving}
+            className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
             required
           />
+          {slugError && (
+            <p className="text-red-400 text-sm mt-1">{slugError}</p>
+          )}
         </div>
 
         <div>
-          <Label>Portfolio Link</Label>
+          <Label className="text-white">Portfolio Link</Label>
           <a
             href={`${liveLink}/${portfolio.slug}`}
             target="_blank"
@@ -171,19 +212,17 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
         </div>
 
         <div>
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description" className="text-white">
+            Description
+          </Label>
           <textarea
             id="description"
-            name="seoMeta.description" // Nested update
+            name="description" // Nested update
             rows={3}
-            value={portfolio.seoMeta?.description || ""}
-            onChange={(e) =>
-              setPortfolio((prev) => ({
-                ...prev,
-                seoMeta: { ...prev.seoMeta, description: e.target.value },
-              }))
-            }
-            className="border border-gray-300 rounded w-full px-3 py-2"
+            value={portfolio.description || ""}
+            onChange={handleChange}
+            disabled={saving}
+            className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
           />
         </div>
       </form>
