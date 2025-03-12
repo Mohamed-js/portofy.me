@@ -1,7 +1,7 @@
 "use client";
 
 import Label from "@/components/Label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiCamera } from "react-icons/ci";
 import { toast } from "react-toastify";
 
