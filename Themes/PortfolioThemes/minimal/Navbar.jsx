@@ -1,11 +1,18 @@
-// app/[slug]/minimal/Navbar.jsx
 "use client";
 
+import { links } from "../menuData";
+import { useState } from "react";
+import MobileMenu from "./MobileMenu";
 import Link from "next/link";
-import Image from "next/image";
-import { TopBlur } from "../../../app/[slug]/BgBlur";
+import { FaBurger } from "react-icons/fa6";
 
 const Navbar = ({ portfolio, user }) => {
+  const [mobileMenu, setMobileMenu] = useState(false);
+
+  const triggerNavItem = (id) => {
+    const element = document.querySelector(id);
+    if (element) element.scrollIntoView({ behavior: "smooth" });
+  };
   const effectivePlan =
     user.plan === "pro" &&
     user.subscriptionEnd &&
@@ -14,47 +21,46 @@ const Navbar = ({ portfolio, user }) => {
       : "free";
 
   return (
-    <nav className="top-0 left-0 w-full z-50 backdrop-blur-md p-4 md:px-4 text-white">
-      <TopBlur colors={["#e45053", "#fd9c46"]} />
-      <div className="mx-auto flex items-center justify-between">
-        {/* Logo */}
-        {effectivePlan === "free" ? (
-          <Link
-            href="/"
-            className="text-lg font-bold hover:text-blue-400 transition-colors"
-          >
-            <Image src="/portofy.webp" alt="logo" height={20} width={100} />
-          </Link>
-        ) : (
-          <Link
-            href={`/${portfolio.slug}`}
-            className="font-bold text-sm transition-colors flex gap-2 items-center"
-          >
-            <div className="w-10 h-10 relative rounded-md overflow-hidden">
-              <Image
-                src={portfolio.avatar || "/default-avatar.png"}
-                alt={portfolio.title}
-                fill
-              />
-            </div>
-            {portfolio.title[0].toUpperCase()}
-            {portfolio.title.substring(1)}
-          </Link>
-        )}
+    <div className="mx-auto px-4  w-full z-50 top-0 py-3 sm:py-5 absolute">
+      <div className="container flex items-center justify-between mx-auto">
+        <div className="text-xl font-semibold text-white">
+          <a href="/">
+            <span className="capitalize">
+              {user.firstName} {user.lastName}
+            </span>{" "}
+            {effectivePlan === "free" && `| `}
+            {effectivePlan === "free" && <Link href="/">Portofy.me</Link>}
+          </a>
+        </div>
 
-        {/* Navigation Links */}
-        {effectivePlan === "free" && (
-          <div className="flex items-center gap-4">
-            <Link
-              href="/signup"
-              className="hover:text-blue-400 transition-colors min-w-fit text-sm"
-            >
-              Create free account!
-            </Link>
-          </div>
-        )}
+        <div className="hidden lg:block">
+          <ul className="flex items-center">
+            {links.map((link) => (
+              <li className="group pl-6" key={link.id}>
+                <span
+                  onClick={() => triggerNavItem(link.id)}
+                  className="cursor-pointer pt-0.5 font-header font-semibold uppercase text-white"
+                >
+                  {link.label}
+                </span>
+                <span className="block h-0.5 w-full bg-transparent group-hover:bg-yellow"></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="block lg:hidden">
+          <button onClick={() => setMobileMenu(true)}>
+            <i className="bx bx-menu text-4xl text-white"></i>
+            <FaBurger size={25} color="white" />
+          </button>
+        </div>
       </div>
-    </nav>
+
+      {mobileMenu && (
+        <MobileMenu links={links} closeMenu={() => setMobileMenu(false)} />
+      )}
+    </div>
   );
 };
 

@@ -1,90 +1,47 @@
-// app/[slug]/minimal/Cover.jsx
 "use client";
 
-import { FaLink, FaChevronDown } from "react-icons/fa6";
+import { FaLink, FaChevronDown, FaChevronRight } from "react-icons/fa6";
 import iconMap from "../../../app/[slug]/IconMap";
 
 const Cover = ({ portfolio }) => {
   const avatar = portfolio.avatar || "https://via.placeholder.com/150";
   const name = portfolio.title || "Untitled Portfolio";
   const socialLinks = portfolio.socialLinks || [];
-  const bio = portfolio.description || ""; // Using seoMeta.description as bio
+  const bio = portfolio.description || "";
 
   return (
-    <div className="relative p-4">
-      <div className="relative w-full h-50 md:h-100 rounded-xl md:rounded-3xl">
-        <div
-          className="h-full rounded-lg md:rounded-3xl overflow-hidden"
-          data-aos="fade-down"
-          data-aos-duration={1000}
-        >
-          <img
-            alt="Cover photo"
-            className="w-full h-full object-cover"
-            src={portfolio.cover || "/assets/default-cover.jpg"}
-          />
-        </div>
-        <img
-          src={avatar}
-          className="h-30 rounded-full sm:h-56 z-10 mx-auto -translate-y-20 md:-translate-y-30 border-5 md:border-6 border-[#242424]"
-          alt={`${portfolio.slug}'s avatar`}
-          data-aos="fade-in"
-          data-aos-delay={1200}
-        />
-      </div>
-      <div className="container relative z-30 flex max-w-7xl mt-16 md:mt-32 justify-center pb-10">
+    <div
+      className="relative bg-cover bg-center bg-no-repeat py-8"
+      style={{ backgroundImage: `url(${portfolio.cover})` }}
+    >
+      <div className="absolute inset-0 z-20 bg-gradient-to-r from-[#5540aed9] to-[#412f90d4] bg-cover bg-center bg-no-repeat"></div>
+
+      <div className="container relative mx-auto z-30 pt-20 pb-12 sm:pt-56 sm:pb-48 lg:pt-64 lg:pb-48">
         <div className="flex flex-col items-center justify-center lg:flex-row">
-          <div className="text-center">
-            <div>
-              <h1
-                className="font-header text-4xl text-white sm:text-5xl md:text-6xl capitalize"
-                data-aos="fade-left"
-                data-aos-duration={2000}
-              >
-                {name}
-              </h1>
-              <p
-                className="font-header text-sm text-gray-400 capitalize mb-4 md:text-xl md:mt-2 md:mb-8"
-                data-aos="fade-right"
-                data-aos-delay={2000}
-                data-aos-duration={2000}
-              >
-                {portfolio.subTitle}
-              </p>
-              <div className="text-center mt-2 mb-6 md:mt-4 md:mb-8">
-                <p
-                  className="max-w-xl mx-auto text-lg text-balance"
-                  data-aos="fade-up"
-                  data-aos-duration={2000}
-                >
-                  {bio}
-                </p>
-              </div>
-            </div>
-            <hr
-              className="py-2 md:hidden"
-              data-aos="fade-in"
-              data-aos-delay={2000}
+          <div className="rounded-full border-8 border-[#5540af] shadow-xl">
+            <img
+              src={avatar}
+              className="h-48 rounded-full sm:h-56"
+              alt="author"
             />
-            <div className="flex flex-col items-center justify-center pt-3">
+          </div>
+          <div className="pt-8 sm:pt-10 lg:pl-8 lg:pt-0">
+            <h1 className="text-center font-header text-4xl text-white sm:text-left sm:text-5xl md:text-6xl">
+              Hello, I&apos;m {name}!
+            </h1>
+            <div className="flex flex-col justify-center pt-3 sm:flex-row sm:pt-5 lg:justify-start">
               <div className="flex items-center justify-center pl-0 sm:justify-start md:pl-1">
-                <div className="font-body text-lg uppercase text-white flex flex-col items-center justify-center">
-                  <span data-aos="fade-right" data-aos-duration={2000}>
-                    Let's connect
-                  </span>
-                  <span
-                    className="animate-bounce mt-4"
-                    data-aos="fade-down"
-                    data-aos-delay={2000}
-                  >
-                    <FaChevronDown />
-                  </span>
+                <p className="font-body text-lg uppercase text-white">
+                  Let&apos;s connect
+                </p>
+                <div className="hidden sm:block mx-4">
+                  <FaChevronRight />
                 </div>
               </div>
-              <div className="flex flex-wrap max-w-[300px] gap-6 items-center justify-center mt-10">
+              <div className="flex items-center justify-center pt-5 md:pl-2 sm:justify-start sm:pt-0">
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
-                  const time = (index + 2) * 200;
+
                   return (
                     <a
                       key={index}
@@ -97,9 +54,6 @@ const Cover = ({ portfolio }) => {
                       }
                       aria-label={site}
                       target="_blank"
-                      data-aos="flip-right"
-                      data-aos-delay={time}
-                      data-aos-duration={2000}
                     >
                       {icon ? (
                         <img

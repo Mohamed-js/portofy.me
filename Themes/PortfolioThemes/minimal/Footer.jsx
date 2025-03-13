@@ -1,8 +1,8 @@
-// app/[slug]/minimal/Footer.jsx
 "use client";
 
+import iconMap from "@/app/[slug]/IconMap";
 import Link from "next/link";
-import { BottomBlur } from "../../../app/[slug]/BgBlur";
+import { FaLink } from "react-icons/fa6";
 
 export default function Footer({ portfolio, user }) {
   const effectivePlan =
@@ -13,7 +13,7 @@ export default function Footer({ portfolio, user }) {
       : "free";
 
   return (
-    <footer className="w-full border-t border-white/10 py-6 mt-10">
+    <footer className="w-full bg-[#5540af] py-6 mt-10">
       <div className="mx-auto px-6 flex flex-col md:flex-row justify-between md:items-center text-gray-300">
         {/* Left: Branding */}
         <div className="mb-4 md:mb-0">
@@ -42,7 +42,7 @@ export default function Footer({ portfolio, user }) {
         </div>
 
         {/* Right: Links */}
-        {effectivePlan === "free" && (
+        {effectivePlan === "free" ? (
           <nav className="flex gap-6">
             <Link
               href="/#pricing"
@@ -63,9 +63,41 @@ export default function Footer({ portfolio, user }) {
               Join Us Now!
             </Link>
           </nav>
+        ) : (
+          portfolio.socialLinks.map(({ site, icon, url }, index) => {
+            const IconComponent = iconMap[site];
+            const time = (index + 2) * 200;
+            return (
+              <a
+                key={index}
+                href={
+                  url ? (url.startsWith("http") ? url : "https://" + url) : "#"
+                }
+                aria-label={site}
+                target="_blank"
+              >
+                {icon ? (
+                  <img
+                    src={icon}
+                    className="w-8 h-8 object-contain text-white hover:text-yellow-300 rounded-full border-3 hover:border-yellow-300"
+                    alt={`${site} icon`}
+                  />
+                ) : IconComponent ? (
+                  <IconComponent
+                    size={34}
+                    className="text-2xl text-white hover:text-yellow-300"
+                  />
+                ) : (
+                  <FaLink
+                    size={34}
+                    className="text-2xl text-white hover:text-yellow-300"
+                  />
+                )}
+              </a>
+            );
+          })
         )}
       </div>
-      <BottomBlur colors={["#e45053", "#fd9c46"]} />
     </footer>
   );
 }
