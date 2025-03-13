@@ -32,12 +32,12 @@ const Cover = ({ portfolio }) => {
             data-aos="fade-in"
             data-aos-delay={1200}
           />
-          <img
-            data-aos="fade-in"
-            data-aos-delay={1200}
-            src="./firering.png"
-            className="!opacity-40 w-full h-43.5 md:h-81 object-contain -translate-y-[130%] translate-x-[5px] md:-translate-y-[121%] md:translate-x-[8px]"
-          />
+          <div>
+            <img
+              src="./firering.png"
+              className="!opacity-60 w-full h-43.5 md:h-81 object-contain -translate-y-[130%] translate-x-[5px] md:-translate-y-[121%] md:translate-x-[8px]"
+            />
+          </div>
         </div>
       </div>
       <div className="container relative z-30 flex max-w-7xl mt-16 md:mt-32 justify-center pb-10">

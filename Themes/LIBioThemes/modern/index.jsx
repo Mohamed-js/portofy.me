@@ -2,14 +2,12 @@ import Cover from "./Cover";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 
-const Minimal = ({ portfolio, user }) => {
+const Modern = ({ portfolio, user }) => {
   return (
-    <>
-      <Navbar portfolio={portfolio} user={user} />
+    <div className="relative">
       <Cover portfolio={portfolio} />
-      <Footer portfolio={portfolio} user={user} />
-    </>
+    </div>
   );
 };
 
-export default Minimal;
+export default Modern;

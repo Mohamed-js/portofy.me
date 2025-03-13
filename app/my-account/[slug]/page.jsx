@@ -45,7 +45,7 @@ export default async function PortfolioEditor({ params, searchParams }) {
     };
 
     return (
-      <div>
+      <div className="p-4">
         <Content initialPortfolio={JSON.stringify(sanitizedPortfolio)} />
       </div>
     );

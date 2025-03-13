@@ -2,7 +2,7 @@ import Cover from "./Cover";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 
-const Minimal = ({ portfolio, user }) => {
+const Flames = ({ portfolio, user }) => {
   return (
     <div className=" max-w-[1280px] mx-auto">
       <Navbar portfolio={portfolio} user={user} />
@@ -12,4 +12,4 @@ const Minimal = ({ portfolio, user }) => {
   );
 };
 
-export default Minimal;
+export default Flames;

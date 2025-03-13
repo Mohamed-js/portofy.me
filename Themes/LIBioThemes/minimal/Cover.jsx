@@ -26,13 +26,13 @@ const Cover = ({ portfolio }) => {
           <div className="md:hidden bg-black/70 absolute inset-0 b"></div>
         </div>
       </div>
-      <div className="container relative z-30 flex max-w-7xl mt-10 md:mt-32 justify-center p-4 pb-10">
+      <div className="container relative z-30 flex max-w-7xl mt-10 md:mt-8 justify-center p-4 pb-10">
         <div className="flex flex-col items-center justify-center lg:flex-row">
           <div className="text-center">
             <div>
               <img
                 src={avatar}
-                className="h-30 rounded-full md:h-56 z-10 mx-auto mb-4 md:border-6 border-[#242424]"
+                className="h-30 rounded-full md:h-50 z-10 mx-auto mb-4 md:border-6 border-[#242424]"
                 alt={`${portfolio.slug}'s avatar`}
                 data-aos="fade-in"
                 data-aos-delay={1200}
@@ -67,7 +67,7 @@ const Cover = ({ portfolio }) => {
               data-aos="fade-in"
               data-aos-delay={2000}
             />
-            <div className="flex flex-col items-center justify-center pt-3">
+            <div className="flex flex-col items-center justify-center pt-2">
               <div className="flex items-center justify-center pl-0 md:justify-start md:pl-1">
                 <div className="font-body text-lg uppercase text-white flex flex-col items-center justify-center">
                   <span data-aos="fade-right" data-aos-duration={2000}>

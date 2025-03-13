@@ -30,7 +30,7 @@ const BottomBlur = ({ colors }) => {
       >
         <img
           src="https://media.tenor.com/I1uKTqRLFyEAAAAM/%CF%86%CF%89%CF%84%CE%B9%CE%AC-%CE%BC.gif"
-          className="w-screen h-screen blur-2 absolute bottom-0 left-0 opacity-40 sm:opacity-30"
+          className="w-screen md:w-[50%] h-screen md:h-[50%] blur-2 absolute bottom-0 right-0 opacity-40 sm:opacity-30"
         />
         <div
           style={{
@@ -41,7 +41,7 @@ const BottomBlur = ({ colors }) => {
             colors[0] || "#e45053"
           }] to-[${
             colors[1] || "#fd9c46"
-          }] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]`}
+          }] opacity-30 sm:right-[calc(50%+16rem)] sm:w-[72.1875rem]`}
         />
       </div>
       <span className="hidden from-[#fd9c46] to-[#e45053]"></span>
