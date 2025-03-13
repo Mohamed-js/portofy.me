@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 
 export default function RootLayout({ children }) {
   return (
-    <>
+    <div>
       <Navbar />
       <div
         aria-hidden="true"
@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
           className="relative left-[calc(50%-11rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-linear-to-tr from-[#e45053] to-[#fd9c46] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
         />
       </div>
-      <div className="mt-24">{children}</div>
+      <div className="mt-24 max-w-[1280px] mx-auto">{children}</div>
       <div className="relative">
         <div
           aria-hidden="true"
@@ -36,6 +36,6 @@ export default function RootLayout({ children }) {
       </div>
       <ToastContainer position="bottom-right" theme="dark" />
       <Footer />
-    </>
+    </div>
   );
 }

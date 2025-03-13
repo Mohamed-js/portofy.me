@@ -111,7 +111,7 @@ const PortfolioSchema = new mongoose.Schema(
     ],
     theme: {
       type: String,
-      enum: ["minimal", "modern", "classic"],
+      enum: ["minimal", "flames", "modern"],
       default: "minimal",
     },
     customDomain: String,
@@ -124,7 +124,7 @@ const PortfolioSchema = new mongoose.Schema(
     type: {
       type: String,
       enum: ["portfolio", "link-in-bio", "custom"], // For future expansion
-      default: "portfolio",
+      default: "link-in-bio",
     },
   },
   { timestamps: true }

@@ -1,9 +1,7 @@
-// app/[slug]/minimal/Navbar.jsx
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
-import { TopBlur } from "../BgBlur";
 
 const Navbar = ({ portfolio, user }) => {
   const effectivePlan =
@@ -14,8 +12,7 @@ const Navbar = ({ portfolio, user }) => {
       : "free";
 
   return (
-    <nav className="top-0 left-0 w-full z-50 backdrop-blur-md p-4 md:px-4 text-white">
-      <TopBlur colors={["#e45053", "#fd9c46"]} />
+    <nav className="hidden md:fixed top-0 left-0 w-full z-50 p-4 md:px-4 text-white">
       <div className="mx-auto flex items-center justify-between">
         {/* Logo */}
         {effectivePlan === "free" ? (
@@ -30,7 +27,7 @@ const Navbar = ({ portfolio, user }) => {
             href={`/${portfolio.slug}`}
             className="font-bold text-sm transition-colors flex gap-2 items-center"
           >
-            <div className="w-10 h-10 relative rounded-md overflow-hidden">
+            <div className="w-10 h-10 relative rounded-full overflow-hidden">
               <Image
                 src={portfolio.avatar || "/default-avatar.png"}
                 alt={portfolio.title}

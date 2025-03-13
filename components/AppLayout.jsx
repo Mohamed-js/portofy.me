@@ -17,7 +17,7 @@ export const metadata = {
 
 export default function AppLayout({ children }) {
   return (
-    <div className={`${poppins.variable}`}>
+    <div className={`${poppins.variable} bg-[#242424]`}>
       <Navbar />
       <div className="relative">
         <div

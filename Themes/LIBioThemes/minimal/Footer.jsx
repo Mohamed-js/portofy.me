@@ -1,8 +1,6 @@
-// app/[slug]/minimal/Footer.jsx
 "use client";
 
 import Link from "next/link";
-import { BottomBlur } from "../BgBlur";
 
 export default function Footer({ portfolio, user }) {
   const effectivePlan =
@@ -13,7 +11,7 @@ export default function Footer({ portfolio, user }) {
       : "free";
 
   return (
-    <footer className="w-full border-t border-white/10 py-6 mt-10">
+    <footer className="fixed bottom-0 left-0 w-full py-3 md:py-6 mt-10">
       <div className="mx-auto px-6 flex flex-col md:flex-row justify-between md:items-center text-gray-300">
         {/* Left: Branding */}
         <div className="mb-4 md:mb-0">
@@ -65,7 +63,6 @@ export default function Footer({ portfolio, user }) {
           </nav>
         )}
       </div>
-      <BottomBlur colors={["#e45053", "#fd9c46"]} />
     </footer>
   );
 }

@@ -3,11 +3,10 @@ import Portfolio from "@/models/Portfolio";
 import User from "@/models/User";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
-import Cover from "./minimal/Cover";
-import Navbar from "./minimal/Navbar";
-import Footer from "./minimal/Footer";
 
-// Utility function to capitalize the first letter of each word
+import LIBioThemer from "../../Themes/LIBioThemes/Themer";
+import PortfolioThemer from "../../Themes/PortfolioThemes/Themer";
+
 function capitalizeTitle(str) {
   if (!str) return str;
   return str
@@ -116,55 +115,14 @@ export default async function PortfolioPage({ params }) {
     notFound();
   }
 
-  // Convert portfolio to plain object
-  const plainPortfolio = {
-    _id: portfolio._id.toString(),
-    user: portfolio.user.toString(),
-    title: portfolio.title || "",
-    subTitle: portfolio.subTitle || "",
-    description: portfolio.description || "",
-    slug: portfolio.slug || "",
-    type: portfolio.type || "portfolio",
-    avatar: portfolio.avatar || "",
-    cover: portfolio.cover || "",
-    socialLinks: portfolio.socialLinks || "",
-    customDomain: portfolio.customDomain || "",
-    domainVerified: portfolio.domainVerified || false,
-    seoMeta: {
-      title: portfolio.seoMeta?.title || "",
-      description: portfolio.seoMeta?.description || "",
-      keywords: portfolio.seoMeta?.keywords || [],
-    },
-    createdAt: new Date(portfolio.createdAt).toISOString(),
-    updatedAt: new Date(portfolio.updatedAt).toISOString(),
-    // Add other fields like projects, experience, etc., if needed
-  };
+  const plainUser = JSON.parse(JSON.stringify(user));
+  const plainPortfolio = JSON.parse(JSON.stringify(portfolio));
 
-  // Convert user to plain object
-  const plainUser = {
-    _id: user._id.toString(),
-    firstName: user.firstName || "",
-    lastName: user.lastName || "",
-    phone: user.phone || "",
-    email: user.email || "",
-    plan: user.plan || "free",
-    billingPeriod: user.billingPeriod || "",
-    subscriptionEnd: user.subscriptionEnd
-      ? new Date(user.subscriptionEnd).toISOString()
-      : null,
-    storageUsed: user.storageUsed || 0,
-    createdAt: new Date(user.createdAt).toISOString(),
-    updatedAt: new Date(user.updatedAt).toISOString(),
-    stripeCustomerId: user.stripeCustomerId || "",
-  };
-
-  return (
-    <>
-      <Navbar portfolio={plainPortfolio} user={plainUser} />
-      <Cover portfolio={plainPortfolio} />
-      <Footer portfolio={plainPortfolio} user={plainUser} />
-    </>
-  );
+  if (plainPortfolio.type === "link-in-bio") {
+    return <LIBioThemer portfolio={plainPortfolio} user={plainUser} />;
+  } else if (plainPortfolio.type === "portfolio") {
+    return <PortfolioThemer portfolio={plainPortfolio} user={plainUser} />;
+  }
 }
 
 export const dynamic = "force-dynamic";

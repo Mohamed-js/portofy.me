@@ -2,7 +2,7 @@
 "use client";
 
 import { FaLink, FaChevronDown } from "react-icons/fa6";
-import iconMap from "../IconMap";
+import iconMap from "../../../app/[slug]/IconMap";
 
 const Cover = ({ portfolio }) => {
   const avatar = portfolio.avatar || "https://via.placeholder.com/150";
@@ -24,13 +24,21 @@ const Cover = ({ portfolio }) => {
             src={portfolio.cover || "/assets/default-cover.jpg"}
           />
         </div>
-        <img
-          src={avatar}
-          className="h-30 rounded-full sm:h-56 z-10 mx-auto -translate-y-20 md:-translate-y-30 border-5 md:border-6 border-[#242424]"
-          alt={`${portfolio.slug}'s avatar`}
-          data-aos="fade-in"
-          data-aos-delay={1200}
-        />
+        <div className="relative">
+          <img
+            src={avatar}
+            className="h-30 rounded-full md:h-56 z-10 mx-auto -translate-y-20 md:-translate-y-30 border-5 md:border-6 border-[#e66a0a6e]"
+            alt={`${portfolio.slug}'s avatar`}
+            data-aos="fade-in"
+            data-aos-delay={1200}
+          />
+          <img
+            data-aos="fade-in"
+            data-aos-delay={1200}
+            src="./firering.png"
+            className="!opacity-40 w-full h-43.5 md:h-81 object-contain -translate-y-[130%] translate-x-[5px] md:-translate-y-[121%] md:translate-x-[8px]"
+          />
+        </div>
       </div>
       <div className="container relative z-30 flex max-w-7xl mt-16 md:mt-32 justify-center pb-10">
         <div className="flex flex-col items-center justify-center lg:flex-row">
@@ -82,7 +90,6 @@ const Cover = ({ portfolio }) => {
                 </div>
               </div>
               <div className="flex flex-wrap max-w-[300px] gap-6 items-center justify-center mt-10">
-                {console.log(socialLinks)}
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
                   const time = (index + 2) * 200;

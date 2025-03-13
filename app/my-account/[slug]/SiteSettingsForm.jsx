@@ -79,11 +79,11 @@ export default function SiteSettingsForm({ portfolio, setPortfolio, saving }) {
           className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
         >
           <option value="minimal">Minimal</option>
+          <option disabled={effectivePlan === "free"} value="flames">
+            Flames
+          </option>
           <option disabled={effectivePlan === "free"} value="modern">
             Modern
-          </option>
-          <option disabled={effectivePlan === "free"} value="classic">
-            Classic
           </option>
         </select>
         {effectivePlan === "free" && (
