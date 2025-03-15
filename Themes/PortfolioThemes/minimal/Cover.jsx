@@ -14,11 +14,11 @@ const Cover = ({ portfolio }) => {
       className="relative bg-cover bg-center bg-no-repeat py-8"
       style={{ backgroundImage: `url(${portfolio.cover})` }}
     >
-      <div className="absolute inset-0 z-20 bg-gradient-to-r from-[#5540aed9] to-[#412f90d4] bg-cover bg-center bg-no-repeat"></div>
+      <div className="absolute inset-0 z-20 bg-gradient-to-b from-[#3f51b552] to-[#3f51b5] bg-cover bg-center bg-no-repeat"></div>
 
-      <div className="container relative mx-auto z-30 pt-20 pb-12 sm:pt-56 sm:pb-48 lg:pt-64 lg:pb-48">
+      <div className="container relative mx-auto z-30 pt-20 pb-12 lg:pt-48 lg:pb-12">
         <div className="flex flex-col items-center justify-center lg:flex-row">
-          <div className="rounded-full border-8 border-[#5540af] shadow-xl">
+          <div className="rounded-full border-8 border-[#03a9f400] shadow-xl">
             <img
               src={avatar}
               className="h-48 rounded-full sm:h-56"
@@ -32,16 +32,15 @@ const Cover = ({ portfolio }) => {
             <div className="flex flex-col justify-center pt-3 sm:flex-row sm:pt-5 lg:justify-start">
               <div className="flex items-center justify-center pl-0 sm:justify-start md:pl-1">
                 <p className="font-body text-lg uppercase text-white">
-                  Let&apos;s connect
+                  {portfolio.socialLinksTitle || "Let&apos;s connect"}
                 </p>
-                <div className="hidden sm:block mx-4">
-                  <FaChevronRight />
+                <div className="hidden sm:block ml-2 mr-4">
+                  <FaChevronRight color="yellow" />
                 </div>
               </div>
-              <div className="flex items-center justify-center pt-5 md:pl-2 sm:justify-start sm:pt-0">
+              <div className="flex items-center justify-center pt-5 md:pl-2 sm:justify-start sm:pt-0 gap-4">
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
-
                   return (
                     <a
                       key={index}

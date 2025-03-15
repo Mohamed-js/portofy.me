@@ -62,6 +62,18 @@ export default function ExperienceForm({ portfolio, setPortfolio, saving }) {
     setPortfolio((prev) => ({ ...prev, experience: updated }));
   };
 
+  const handleTitleChange = (e) => {
+    const { name, value } = e.target;
+
+    setPortfolio((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleActivationChange = (e) => {
+    const { name, checked } = e.target;
+
+    setPortfolio((prev) => ({ ...prev, [name]: checked }));
+  };
+
   return (
     <div>
       <h3 className="text-xl md:text-5xl text-center font-semibold mb-2 text-white">
@@ -70,6 +82,38 @@ export default function ExperienceForm({ portfolio, setPortfolio, saving }) {
       <p className="text-sm md:text-base text-gray-400 font-normal text-center mb-4 md:mb-8">
         (automatically listed in reverse chronological order)
       </p>
+
+      <div className="flex gap-2 items-center mb-2">
+        <Label htmlFor="experienceActivatedInPortfolio" className="text-white">
+          Activated In Portfolio
+        </Label>
+        <input
+          id="experienceActivatedInPortfolio"
+          name="experienceActivatedInPortfolio"
+          type="checkbox"
+          checked={portfolio.experienceActivatedInPortfolio || ""}
+          onChange={handleActivationChange}
+          disabled={saving}
+          className="border border-gray-300 -mt-1 w-5 h-5 rounded px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+          required
+        />
+      </div>
+
+      <div className="mb-2">
+        <Label htmlFor="experienceTitle" className="text-white">
+          Section Title
+        </Label>
+        <input
+          id="experienceTitle"
+          name="experienceTitle"
+          type="text"
+          value={portfolio.experienceTitle || ""}
+          onChange={handleTitleChange}
+          disabled={saving}
+          className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+          required
+        />
+      </div>
 
       <div className="space-y-6">
         {experience.map((exp, idx) => (

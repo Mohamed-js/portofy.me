@@ -1,10 +1,10 @@
+import BgChanger from "./BgChanger";
 import Cover from "./Cover";
-import Footer from "./Footer";
-import Navbar from "./Navbar";
 
 const Modern = ({ portfolio, user }) => {
   return (
     <div className="relative">
+      <BgChanger />
       <Cover portfolio={portfolio} />
     </div>
   );

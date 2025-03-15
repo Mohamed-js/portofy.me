@@ -1,5 +1,3 @@
-// import closeIcon from "/assets/img/icon-close.svg";
-
 const MobileMenu = ({ links, closeMenu }) => {
   const handleNavigation = (id) => {
     const element = document.querySelector(id);
@@ -8,8 +6,8 @@ const MobileMenu = ({ links, closeMenu }) => {
   };
 
   return (
-    <div className="pointer-events-auto fixed inset-0 z-70 min-h-screen bg-black opacity-90 lg:hidden">
-      <div className="absolute right-0 min-h-screen w-2/3 bg-[#5540af] py-4 px-8 shadow md:w-1/3">
+    <div className="pointer-events-auto fixed inset-0 z-70 min-h-screen bg-black lg:hidden">
+      <div className="absolute right-0 min-h-screen w-2/3 bg-[#3f51b5] py-4 px-8 shadow md:w-1/3">
         <button
           className="absolute top-0 right-0 mt-4 mr-4 text-white text-xl"
           onClick={closeMenu}

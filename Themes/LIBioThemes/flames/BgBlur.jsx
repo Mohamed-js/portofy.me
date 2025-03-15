@@ -29,8 +29,8 @@ const BottomBlur = ({ colors }) => {
         className="absolute inset-x-0 bottom-0 -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-50rem)]"
       >
         <img
-          src="https://media.tenor.com/I1uKTqRLFyEAAAAM/%CF%86%CF%89%CF%84%CE%B9%CE%AC-%CE%BC.gif"
-          className="w-screen md:w-[50%] h-screen md:h-[50%] blur-2 absolute bottom-0 right-0 opacity-40 sm:opacity-30"
+          src="https://i.pinimg.com/originals/ef/5e/4b/ef5e4b4d024c66b42311e337ae8ab4cc.gif"
+          className="w-screen h-screen md:h-[50%] blur-2 absolute bottom-0 right-0 opacity-40 sm:opacity-60"
         />
         <div
           style={{

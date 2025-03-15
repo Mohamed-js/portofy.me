@@ -27,16 +27,16 @@ const Cover = ({ portfolio }) => {
         <div className="relative">
           <img
             src={avatar}
-            className="h-30 rounded-full md:h-56 z-10 mx-auto -translate-y-20 md:-translate-y-30 border-5 md:border-6 border-[#e66a0a6e]"
+            className="h-30 rounded-full md:h-56 z-10 mx-auto -translate-y-20 md:-translate-y-30 border-5 md:border-6 shadow-lg border-[#121212]"
             alt={`${portfolio.slug}'s avatar`}
             data-aos="fade-in"
             data-aos-delay={1200}
           />
           <div>
-            <img
+            {/* <img
               src="./firering.png"
               className="!opacity-60 w-full h-43.5 md:h-81 object-contain -translate-y-[130%] translate-x-[5px] md:-translate-y-[121%] md:translate-x-[8px]"
-            />
+            /> */}
           </div>
         </div>
       </div>

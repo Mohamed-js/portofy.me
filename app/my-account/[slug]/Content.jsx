@@ -188,7 +188,7 @@ export default function Content({ initialPortfolio }) {
           { key: "social", label: "Social Links" },
           { key: "projects", label: "Projects" },
           { key: "experience", label: "Experience" },
-          { key: "skills", label: "Skills" },
+          { key: "skills", label: "Skills/Services" },
           { key: "seo", label: "SEO" },
           { key: "settings", label: "Site Settings" },
         ].map(({ key, label }) => (

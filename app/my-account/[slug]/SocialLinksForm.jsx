@@ -109,6 +109,12 @@ export default function SocialLinksForm({ portfolio, setPortfolio, saving }) {
     setActiveId(null);
   };
 
+  const handleTitleChange = (e) => {
+    const { name, value } = e.target;
+
+    setPortfolio((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <div className="relative space-y-4">
       {/* Full-screen loader during upload */}
@@ -122,11 +128,25 @@ export default function SocialLinksForm({ portfolio, setPortfolio, saving }) {
           </div>
         </div>
       )}
-
       <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold">
         Social Links
       </h3>
 
+      <div>
+        <Label htmlFor="socialLinksTitle" className="text-white">
+          SocialLinks CTA
+        </Label>
+        <input
+          id="socialLinksTitle"
+          name="socialLinksTitle"
+          type="text"
+          value={portfolio.socialLinksTitle || ""}
+          onChange={handleTitleChange}
+          disabled={saving}
+          className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+          required
+        />
+      </div>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -156,7 +176,6 @@ export default function SocialLinksForm({ portfolio, setPortfolio, saving }) {
           </DragOverlay>
         )}
       </DndContext>
-
       <button
         type="button"
         onClick={addLink}

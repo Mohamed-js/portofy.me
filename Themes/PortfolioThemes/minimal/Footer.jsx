@@ -13,7 +13,7 @@ export default function Footer({ portfolio, user }) {
       : "free";
 
   return (
-    <footer className="w-full bg-[#5540af] py-6 mt-10">
+    <footer className="w-full bg-[#3f51b5] py-6">
       <div className="mx-auto px-6 flex flex-col md:flex-row justify-between md:items-center text-gray-300">
         {/* Left: Branding */}
         <div className="mb-4 md:mb-0">
@@ -64,38 +64,44 @@ export default function Footer({ portfolio, user }) {
             </Link>
           </nav>
         ) : (
-          portfolio.socialLinks.map(({ site, icon, url }, index) => {
-            const IconComponent = iconMap[site];
-            const time = (index + 2) * 200;
-            return (
-              <a
-                key={index}
-                href={
-                  url ? (url.startsWith("http") ? url : "https://" + url) : "#"
-                }
-                aria-label={site}
-                target="_blank"
-              >
-                {icon ? (
-                  <img
-                    src={icon}
-                    className="w-8 h-8 object-contain text-white hover:text-yellow-300 rounded-full border-3 hover:border-yellow-300"
-                    alt={`${site} icon`}
-                  />
-                ) : IconComponent ? (
-                  <IconComponent
-                    size={34}
-                    className="text-2xl text-white hover:text-yellow-300"
-                  />
-                ) : (
-                  <FaLink
-                    size={34}
-                    className="text-2xl text-white hover:text-yellow-300"
-                  />
-                )}
-              </a>
-            );
-          })
+          <div className="flex gap-4 items-center">
+            {portfolio.socialLinks.map(({ site, icon, url }, index) => {
+              const IconComponent = iconMap[site];
+              const time = (index + 2) * 200;
+              return (
+                <a
+                  key={index}
+                  href={
+                    url
+                      ? url.startsWith("http")
+                        ? url
+                        : "https://" + url
+                      : "#"
+                  }
+                  aria-label={site}
+                  target="_blank"
+                >
+                  {icon ? (
+                    <img
+                      src={icon}
+                      className="w-8 h-8 object-contain text-white hover:text-yellow-300 rounded-full border-3 hover:border-yellow-300"
+                      alt={`${site} icon`}
+                    />
+                  ) : IconComponent ? (
+                    <IconComponent
+                      size={34}
+                      className="text-2xl text-white hover:text-yellow-300"
+                    />
+                  ) : (
+                    <FaLink
+                      size={34}
+                      className="text-2xl text-white hover:text-yellow-300"
+                    />
+                  )}
+                </a>
+              );
+            })}
+          </div>
         )}
       </div>
     </footer>

@@ -18,8 +18,16 @@ const PortfolioSchema = new mongoose.Schema(
     title: String, // e.g., "John's Developer Portfolio"
     subTitle: String, // e.g., "Software Engineer"
     description: String,
+    email: String,
+    phone: String,
     cover: String, // Cover image URL
     avatar: String, // Override user's avatar if needed
+
+    // SOCIAL LINKS
+    socialLinksTitle: {
+      type: String,
+      default: "Let's connect",
+    },
     socialLinks: [
       {
         site: {
@@ -54,6 +62,14 @@ const PortfolioSchema = new mongoose.Schema(
         icon: String, // URL to an image
       },
     ],
+
+    // PROJECTS
+    projectsActivatedInResume: { type: Boolean, default: true },
+    projectsActivatedInPortfolio: { type: Boolean, default: true },
+    projectsTitle: {
+      type: String,
+      default: "Check out my Projects",
+    },
     projects: [
       {
         title: String,
@@ -92,12 +108,28 @@ const PortfolioSchema = new mongoose.Schema(
         ],
       },
     ],
+
+    // SKILLS
+    skillsActivatedInResume: { type: Boolean, default: true },
+    skillsActivatedInPortfolio: { type: Boolean, default: true },
+    skillsTitle: {
+      type: String,
+      default: "Skills I Master",
+    },
     skills: [
       {
         name: String,
         image: String,
       },
     ],
+
+    // EXPERIENCE
+    experienceActivatedInResume: { type: Boolean, default: true },
+    experienceActivatedInPortfolio: { type: Boolean, default: true },
+    experienceTitle: {
+      type: String,
+      default: "My work experience",
+    },
     experience: [
       {
         company: String,

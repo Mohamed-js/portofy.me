@@ -12,7 +12,7 @@ const Cover = ({ portfolio }) => {
 
   return (
     <div className="relative grid md:grid-cols-2 overflow-hidden">
-      <div className="relative w-full md:h-[100vh]">
+      <div className="relative w-full md:w-[50vw] md:h-[100vh]">
         <div
           className="h-full rounded-lg w-screen md:w-[50vw] fixed top-0 left-0 right-0 blur-1"
           data-aos="fade-right"
@@ -23,8 +23,16 @@ const Cover = ({ portfolio }) => {
             className="w-full h-full object-cover"
             src={portfolio.cover || "/assets/default-cover.jpg"}
           />
+
           <div className="md:hidden bg-black/70 absolute inset-0 b"></div>
         </div>
+        <div
+          className="absolute top-0 h-[200vh] right-0 w-40 hidden md:block"
+          style={{
+            background:
+              "linear-gradient(270deg, #242424,rgba(36, 36, 36, 0.78), transparent)",
+          }}
+        ></div>
       </div>
       <div className="container relative z-30 flex max-w-7xl mt-10 md:mt-8 justify-center p-4 pb-10">
         <div className="flex flex-col items-center justify-center lg:flex-row">

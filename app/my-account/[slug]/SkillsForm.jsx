@@ -109,11 +109,55 @@ export default function SkillsForm({ portfolio, setPortfolio, saving }) {
     setActiveId(null);
   };
 
+  const handleTitleChange = (e) => {
+    const { name, value } = e.target;
+
+    setPortfolio((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleActivationChange = (e) => {
+    const { name, checked } = e.target;
+
+    setPortfolio((prev) => ({ ...prev, [name]: checked }));
+  };
+
   return (
     <div className="relative space-y-8">
       <h3 className="text-xl md:text-5xl text-center mb-4 md:mb-8 font-semibold text-white">
-        Skills
+        Skills/Services
       </h3>
+
+      <div className="flex gap-2 items-center">
+        <Label htmlFor="skillsActivatedInPortfolio" className="text-white">
+          Activated In Portfolio
+        </Label>
+        <input
+          id="skillsActivatedInPortfolio"
+          name="skillsActivatedInPortfolio"
+          type="checkbox"
+          checked={portfolio.skillsActivatedInPortfolio || ""}
+          onChange={handleActivationChange}
+          disabled={saving}
+          className="border border-gray-300 -mt-1 w-5 h-5 rounded px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+          required
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="skillsTitle" className="text-white">
+          Section Title
+        </Label>
+        <input
+          id="skillsTitle"
+          name="skillsTitle"
+          type="text"
+          value={portfolio.skillsTitle || ""}
+          onChange={handleTitleChange}
+          disabled={saving}
+          className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+          required
+        />
+      </div>
       <div className="space-y-4">
         <DndContext
           sensors={sensors}
