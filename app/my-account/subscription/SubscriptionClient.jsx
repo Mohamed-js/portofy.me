@@ -2,18 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { loadStripe } from "@stripe/stripe-js";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSearchParams } from "next/navigation";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
 
 export default function SubscriptionClient({ initialUser }) {
   const [user, setUser] = useState(JSON.parse(initialUser));
   const [billingStep, setBillingStep] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selectedBillingPeriod, setSelectedBillingPeriod] = useState(null); // New state
+  const [selectedBillingPeriod, setSelectedBillingPeriod] = useState(null);
   const searchParams = useSearchParams();
 
   const effectivePlan = user.effectivePlan || "free";
@@ -53,38 +49,14 @@ export default function SubscriptionClient({ initialUser }) {
     setBillingStep(true);
   };
 
-  const handleBillingChoice = async (billingPeriod) => {
+  const handleBillingChoice = (billingPeriod) => {
+    setSelectedBillingPeriod(billingPeriod);
     setLoading(true);
-    setSelectedBillingPeriod(billingPeriod); // Track the selected period
-    try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ billingPeriod }),
-      });
-      const { success, sessionId, message } = await res.json();
-
-      if (!success) {
-        throw new Error(message || "Failed to initiate checkout");
-      }
-
-      const stripe = await stripePromise;
-      const { error } = await stripe.redirectToCheckout({ sessionId });
-      if (error) {
-        throw error;
-      }
-    } catch (error) {
-      toast.error(error.message || "Checkout failed");
-      setBillingStep(false);
-      setSelectedBillingPeriod(null); // Reset on failure
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleManageSubscription = async () => {
     try {
-      const res = await fetch("/api/stripe/portal", {
+      const res = await fetch("/api/paypal/portal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -97,6 +69,41 @@ export default function SubscriptionClient({ initialUser }) {
     } catch (error) {
       toast.error(error.message || "Failed to manage subscription");
     }
+  };
+
+  const createSubscription = async (data, actions) => {
+    try {
+      const res = await fetch("/api/paypal/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ billingPeriod: selectedBillingPeriod }),
+      });
+      const { success, planId, message } = await res.json();
+      if (!success) {
+        throw new Error(message || "Failed to create subscription plan");
+      }
+      return actions.subscription.create({
+        plan_id: planId,
+        custom_id: user._id, // Pass user ID for webhook
+      });
+    } catch (error) {
+      toast.error(error.message || "Subscription creation failed");
+      setLoading(false);
+      setSelectedBillingPeriod(null);
+      throw error;
+    }
+  };
+
+  const onApprove = (data, actions) => {
+    setLoading(false);
+    toast.success("Processing your subscription...");
+    window.location.href = "/my-account?tab=settings&success=true";
+  };
+
+  const onError = (err) => {
+    setLoading(false);
+    setSelectedBillingPeriod(null);
+    toast.error(err.message || "Something went wrong with PayPal");
   };
 
   return (
@@ -144,80 +151,98 @@ export default function SubscriptionClient({ initialUser }) {
           )}
         </>
       ) : (
-        <>
-          <h4 className="text-lg font-semibold text-white mb-4">
-            Choose Your Pro Billing
-          </h4>
-          <div className="grid md:grid-cols-2 gap-4">
+        <PayPalScriptProvider
+          options={{ "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID }}
+        >
+          <>
+            <h4 className="text-lg font-semibold text-white mb-4">
+              Choose Your Pro Billing
+            </h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              <button
+                onClick={() => handleBillingChoice("monthly")}
+                disabled={loading}
+                className="px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading && selectedBillingPeriod === "monthly" ? (
+                  <svg
+                    className="animate-spin h-5 w-5 mx-auto"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      className="opacity-25"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                      className="opacity-75"
+                    />
+                  </svg>
+                ) : (
+                  <>
+                    <span className="text-xl font-bold">$8</span>/month
+                  </>
+                )}
+              </button>
+              <button
+                onClick={() => handleBillingChoice("annual")}
+                disabled={loading}
+                className="px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading && selectedBillingPeriod === "annual" ? (
+                  <svg
+                    className="animate-spin h-5 w-5 mx-auto"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      className="opacity-25"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                      className="opacity-75"
+                    />
+                  </svg>
+                ) : (
+                  <>
+                    <span className="text-xl font-bold">$80</span>/year{" "}
+                    <span className="text-[#e45053]">(Save ~17%)</span>
+                  </>
+                )}
+              </button>
+            </div>
+            {selectedBillingPeriod && (
+              <div className="mt-4">
+                <PayPalButtons
+                  createSubscription={createSubscription}
+                  onApprove={onApprove}
+                  onError={onError}
+                  style={{ layout: "vertical" }}
+                />
+              </div>
+            )}
             <button
-              onClick={() => handleBillingChoice("monthly")}
-              disabled={loading}
-              className="px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => {
+                setBillingStep(false);
+                setSelectedBillingPeriod(null);
+                setLoading(false);
+              }}
+              className="mt-4 w-full px-5 py-2.5 text-sm font-semibold text-white bg-gray-700 rounded-md hover:bg-gray-600 transition-all duration-200"
             >
-              {loading && selectedBillingPeriod === "monthly" ? (
-                <svg
-                  className="animate-spin h-5 w-5 mx-auto"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    className="opacity-25"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
-                    className="opacity-75"
-                  />
-                </svg>
-              ) : (
-                <>
-                  <span className="text-xl font-bold">$9</span>/month
-                </>
-              )}
+              Back
             </button>
-            <button
-              onClick={() => handleBillingChoice("annual")}
-              disabled={loading}
-              className="px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading && selectedBillingPeriod === "annual" ? (
-                <svg
-                  className="animate-spin h-5 w-5 mx-auto"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    className="opacity-25"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
-                    className="opacity-75"
-                  />
-                </svg>
-              ) : (
-                <>
-                  <span className="text-xl font-bold">$90</span>/year{" "}
-                  <span className="text-[#e45053]">(Save ~17%)</span>
-                </>
-              )}
-            </button>
-          </div>
-          <button
-            onClick={() => setBillingStep(false)}
-            className="mt-4 w-full px-5 py-2.5 text-sm font-semibold text-white bg-gray-700 rounded-md hover:bg-gray-600 transition-all duration-200"
-          >
-            Back
-          </button>
-        </>
+          </>
+        </PayPalScriptProvider>
       )}
     </div>
   );

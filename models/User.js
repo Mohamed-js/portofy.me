@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema(
     password: String,
     plan: { type: String, enum: ["free", "pro"], default: "free" },
     stripeCustomerId: String,
+    paypalSubscriptionId: String,
     billingPeriod: {
       type: String,
       enum: ["monthly", "annual", null],

@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import { cookies } from "next/headers";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
   try {
@@ -20,23 +17,20 @@ export async function POST(request) {
     }
 
     const user = await User.findById(userId);
-    if (!user || user.plan !== "pro") {
+    if (!user || user.plan !== "pro" || !user.paypalSubscriptionId) {
       return NextResponse.json(
         { success: false, message: "No active subscription" },
         { status: 404 }
       );
     }
 
-    const session = await stripe.billingPortal.sessions.create({
-      customer: user.stripeCustomerId, // Add this field to User schema
-      return_url: `${request.headers.get("origin")}/my-account?tab=settings`,
-    });
-
-    return NextResponse.json({ success: true, url: session.url });
+    // Redirect to PayPal's subscription management page (no API session like Stripe)
+    const manageUrl = `https://www.paypal.com/myaccount/autopay/`; // General link; user logs in to manage
+    return NextResponse.json({ success: true, url: manageUrl });
   } catch (error) {
-    console.error("Stripe portal error:", error);
+    console.error("PayPal portal error:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to create portal session" },
+      { success: false, message: "Failed to redirect to portal" },
       { status: 500 }
     );
   }
