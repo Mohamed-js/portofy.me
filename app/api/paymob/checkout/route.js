@@ -14,7 +14,10 @@ async function getPaymobToken() {
     body: JSON.stringify({ api_key: PAYMOB_API_KEY }),
   });
   const data = await response.json();
-  if (!response.ok) throw new Error("Failed to get Paymob token");
+  if (!response.ok)
+    throw new Error(
+      "Failed to get Paymob token: " + (data.message || "Unknown error")
+    );
   return data.token;
 }
 
@@ -24,7 +27,9 @@ async function getExchangeRate() {
   );
   const data = await response.json();
   if (data.result !== "success")
-    throw new Error("Failed to fetch exchange rate");
+    throw new Error(
+      "Failed to fetch exchange rate: " + (data.error || "Unknown error")
+    );
   return data.conversion_rates.EGP;
 }
 
@@ -66,6 +71,7 @@ export async function POST(request) {
     const amountCents = amountEGP * 100;
 
     const token = await getPaymobToken();
+    const uniqueId = `${userId}_${billingPeriod}_${Date.now()}`;
 
     const orderResponse = await fetch(`${PAYMOB_API_BASE}/ecommerce/orders`, {
       method: "POST",
@@ -74,21 +80,27 @@ export async function POST(request) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        merchant_id: process.env.PAYMOB_MERCHANT_ID,
+        auth_token: token,
+        delivery_needed: false,
         amount_cents: amountCents,
         currency: "EGP",
         items: [
           {
             name: `Pro ${billingPeriod} Plan`,
             amount_cents: amountCents,
+            description: `Subscription for ${userId}`,
             quantity: 1,
           },
         ],
-        merchant_order_id: `${userId}_${billingPeriod}`, // Pass userId and billingPeriod
+        merchant_order_id: uniqueId,
       }),
     });
     const orderData = await orderResponse.json();
-    if (!orderResponse.ok) throw new Error("Failed to create order");
+    if (!orderResponse.ok || orderData.message) {
+      throw new Error(
+        "Failed to create order: " + (orderData.message || "Unknown error")
+      );
+    }
     const orderId = orderData.id;
 
     const integrationId =
@@ -105,29 +117,40 @@ export async function POST(request) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          integration_id: integrationId,
+          auth_token: token,
+          amount_cents: amountCents,
+          expiration: 30600,
           order_id: orderId,
           billing_data: {
             email: user.email || "test@example.com",
             first_name: user.name?.split(" ")[0] || "Test",
             last_name: user.name?.split(" ")[1] || "User",
             phone_number: user.phone || "+201234567890",
+            floor: "NA",
+            apartment: "NA",
+            street: "NA",
+            building: "NA",
+            city: "NA",
             country: "EG",
           },
-          amount_cents: amountCents,
           currency: "EGP",
+          integration_id: integrationId,
         }),
       }
     );
     const paymentData = await paymentKeyResponse.json();
-    if (!paymentKeyResponse.ok) throw new Error("Failed to get payment key");
+    if (!paymentKeyResponse.ok) {
+      throw new Error(
+        "Failed to get payment key: " + (paymentData.message || "Unknown error")
+      );
+    }
     const paymentKey = paymentData.token;
 
     return NextResponse.json({ success: true, paymentKey, orderId, amountEGP });
   } catch (error) {
     console.error("Paymob checkout error:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to create payment" },
+      { success: false, message: error.message || "Failed to create payment" },
       { status: 500 }
     );
   }
