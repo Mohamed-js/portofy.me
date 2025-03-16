@@ -216,7 +216,7 @@ export default function ProjectsForm({ portfolio, setPortfolio, saving }) {
 
       <div className="flex gap-2 items-center">
         <Label htmlFor="projectsActivatedInPortfolio" className="text-white">
-          Activated In Portfolio
+          Activate In Portfolio
         </Label>
         <input
           id="projectsActivatedInPortfolio"

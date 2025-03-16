@@ -1,4 +1,3 @@
-// app/my-account/[slug]/Content.jsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -21,10 +20,11 @@ export default function Content({ initialPortfolio }) {
   const [activeTab, setActiveTab] = useState(
     searchParams.get("tab") || "personal"
   );
-  const effectivePlan = portfolio.effectivePlan; // From initialPortfolio, not searchParams
+  const effectivePlan = portfolio.effectivePlan;
+  const portfolioType = portfolio.type;
 
   useEffect(() => {
-    const newUrl = `?tab=${activeTab}`; // No effectivePlan in URL
+    const newUrl = `?tab=${activeTab}`;
     router.replace(newUrl, { scroll: false });
   }, [activeTab, router]);
 
@@ -72,38 +72,46 @@ export default function Content({ initialPortfolio }) {
     setActiveTab(tab);
   };
 
-  const isProOnlyTab = (tab) =>
-    ["projects", "experience", "skills", "seo"].includes(tab);
+  // Define restricted tabs based on plan and type
+  const isRestrictedTab = (tab) => {
+    const socialLinksRestrictedTabs = ["skills", "experience", "projects"];
+    if (effectivePlan === "free") {
+      if (tab === "seo") return true; // SEO is restricted on free plan for both types
+      if (
+        portfolioType === "social-links" &&
+        socialLinksRestrictedTabs.includes(tab)
+      )
+        return true;
+    } else if (effectivePlan === "pro") {
+      if (
+        portfolioType === "social-links" &&
+        socialLinksRestrictedTabs.includes(tab)
+      )
+        return true;
+    }
+    return false;
+  };
 
   const renderTabContent = () => {
-    if (portfolio.type === "social-links" && isProOnlyTab(activeTab)) {
+    if (isRestrictedTab(activeTab)) {
       return (
         <div className="p-6 text-center text-gray-300">
           <p className="text-lg">
-            Projects, Experience, Skills, and SEO are not available for Social
-            Links apps.
+            {effectivePlan === "free" && activeTab === "seo"
+              ? "SEO settings are available with an active Pro subscription."
+              : "This feature is not available for Social Links apps."}
           </p>
           <button
-            onClick={() => setActiveTab("social")}
+            onClick={() =>
+              effectivePlan === "free" && activeTab === "seo"
+                ? router.push("/my-account/subscription")
+                : setActiveTab("social")
+            }
             className="mt-4 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-bl from-[#e45053] to-[#fd9c46] rounded-md hover:bg-blue-700 transition-all duration-200"
           >
-            Back to Social Links
-          </button>
-        </div>
-      );
-    }
-
-    if (effectivePlan === "free" && isProOnlyTab(activeTab)) {
-      return (
-        <div className="p-6 text-center text-gray-300">
-          <p className="text-lg">
-            This feature is available with an active Pro subscription.
-          </p>
-          <button
-            onClick={() => router.push("/my-account/subscription")}
-            className="mt-4 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-bl from-[#e45053] to-[#fd9c46] rounded-md hover:bg-blue-700 transition-all duration-200"
-          >
-            Upgrade to Pro
+            {effectivePlan === "free" && activeTab === "seo"
+              ? "Upgrade to Pro"
+              : "Back to Social Links"}
           </button>
         </div>
       );
@@ -199,23 +207,19 @@ export default function Content({ initialPortfolio }) {
             className={`cursor-pointer min-w-fit px-3 py-1 rounded-full transition-colors ${
               activeTab === key
                 ? "bg-gradient-to-bl from-[#e45053] to-[#fd9c46] text-white"
-                : effectivePlan === "free" && isProOnlyTab(key)
+                : isRestrictedTab(key)
                 ? "text-gray-500 cursor-not-allowed"
                 : "text-gray-300 hover:text-white"
             }`}
             onClick={() => handleTabChange(key)}
-            disabled={
-              (effectivePlan === "free" && isProOnlyTab(key)) ||
-              (portfolio.type === "social-links" && isProOnlyTab(key))
-            }
+            disabled={isRestrictedTab(key)}
           >
             {label}
-            {(effectivePlan === "free" || portfolio.type === "social-links") &&
-              isProOnlyTab(key) && (
-                <span className="ml-1 text-xs text-[#e45053]">
-                  {portfolio.type === "social-links" ? "(N/A)" : "(Pro)"}
-                </span>
-              )}
+            {isRestrictedTab(key) && (
+              <span className="ml-1 text-xs text-[#e45053]">
+                {effectivePlan === "free" && key === "seo" ? "(Pro)" : "(N/A)"}
+              </span>
+            )}
           </button>
         ))}
       </nav>

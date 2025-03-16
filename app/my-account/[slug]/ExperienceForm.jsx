@@ -85,7 +85,7 @@ export default function ExperienceForm({ portfolio, setPortfolio, saving }) {
 
       <div className="flex gap-2 items-center mb-2">
         <Label htmlFor="experienceActivatedInPortfolio" className="text-white">
-          Activated In Portfolio
+          Activate In Portfolio
         </Label>
         <input
           id="experienceActivatedInPortfolio"

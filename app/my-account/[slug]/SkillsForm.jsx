@@ -129,7 +129,7 @@ export default function SkillsForm({ portfolio, setPortfolio, saving }) {
 
       <div className="flex gap-2 items-center">
         <Label htmlFor="skillsActivatedInPortfolio" className="text-white">
-          Activated In Portfolio
+          Activate In Portfolio
         </Label>
         <input
           id="skillsActivatedInPortfolio"
