@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSearchParams } from "next/navigation";
 
 export default function SubscriptionClient({ initialUser }) {
@@ -10,6 +9,8 @@ export default function SubscriptionClient({ initialUser }) {
   const [billingStep, setBillingStep] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedBillingPeriod, setSelectedBillingPeriod] = useState(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [exchangeRate, setExchangeRate] = useState(null);
   const searchParams = useSearchParams();
 
   const effectivePlan = user.effectivePlan || "free";
@@ -19,7 +20,19 @@ export default function SubscriptionClient({ initialUser }) {
       toast.success("Upgrade successful! You’re now on Pro.");
       fetchUserData();
     }
+    fetchExchangeRate();
   }, [searchParams]);
+
+  const fetchExchangeRate = async () => {
+    try {
+      const res = await fetch("/api/paymob/exchange-rate");
+      const data = await res.json();
+      if (data.success) setExchangeRate(data.rate);
+    } catch (error) {
+      console.error("Error fetching exchange rate:", error);
+      setExchangeRate(50.6); // Fallback
+    }
+  };
 
   const fetchUserData = async () => {
     try {
@@ -49,62 +62,32 @@ export default function SubscriptionClient({ initialUser }) {
     setBillingStep(true);
   };
 
-  const handleBillingChoice = (billingPeriod) => {
+  const handleBillingChoice = async (billingPeriod, paymentMethod) => {
     setSelectedBillingPeriod(billingPeriod);
+    setSelectedPaymentMethod(paymentMethod);
     setLoading(true);
-  };
 
-  const handleManageSubscription = async () => {
     try {
-      const res = await fetch("/api/paypal/portal", {
+      const res = await fetch("/api/paymob/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ billingPeriod, paymentMethod }),
       });
-      const { success, url, message } = await res.json();
-      if (success) {
-        window.location.href = url;
-      } else {
-        throw new Error(message || "Failed to open subscription portal");
-      }
-    } catch (error) {
-      toast.error(error.message || "Failed to manage subscription");
-    }
-  };
+      const { success, paymentKey, orderId, amountEGP } = await res.json();
+      if (!success) throw new Error("Failed to initiate payment");
 
-  const createSubscription = async (data, actions) => {
-    try {
-      const res = await fetch("/api/paypal/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ billingPeriod: selectedBillingPeriod }),
-      });
-      const { success, planId, message } = await res.json();
-      if (!success) {
-        throw new Error(message || "Failed to create subscription plan");
-      }
-      return actions.subscription.create({
-        plan_id: planId,
-        custom_id: user._id,
-      });
+      const iframeUrl = `https://accept.paymob.com/api/acceptance/iframes/${process.env.NEXT_PUBLIC_PAYMOB_IFRAME_ID}?payment_token=${paymentKey}`;
+      window.location.href = iframeUrl;
     } catch (error) {
-      toast.error(error.message || "Subscription creation failed");
+      toast.error(error.message || "Payment initiation failed");
       setLoading(false);
       setSelectedBillingPeriod(null);
-      throw error;
+      setSelectedPaymentMethod(null);
     }
   };
 
-  const onApprove = (data, actions) => {
-    setLoading(false);
-    toast.success("Processing your subscription...");
-    window.location.href = "/my-account?tab=settings&success=true";
-  };
-
-  const onError = (err) => {
-    setLoading(false);
-    setSelectedBillingPeriod(null);
-    toast.error(err.message || "Something went wrong with PayPal");
-  };
+  const monthlyEGP = exchangeRate ? Math.round(8 * exchangeRate) : 405;
+  const annualEGP = exchangeRate ? Math.round(80 * exchangeRate) : 4050;
 
   return (
     <div className="bg-white/10 p-6 rounded-lg border border-white/20 max-w-lg">
@@ -115,31 +98,11 @@ export default function SubscriptionClient({ initialUser }) {
             Current Plan: {effectivePlan === "pro" ? "Pro" : "Free"}
           </p>
           {effectivePlan === "pro" && user.subscriptionEnd && (
-            <>
-              <p className="text-gray-300">
-                Subscription Ends:{" "}
-                {new Date(user.subscriptionEnd).toLocaleDateString()}
-              </p>
-              <button
-                onClick={handleManageSubscription}
-                className="bg-gradient-to-bl from-[#e45053] to-[#fd9c46] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed my-4 transition-all duration-200"
-              >
-                Manage Subscription
-              </button>
-            </>
+            <p className="text-gray-300">
+              Subscription Ends:{" "}
+              {new Date(user.subscriptionEnd).toLocaleDateString()}
+            </p>
           )}
-          {user.plan === "pro" &&
-            user.subscriptionEnd &&
-            new Date(user.subscriptionEnd) <= new Date() && (
-              <p className="text-red-400 mt-2">
-                Your Pro subscription has expired. Upgrade to restore Pro
-                features.
-              </p>
-            )}
-          <p className="text-gray-300">
-            Storage Used: {(user.storageUsed / 1024 / 1024).toFixed(2)} MB /{" "}
-            {effectivePlan === "pro" ? "1000" : "20"} MB
-          </p>
           {effectivePlan === "free" && (
             <button
               onClick={handleUpgrade}
@@ -151,25 +114,20 @@ export default function SubscriptionClient({ initialUser }) {
           )}
         </>
       ) : (
-        <PayPalScriptProvider
-          options={{
-            "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-            vault: true,
-
-            intent: "subscription",
-          }}
-        >
-          <>
-            <h4 className="text-lg font-semibold text-white mb-4">
-              Choose Your Pro Billing
-            </h4>
-            <div className="grid md:grid-cols-2 gap-4">
+        <>
+          <h4 className="text-lg font-semibold text-white mb-4">
+            Choose Your Pro Billing
+          </h4>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
               <button
-                onClick={() => handleBillingChoice("monthly")}
+                onClick={() => handleBillingChoice("monthly", "card")}
                 disabled={loading}
-                className="px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading && selectedBillingPeriod === "monthly" ? (
+                {loading &&
+                selectedBillingPeriod === "monthly" &&
+                selectedPaymentMethod === "card" ? (
                   <svg
                     className="animate-spin h-5 w-5 mx-auto"
                     viewBox="0 0 24 24"
@@ -190,16 +148,19 @@ export default function SubscriptionClient({ initialUser }) {
                   </svg>
                 ) : (
                   <>
-                    <span className="text-xl font-bold">$8</span>/month
+                    <span className="text-xl font-bold">{monthlyEGP} EGP</span>
+                    /month (Card)
                   </>
                 )}
               </button>
               <button
-                onClick={() => handleBillingChoice("annual")}
+                onClick={() => handleBillingChoice("monthly", "wallet")}
                 disabled={loading}
-                className="px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full mt-2 px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading && selectedBillingPeriod === "annual" ? (
+                {loading &&
+                selectedBillingPeriod === "monthly" &&
+                selectedPaymentMethod === "wallet" ? (
                   <svg
                     className="animate-spin h-5 w-5 mx-auto"
                     viewBox="0 0 24 24"
@@ -220,34 +181,95 @@ export default function SubscriptionClient({ initialUser }) {
                   </svg>
                 ) : (
                   <>
-                    <span className="text-xl font-bold">$80</span>/year{" "}
+                    <span className="text-xl font-bold">{monthlyEGP} EGP</span>
+                    /month (Wallet)
+                  </>
+                )}
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => handleBillingChoice("annual", "card")}
+                disabled={loading}
+                className="w-full px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading &&
+                selectedBillingPeriod === "annual" &&
+                selectedPaymentMethod === "card" ? (
+                  <svg
+                    className="animate-spin h-5 w-5 mx-auto"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      className="opacity-25"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                      className="opacity-75"
+                    />
+                  </svg>
+                ) : (
+                  <>
+                    <span className="text-xl font-bold">{annualEGP} EGP</span>
+                    /year (Card){" "}
+                    <span className="text-[#e45053]">(Save ~17%)</span>
+                  </>
+                )}
+              </button>
+              <button
+                onClick={() => handleBillingChoice("annual", "wallet")}
+                disabled={loading}
+                className="w-full mt-2 px-5 py-4 text-sm font-semibold text-white bg-white/20 border border-white/20 rounded-md hover:bg-white/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading &&
+                selectedBillingPeriod === "annual" &&
+                selectedPaymentMethod === "wallet" ? (
+                  <svg
+                    className="animate-spin h-5 w-5 mx-auto"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      className="opacity-25"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                      className="opacity-75"
+                    />
+                  </svg>
+                ) : (
+                  <>
+                    <span className="text-xl font-bold">{annualEGP} EGP</span>
+                    /year (Wallet){" "}
                     <span className="text-[#e45053]">(Save ~17%)</span>
                   </>
                 )}
               </button>
             </div>
-            {selectedBillingPeriod && (
-              <div className="mt-4">
-                <PayPalButtons
-                  createSubscription={createSubscription}
-                  onApprove={onApprove}
-                  onError={onError}
-                  style={{ layout: "vertical" }}
-                />
-              </div>
-            )}
-            <button
-              onClick={() => {
-                setBillingStep(false);
-                setSelectedBillingPeriod(null);
-                setLoading(false);
-              }}
-              className="mt-4 w-full px-5 py-2.5 text-sm font-semibold text-white bg-gray-700 rounded-md hover:bg-gray-600 transition-all duration-200"
-            >
-              Back
-            </button>
-          </>
-        </PayPalScriptProvider>
+          </div>
+          <button
+            onClick={() => {
+              setBillingStep(false);
+              setSelectedBillingPeriod(null);
+              setSelectedPaymentMethod(null);
+              setLoading(false);
+            }}
+            className="mt-4 w-full px-5 py-2.5 text-sm font-semibold text-white bg-gray-700 rounded-md hover:bg-gray-600 transition-all duration-200"
+          >
+            Back
+          </button>
+        </>
       )}
     </div>
   );
