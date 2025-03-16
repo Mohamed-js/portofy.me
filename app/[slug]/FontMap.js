@@ -38,4 +38,4 @@ const fontMap = {
   lato,
 };
 
-// export default fontMap;
+export default fontMap;
