@@ -118,7 +118,10 @@ export default async function PortfolioPage({ params }) {
   const plainUser = JSON.parse(JSON.stringify(user));
   const plainPortfolio = JSON.parse(JSON.stringify(portfolio));
 
-  if (plainPortfolio.type === "social-links") {
+  if (
+    plainPortfolio.type === "social-links" ||
+    plainPortfolio.type === "link-in-bio"
+  ) {
     return <LIBioThemer portfolio={plainPortfolio} user={plainUser} />;
   } else if (plainPortfolio.type === "portfolio") {
     return <PortfolioThemer portfolio={plainPortfolio} user={plainUser} />;
