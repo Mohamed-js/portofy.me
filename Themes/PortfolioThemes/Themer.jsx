@@ -1,7 +1,7 @@
 import Minimal from "./minimal";
 import Flames from "./flames";
 import Modern from "./modern";
-import fontMap from "@/app/[slug]/FontMap";
+import fontMap from "@/app/[slug]/page";
 
 const themes = {
   minimal: Minimal,

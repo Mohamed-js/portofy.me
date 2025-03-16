@@ -9,7 +9,7 @@ import {
   Roboto_Slab,
   Roboto,
   Tajawal,
-} from "@next/font/google";
+} from "next/font/google";
 
 const almarai = Almarai({ subsets: ["arabic"], weight: ["300", "400", "700"] });
 const cairo = Cairo({ subsets: ["arabic"], weight: ["400", "700"] });
@@ -38,4 +38,4 @@ const fontMap = {
   lato,
 };
 
-export default fontMap;
+// export default fontMap;
