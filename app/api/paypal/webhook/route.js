@@ -26,6 +26,7 @@ async function verifyWebhookSignature(event, sig, token) {
     }
   );
   const result = await response.json();
+  console.log(result);
   return result.verification_status === "SUCCESS";
 }
 
