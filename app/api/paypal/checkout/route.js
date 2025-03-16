@@ -131,7 +131,6 @@ export async function POST(request) {
     }
 
     const planData = await planResponse.json();
-    console.log("Plan created:", planData);
     const planId = planData.id;
 
     return NextResponse.json({ success: true, planId });
