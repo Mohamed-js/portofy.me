@@ -79,7 +79,7 @@ const Cover = ({ portfolio }) => {
               <div className="flex items-center justify-center pl-0 md:justify-start md:pl-1">
                 <div className="font-body text-lg uppercase text-white flex flex-col items-center justify-center">
                   <span data-aos="fade-right" data-aos-duration={2000}>
-                    Let's connect
+                    {portfolio.socialLinksTitle || "Let&apos;s connect"}
                   </span>
                   <span
                     className="animate-bounce mt-4"

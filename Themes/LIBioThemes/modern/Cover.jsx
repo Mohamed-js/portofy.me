@@ -52,7 +52,9 @@ const Cover = ({ portfolio }) => {
             <div className="flex flex-col pt-3">
               <div className=" items-center justify-center pl-0 sm:justify-start md:pl-1 md:mb-3">
                 <div className="font-body text-lg uppercase text-white  flex-col items-center justify-center">
-                  <span>Let's connect...</span>
+                  <span>
+                    {portfolio.socialLinksTitle || "Let&apos;s connect"}
+                  </span>
                 </div>
               </div>
               <div className="flex flex-wrap max-w-[300px] gap-6 items-center mt-4">
