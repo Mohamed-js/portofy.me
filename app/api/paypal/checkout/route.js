@@ -3,7 +3,6 @@ import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import { cookies } from "next/headers";
 
-// PayPal API credentials (add to .env)
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
 const PAYPAL_API_BASE = "https://api-m.sandbox.paypal.com"; // Use "api-m.paypal.com" for live
@@ -21,6 +20,34 @@ async function getPayPalToken() {
   });
   const data = await response.json();
   return data.access_token;
+}
+
+async function createPayPalProduct(token) {
+  const product = {
+    name: "Pro Subscription Product",
+    description: "Product for Pro subscription plans",
+    type: "SERVICE",
+    category: "SOFTWARE",
+  };
+
+  const response = await fetch(`${PAYPAL_API_BASE}/v1/catalogs/products`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(product),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error("PayPal product creation error:", errorData);
+    throw new Error("Failed to create PayPal product");
+  }
+
+  const productData = await response.json();
+  console.log("Product created:", productData);
+  return productData.id; // Returns the product_id (e.g., "PROD-XXXXXX")
 }
 
 export async function POST(request) {
@@ -54,7 +81,12 @@ export async function POST(request) {
 
     const token = await getPayPalToken();
 
+    // Create or reuse a product
+    const productId = await createPayPalProduct(token);
+
+    // Create the subscription plan with the product_id
     const plan = {
+      product_id: productId, // Add the product_id here
       name: `Pro ${billingPeriod} Plan`,
       description: `Pro subscription (${billingPeriod})`,
       status: "ACTIVE",
@@ -66,10 +98,10 @@ export async function POST(request) {
           },
           tenure_type: "REGULAR",
           sequence: 1,
-          total_cycles: 0, // Infinite billing
+          total_cycles: 0,
           pricing_scheme: {
             fixed_price: {
-              value: billingPeriod === "monthly" ? "8.00" : "80.00", // Adjust prices
+              value: billingPeriod === "monthly" ? "8.00" : "80.00",
               currency_code: "USD",
             },
           },
@@ -83,7 +115,6 @@ export async function POST(request) {
       },
     };
 
-    // Create the plan
     const planResponse = await fetch(`${PAYPAL_API_BASE}/v1/billing/plans`, {
       method: "POST",
       headers: {
@@ -92,7 +123,15 @@ export async function POST(request) {
       },
       body: JSON.stringify(plan),
     });
+
+    if (!planResponse.ok) {
+      const errorData = await planResponse.json();
+      console.error("PayPal plan creation error:", errorData);
+      throw new Error("Failed to create PayPal plan");
+    }
+
     const planData = await planResponse.json();
+    console.log("Plan created:", planData);
     const planId = planData.id;
 
     return NextResponse.json({ success: true, planId });

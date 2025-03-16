@@ -84,7 +84,7 @@ export default function SubscriptionClient({ initialUser }) {
       }
       return actions.subscription.create({
         plan_id: planId,
-        custom_id: user._id, // Pass user ID for webhook
+        custom_id: user._id,
       });
     } catch (error) {
       toast.error(error.message || "Subscription creation failed");
@@ -152,7 +152,11 @@ export default function SubscriptionClient({ initialUser }) {
         </>
       ) : (
         <PayPalScriptProvider
-          options={{ "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID }}
+          options={{
+            "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+            vault: true,
+            intent: "subscription",
+          }}
         >
           <>
             <h4 className="text-lg font-semibold text-white mb-4">
