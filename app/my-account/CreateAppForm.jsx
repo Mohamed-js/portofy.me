@@ -85,7 +85,7 @@ export default function CreateAppForm({ closeModal }) {
             className="p-2 rounded-md bg-neutral-800 text-white border border-neutral-700 w-full"
             disabled={submitting}
           >
-            <option value="link-in-bio">Link-in-Bio</option>
+            <option value="social-links">Social Links</option>
             <option value="portfolio">Portfolio</option>
           </select>
         </div>

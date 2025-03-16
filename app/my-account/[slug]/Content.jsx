@@ -76,12 +76,12 @@ export default function Content({ initialPortfolio }) {
     ["projects", "experience", "skills", "seo"].includes(tab);
 
   const renderTabContent = () => {
-    if (portfolio.type === "link-in-bio" && isProOnlyTab(activeTab)) {
+    if (portfolio.type === "social-links" && isProOnlyTab(activeTab)) {
       return (
         <div className="p-6 text-center text-gray-300">
           <p className="text-lg">
-            Projects, Experience, Skills, and SEO are not available for
-            Link-in-Bio apps.
+            Projects, Experience, Skills, and SEO are not available for Social
+            Links apps.
           </p>
           <button
             onClick={() => setActiveTab("social")}
@@ -206,14 +206,14 @@ export default function Content({ initialPortfolio }) {
             onClick={() => handleTabChange(key)}
             disabled={
               (effectivePlan === "free" && isProOnlyTab(key)) ||
-              (portfolio.type === "link-in-bio" && isProOnlyTab(key))
+              (portfolio.type === "social-links" && isProOnlyTab(key))
             }
           >
             {label}
-            {(effectivePlan === "free" || portfolio.type === "link-in-bio") &&
+            {(effectivePlan === "free" || portfolio.type === "social-links") &&
               isProOnlyTab(key) && (
                 <span className="ml-1 text-xs text-[#e45053]">
-                  {portfolio.type === "link-in-bio" ? "(N/A)" : "(Pro)"}
+                  {portfolio.type === "social-links" ? "(N/A)" : "(Pro)"}
                 </span>
               )}
           </button>

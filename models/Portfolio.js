@@ -17,6 +17,7 @@ const PortfolioSchema = new mongoose.Schema(
     },
     title: String, // e.g., "John's Developer Portfolio"
     subTitle: String, // e.g., "Software Engineer"
+    descriptionTitle: String,
     description: String,
     email: String,
     phone: String,
@@ -146,6 +147,22 @@ const PortfolioSchema = new mongoose.Schema(
       enum: ["minimal", "flames", "modern"],
       default: "minimal",
     },
+    font: {
+      type: String,
+      enum: [
+        "openSans",
+        "poppins",
+        "robotoSlab",
+        "roboto",
+        "almarai",
+        "changa",
+        "tajawal",
+        "merriweatherSans",
+        "cairo",
+        "lato",
+      ],
+      default: "openSans",
+    },
     customDomain: String,
     domainVerified: { type: Boolean, default: false },
     seoMeta: {
@@ -155,8 +172,8 @@ const PortfolioSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["portfolio", "link-in-bio", "custom"], // For future expansion
-      default: "link-in-bio",
+      enum: ["portfolio", "social-links", "custom"], // For future expansion
+      default: "social-links",
     },
   },
   { timestamps: true }

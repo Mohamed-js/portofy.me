@@ -37,7 +37,7 @@ export async function POST(req) {
       );
     }
 
-    const validTypes = ["portfolio", "link-in-bio"];
+    const validTypes = ["portfolio", "social-links"];
     if (!validTypes.includes(type)) {
       return NextResponse.json({ error: "Invalid app type" }, { status: 400 });
     }

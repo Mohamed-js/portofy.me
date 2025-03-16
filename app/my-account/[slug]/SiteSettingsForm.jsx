@@ -99,6 +99,55 @@ export default function SiteSettingsForm({ portfolio, setPortfolio, saving }) {
         )}
       </div>
 
+      {/* FONT */}
+      <div>
+        <Label htmlFor="font">Font</Label>
+        <select
+          id="font"
+          name="font"
+          value={portfolio.font || "minimal"}
+          onChange={handleChange}
+          disabled={effectivePlan === "free" || saving}
+          className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+        >
+          <option value="poppins">Poppins</option>
+          <option value="openSans">Open Sans</option>
+          <option value="roboto">Roboto</option>
+          <option disabled={effectivePlan === "free"} value="robotoSlab">
+            Roboto Slab
+          </option>
+          <option disabled={effectivePlan === "free"} value="almarai">
+            Almarai
+          </option>
+          <option disabled={effectivePlan === "free"} value="changa">
+            Changa
+          </option>
+          <option disabled={effectivePlan === "free"} value="tajawal">
+            Tajawal
+          </option>
+          <option disabled={effectivePlan === "free"} value="merriweatherSans">
+            Merriweather Sans
+          </option>
+          <option disabled={effectivePlan === "free"} value="cairo">
+            Cairo
+          </option>
+          <option disabled={effectivePlan === "free"} value="lato">
+            Lato
+          </option>
+        </select>
+        {effectivePlan === "free" && (
+          <p className="text-gray-400 mt-2 text-sm">
+            All fonts available with Pro –{" "}
+            <a
+              href="/my-account/subscription"
+              className="text-[#e45053] hover:text-[#fd9c46]"
+            >
+              Upgrade Now
+            </a>
+          </p>
+        )}
+      </div>
+
       {/* Custom Domain */}
       <div>
         <Label htmlFor="customDomain">Custom Domain</Label>

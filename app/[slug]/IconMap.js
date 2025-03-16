@@ -43,6 +43,7 @@ const iconMap = {
   spotify: FaSpotify,
   patreon: FaPatreon,
   website: FaLocationArrow,
-  other: FaLink, // Added for "other" site type
+  other: FaLink,
 };
+
 export default iconMap;

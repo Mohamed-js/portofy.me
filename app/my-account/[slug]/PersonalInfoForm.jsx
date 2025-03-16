@@ -220,6 +220,23 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
           )}
         </div>
 
+        {portfolio.type === "portfolio" && (
+          <div>
+            <Label htmlFor="descriptionTitle" className="text-white">
+              Description Section Title
+            </Label>
+            <input
+              id="descriptionTitle"
+              name="descriptionTitle"
+              rows={3}
+              value={portfolio.descriptionTitle || ""}
+              onChange={handleChange}
+              disabled={saving}
+              className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+            />
+          </div>
+        )}
+
         <div>
           <Label htmlFor="description" className="text-white">
             Description

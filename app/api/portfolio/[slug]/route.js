@@ -43,7 +43,7 @@ export async function PATCH(req, { params }) {
         "my-account",
         "dashboard",
         "portfolio",
-        "link-in-bio", // Possible type-specific route
+        "social-links", // Possible type-specific route
 
         // Common Next.js reserved routes
         "api",
