@@ -1,4 +1,4 @@
-const TopBlur = ({ colors }) => {
+const TopBlur = ({ colors = ["#e45053", "#fd9c46"] }) => {
   return (
     <div className="relative">
       <div
@@ -21,7 +21,7 @@ const TopBlur = ({ colors }) => {
   );
 };
 
-const BottomBlur = ({ colors }) => {
+const BottomBlur = ({ colors = ["#e45053", "#fd9c46"] }) => {
   return (
     <div className="relative">
       <div

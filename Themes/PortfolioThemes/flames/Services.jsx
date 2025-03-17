@@ -1,6 +1,9 @@
+import { TopBlur } from "./BgBlur";
+
 const Services = ({ portfolio }) => {
   return (
     <div className="container py-16 mt-8 md:pb-0 mx-auto px-4" id="services">
+      <TopBlur />
       <div className="bg-gradient-to-r from-[#e45053] to-[#fd9c46] h-1 rounded-[50%] opacity-50 w-full md:w-[50%] mx-auto" />
       <br />
       <br />
@@ -9,7 +12,7 @@ const Services = ({ portfolio }) => {
         {portfolio.skillsTitle || "Here's what I'm good at"}
       </h2>
 
-      <div className="grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 md:gap-10 md:pt-12 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-6 pt-10 sm:grid-cols-2 md:gap-10 md:pt-12 lg:grid-cols-3">
         {portfolio.skills.map((skill, index) => (
           <div
             key={index}

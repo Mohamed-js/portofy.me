@@ -29,7 +29,7 @@ const Experience = ({ portfolio }) => {
   };
 
   return (
-    <div className="container py-16  mx-auto" id="work">
+    <div className="container py-16  mx-auto p-4" id="work">
       <div className="bg-gradient-to-r from-[#e45053] to-[#fd9c46] h-1 rounded-[50%] opacity-50 w-full md:w-[50%] mx-auto" />
       <br />
       <br />

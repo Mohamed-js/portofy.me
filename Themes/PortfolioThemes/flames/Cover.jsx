@@ -11,27 +11,27 @@ const Cover = ({ portfolio }) => {
   const bio = portfolio.description || ""; // Using seoMeta.description as bio
 
   return (
-    <div className="relative p-4 flex items-center justify-center w-full">
+    <div className="relative p-4 flex items-center justify-center w-full min-h-[90vh] overflow-hidden">
       <div className="container relative z-30 flex max-w-7xl mt-16 justify-center pb-10">
         <div className="flex flex-col items-center justify-center lg:flex-row">
           <div className="text-center">
             <img
               src={avatar}
-              className="h-30 rounded-full sm:h-56 z-10 mx-auto mb-6 border-5 md:border-6 border-[#242424]"
+              className="h-40 rounded-full sm:h-56 z-10 mx-auto mb-6 border-5 md:border-6 border-[#242424]"
               alt={`${portfolio.slug}'s avatar`}
               data-aos="fade-in"
               data-aos-delay={1200}
             />
             <div className="text-left">
               <h1
-                className="font-header text-4xl text-white sm:text-5xl md:text-6xl capitalize"
+                className="font-header text-4xl text-white sm:text-5xl md:text-6xl capitalize text-center"
                 data-aos="fade-left"
                 data-aos-duration={2000}
               >
                 {name}
               </h1>
               <p
-                className="font-header text-sm text-gray-400 capitalize mb-4 md:text-xl md:mt-2 md:mb-8"
+                className="font-header text-sm text-gray-200 capitalize mb-4 md:text-xl md:mt-2 md:mb-8 text-center"
                 data-aos="fade-right"
                 data-aos-delay={2000}
                 data-aos-duration={2000}
@@ -44,7 +44,7 @@ const Cover = ({ portfolio }) => {
               data-aos="fade-in"
               data-aos-delay={2000}
             />
-            <div className="flex items-center">
+            <div className="flex items-center justify-center">
               <div className="flex items-center justify-center pl-0 sm:justify-start md:pl-1">
                 <div className="font-body text-lg uppercase text-white flex items-center justify-center">
                   <span data-aos="fade-right" data-aos-duration={2000}>
@@ -104,13 +104,13 @@ const Cover = ({ portfolio }) => {
           </div>
         </div>
       </div>
-      <div className="relative w-[90%] h-[80vh] rounded-xl md:rounded-3xl opacity-80">
+      <div className="">
         <img
           alt="Cover photo"
-          className="w-[90%] h-full object-cover rounded-3xl"
+          className="absolute left-0 top-0 bottom-0 w-full h-full object-cover opacity-30"
           src={portfolio.cover || "/assets/default-cover.jpg"}
         />
-        <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-bl from-black via-[#e45053] to-[#fd9c46] w-[90%] rounded-3xl opacity-30"></div>
+        <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-b from-[#e45053]/30 via-[#fd9c46]/30 to-[#121212] w-full"></div>
       </div>
     </div>
   );

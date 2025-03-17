@@ -2,7 +2,7 @@ import { FaEnvelope, FaPhone } from "react-icons/fa6";
 
 const Contact = ({ portfolio }) => {
   return (
-    <div className="w-full py-16 mx-auto" id="contact">
+    <div className="w-full py-16 mx-auto p-4" id="contact">
       <div className="bg-gradient-to-r from-[#e45053] to-[#fd9c46] h-1 rounded-[50%] opacity-50 w-full md:w-[50%] mx-auto" />
       <br />
       <br />
@@ -19,7 +19,7 @@ const Contact = ({ portfolio }) => {
 
       <div className="flex flex-col pt-16 lg:flex-row items-center justify-center gap-8 px-4">
         <div>
-          <div className="flex items-center">
+          <div className="flex items-center text-center justify-center">
             <FaPhone color="white" />
             <p className="pl-2 font-body font-bold uppercase text-white lg:text-lg">
               Phone
@@ -30,7 +30,7 @@ const Contact = ({ portfolio }) => {
           </p>
         </div>
         <div>
-          <div className="flex items-center">
+          <div className="flex items-center text-center justify-center">
             <FaEnvelope color="white" />
             <p className="pl-2 font-body font-bold uppercase text-white lg:text-lg">
               Email

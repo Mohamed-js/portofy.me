@@ -1,9 +1,10 @@
 import iconMap from "@/app/[slug]/IconMap";
 import { FaChevronRight, FaLink } from "react-icons/fa6";
+import { BottomBlur } from "./BgBlur";
 
 const About = ({ portfolio }) => {
   return (
-    <section className="my-8 mb-16" id="about">
+    <section className="my-8 md:mb-16 p-4" id="about">
       <div className="bg-gradient-to-r from-[#e45053] to-[#fd9c46] h-1 rounded-[50%] opacity-50 w-full md:w-[50%] mx-auto" />
       <br />
       <br />
@@ -67,6 +68,7 @@ const About = ({ portfolio }) => {
           </div>
         </div>
       </div>
+      <BottomBlur />
     </section>
   );
 };
