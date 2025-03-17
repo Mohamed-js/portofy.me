@@ -11,7 +11,7 @@ const Cover = ({ portfolio }) => {
 
   return (
     <div className="flex flex-col-reverse md:flex-row md:min-h-[100vh] items-center md:px-4 justify-end md:justify-center">
-      <div class="bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0 w-screen h-screen fixed -z-10"></div>
+      <div class="bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0 w-screen h-screen fixed -z-10 top-0"></div>
       <div className="container relative z-30 flex max-w-7xl mt-10 md:mt-0 justify-center md:justify-end pb-10 p-4 md:p-0">
         <div className="flex flex-col items-center justify-center lg:flex-row">
           <div>

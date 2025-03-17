@@ -20,21 +20,25 @@ export default function MyAccountClient({ initialPortfolios, effectivePlan }) {
     const errorOccurred = searchParams.get("error_occured");
     const txnResponseCode = searchParams.get("txn_response_code");
 
-    if (
-      success === "true" &&
-      pending === "false" &&
-      errorOccurred === "false" &&
-      txnResponseCode === "APPROVED"
-    ) {
-      toast.success("Subscription successful! You’re now on Pro.");
-    } else if (
-      success === "false" ||
-      errorOccurred === "true" ||
-      txnResponseCode !== "APPROVED"
-    ) {
-      toast.error("Payment failed. Please try again.");
-    } else if (pending === "true") {
-      toast.info("Payment is pending. We’ll update your plan once confirmed.");
+    if (success) {
+      if (
+        success === "true" &&
+        pending === "false" &&
+        errorOccurred === "false" &&
+        txnResponseCode === "APPROVED"
+      ) {
+        toast.success("Subscription successful! You’re now on Pro.");
+      } else if (
+        success === "false" ||
+        errorOccurred === "true" ||
+        txnResponseCode !== "APPROVED"
+      ) {
+        toast.error("Payment failed. Please try again.");
+      } else if (pending === "true") {
+        toast.info(
+          "Payment is pending. We’ll update your plan once confirmed."
+        );
+      }
     }
   }, [searchParams]);
 
@@ -106,7 +110,10 @@ export default function MyAccountClient({ initialPortfolios, effectivePlan }) {
                 ✕
               </button>
             </div>
-            <CreateAppForm closeModal={() => setShowModal(false)} />
+            <CreateAppForm
+              closeModal={() => setShowModal(false)}
+              effectivePlan={effectivePlan}
+            />
           </div>
         </div>
       )}

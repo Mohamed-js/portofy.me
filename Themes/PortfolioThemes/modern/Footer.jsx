@@ -65,7 +65,6 @@ export default function Footer({ portfolio, user }) {
           </nav>
         )}
       </div>
-      <BottomBlur colors={["#e45053", "#fd9c46"]} />
     </footer>
   );
 }

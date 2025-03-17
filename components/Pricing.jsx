@@ -88,7 +88,7 @@ export function Pricing() {
             </p>
             <ul className="text-left text-gray-300 space-y-3 mb-8">
               <li>Unlimited Visitors</li>
-              <li>Unlimited Projects</li>
+              <li>Unlimited Apps</li>
               <li>Animated Page</li>
               <li>QR Code Access</li>
               <li>All Themes</li>
@@ -98,7 +98,6 @@ export function Pricing() {
               <li>Hide Portofy.me Branding</li>
               <li>Priority Support</li>
               <li>Built-in Analytics</li>
-              <li>PDF Downloadable</li>
             </ul>
             <Link
               href="/signup"

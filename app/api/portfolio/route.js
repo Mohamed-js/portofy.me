@@ -37,7 +37,11 @@ export async function POST(req) {
       );
     }
 
-    const validTypes = ["portfolio", "social-links"];
+    const validTypes =
+      effectivePlan === "free"
+        ? ["social-links"]
+        : ["portfolio", "social-links"];
+
     if (!validTypes.includes(type)) {
       return NextResponse.json({ error: "Invalid app type" }, { status: 400 });
     }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Label from "@/components/Label";
+import QRCodeGenerator from "../QRCodeGenerator";
 
 export default function SiteSettingsForm({ portfolio, setPortfolio, saving }) {
   const [verifying, setVerifying] = useState(false);
@@ -194,6 +195,9 @@ export default function SiteSettingsForm({ portfolio, setPortfolio, saving }) {
           <p className="text-green-400 mt-2 text-sm">Domain verified ✓</p>
         )}
       </div>
+
+      {/* QR GENERATOR */}
+      <QRCodeGenerator slug={portfolio.slug} title={portfolio.title} />
     </div>
   );
 }

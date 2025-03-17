@@ -3,7 +3,7 @@ import { FaEnvelope, FaPhone } from "react-icons/fa6";
 const Contact = ({ portfolio }) => {
   return (
     <div className="w-full py-16 mx-auto p-4" id="contact">
-      <div className="bg-gradient-to-r from-[#e45053] to-[#fd9c46] h-1 rounded-[50%] opacity-50 w-full md:w-[50%] mx-auto" />
+      <div className="bg-gradient-to-r from-[#171717] via-[#242424] to-[#171717] h-1 rounded-[50%] opacity-90 w-full md:w-[50%] mx-auto" />
       <br />
       <br />
       <br />

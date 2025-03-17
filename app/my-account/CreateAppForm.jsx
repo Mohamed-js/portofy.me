@@ -5,10 +5,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-export default function CreateAppForm({ closeModal }) {
+export default function CreateAppForm({ closeModal, effectivePlan }) {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  const [type, setType] = useState("portfolio");
+  const [type, setType] = useState("social-links");
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
@@ -86,7 +86,9 @@ export default function CreateAppForm({ closeModal }) {
             disabled={submitting}
           >
             <option value="social-links">Social Links</option>
-            <option value="portfolio">Portfolio</option>
+            <option value="portfolio" disabled={effectivePlan === "free"}>
+              Portfolio {effectivePlan === "free" && "(Pro Only)"}
+            </option>
           </select>
         </div>
         <button
