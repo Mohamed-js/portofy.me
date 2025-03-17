@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { TopBlur } from "../../../app/[slug]/BgBlur";
+import { TopBlur } from "./BgBlur";
 
 const Navbar = ({ portfolio, user }) => {
   const effectivePlan =

@@ -1,7 +1,7 @@
 // app/[slug]/minimal/Cover.jsx
 "use client";
 
-import { FaLink, FaChevronDown } from "react-icons/fa6";
+import { FaLink, FaChevronRight } from "react-icons/fa6";
 import iconMap from "../../../app/[slug]/IconMap";
 
 const Cover = ({ portfolio }) => {
@@ -11,31 +11,18 @@ const Cover = ({ portfolio }) => {
   const bio = portfolio.description || ""; // Using seoMeta.description as bio
 
   return (
-    <div className="relative p-4">
-      <div className="relative w-full h-50 md:h-100 rounded-xl md:rounded-3xl">
-        <div
-          className="h-full rounded-lg md:rounded-3xl overflow-hidden"
-          data-aos="fade-down"
-          data-aos-duration={1000}
-        >
-          <img
-            alt="Cover photo"
-            className="w-full h-full object-cover"
-            src={portfolio.cover || "/assets/default-cover.jpg"}
-          />
-        </div>
-        <img
-          src={avatar}
-          className="h-30 rounded-full sm:h-56 z-10 mx-auto -translate-y-20 md:-translate-y-30 border-5 md:border-6 border-[#242424]"
-          alt={`${portfolio.slug}'s avatar`}
-          data-aos="fade-in"
-          data-aos-delay={1200}
-        />
-      </div>
-      <div className="container relative z-30 flex max-w-7xl mt-16 md:mt-32 justify-center pb-10">
+    <div className="relative p-4 flex items-center justify-center w-full">
+      <div className="container relative z-30 flex max-w-7xl mt-16 justify-center pb-10">
         <div className="flex flex-col items-center justify-center lg:flex-row">
           <div className="text-center">
-            <div>
+            <img
+              src={avatar}
+              className="h-30 rounded-full sm:h-56 z-10 mx-auto mb-6 border-5 md:border-6 border-[#242424]"
+              alt={`${portfolio.slug}'s avatar`}
+              data-aos="fade-in"
+              data-aos-delay={1200}
+            />
+            <div className="text-left">
               <h1
                 className="font-header text-4xl text-white sm:text-5xl md:text-6xl capitalize"
                 data-aos="fade-left"
@@ -51,37 +38,28 @@ const Cover = ({ portfolio }) => {
               >
                 {portfolio.subTitle}
               </p>
-              <div className="text-center mt-2 mb-6 md:mt-4 md:mb-8">
-                <p
-                  className="max-w-xl mx-auto text-lg text-balance"
-                  data-aos="fade-up"
-                  data-aos-duration={2000}
-                >
-                  {bio}
-                </p>
-              </div>
             </div>
             <hr
               className="py-2 md:hidden"
               data-aos="fade-in"
               data-aos-delay={2000}
             />
-            <div className="flex flex-col items-center justify-center pt-3">
+            <div className="flex items-center">
               <div className="flex items-center justify-center pl-0 sm:justify-start md:pl-1">
-                <div className="font-body text-lg uppercase text-white flex flex-col items-center justify-center">
+                <div className="font-body text-lg uppercase text-white flex items-center justify-center">
                   <span data-aos="fade-right" data-aos-duration={2000}>
                     Let's connect
                   </span>
                   <span
-                    className="animate-bounce mt-4"
+                    className="animate-bounce ml-2 mt-1"
                     data-aos="fade-down"
                     data-aos-delay={2000}
                   >
-                    <FaChevronDown />
+                    <FaChevronRight />
                   </span>
                 </div>
               </div>
-              <div className="flex flex-wrap max-w-[300px] gap-6 items-center justify-center mt-10">
+              <div className="ml-6 flex flex-wrap max-w-[300px] gap-6 items-center justify-center">
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
                   const time = (index + 2) * 200;
@@ -125,6 +103,14 @@ const Cover = ({ portfolio }) => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="relative w-[90%] h-[80vh] rounded-xl md:rounded-3xl opacity-80">
+        <img
+          alt="Cover photo"
+          className="w-[90%] h-full object-cover rounded-3xl"
+          src={portfolio.cover || "/assets/default-cover.jpg"}
+        />
+        <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-bl from-black via-[#e45053] to-[#fd9c46] w-[90%] rounded-3xl opacity-30"></div>
       </div>
     </div>
   );
