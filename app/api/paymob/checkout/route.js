@@ -54,13 +54,12 @@ export async function POST(request) {
       );
     }
 
-    const { billingPeriod, paymentMethod } = await request.json();
-    if (
-      !["monthly", "annual"].includes(billingPeriod) ||
-      !["card", "wallet"].includes(paymentMethod)
-    ) {
+    const { billingPeriod } = await request.json();
+    console.log("Received billingPeriod:", billingPeriod);
+    if (!["monthly", "annual"].includes(billingPeriod)) {
+      console.error("Invalid or missing billingPeriod:", billingPeriod);
       return NextResponse.json(
-        { success: false, message: "Invalid billing period or payment method" },
+        { success: false, message: "Invalid billing period" },
         { status: 400 }
       );
     }
@@ -88,7 +87,7 @@ export async function POST(request) {
           {
             name: `Pro ${billingPeriod} Plan`,
             amount_cents: amountCents,
-            description: `Subscription for ${userId}`,
+            description: `One-time purchase for ${userId}`,
             quantity: 1,
           },
         ],
@@ -103,10 +102,7 @@ export async function POST(request) {
     }
     const orderId = orderData.id;
 
-    const integrationId =
-      paymentMethod === "card"
-        ? process.env.PAYMOB_INTEGRATION_ID_CARD
-        : process.env.PAYMOB_INTEGRATION_ID_WALLET;
+    const integrationId = process.env.PAYMOB_INTEGRATION_ID_CARD;
 
     const paymentKeyResponse = await fetch(
       `${PAYMOB_API_BASE}/acceptance/payment_keys`,
@@ -146,7 +142,15 @@ export async function POST(request) {
     }
     const paymentKey = paymentData.token;
 
-    return NextResponse.json({ success: true, paymentKey, orderId, amountEGP });
+    const iframeId = process.env.NEXT_PUBLIC_PAYMOB_IFRAME_ID;
+
+    if (!iframeId || iframeId === "undefined") {
+      throw new Error("Iframe ID is not defined in environment variables");
+    }
+
+    const iframeUrl = `https://accept.paymob.com/api/acceptance/iframes/${iframeId}?payment_token=${paymentKey}`;
+
+    return NextResponse.json({ success: true, paymentKey, orderId, iframeUrl });
   } catch (error) {
     console.error("Paymob checkout error:", error);
     return NextResponse.json(
