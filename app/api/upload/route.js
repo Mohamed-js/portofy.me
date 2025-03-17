@@ -64,7 +64,9 @@ export async function POST(request) {
 
     const fileSize = file.size;
 
-    console.log(fileSize);
+    console.log(
+      "User: " + user._id + " uploaded a file with size: " + fileSize
+    );
     const maxFileSize = 10 * 1024 * 1024; // 10MB per file
     if (fileSize > maxFileSize) {
       return NextResponse.json(

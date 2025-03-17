@@ -1,12 +1,42 @@
-// app/my-account/MyAccountClient.jsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 import CreateAppForm from "./CreateAppForm";
 
 export default function MyAccountClient({ initialPortfolios, effectivePlan }) {
   const [showModal, setShowModal] = useState(false);
+  const searchParams = useSearchParams();
+  const hasToasted = useRef(false);
+
+  useEffect(() => {
+    if (hasToasted.current) return; // Prevent duplicate toasts
+    hasToasted.current = true;
+
+    const success = searchParams.get("success");
+    const pending = searchParams.get("pending");
+    const errorOccurred = searchParams.get("error_occured");
+    const txnResponseCode = searchParams.get("txn_response_code");
+
+    if (
+      success === "true" &&
+      pending === "false" &&
+      errorOccurred === "false" &&
+      txnResponseCode === "APPROVED"
+    ) {
+      toast.success("Subscription successful! You’re now on Pro.");
+    } else if (
+      success === "false" ||
+      errorOccurred === "true" ||
+      txnResponseCode !== "APPROVED"
+    ) {
+      toast.error("Payment failed. Please try again.");
+    } else if (pending === "true") {
+      toast.info("Payment is pending. We’ll update your plan once confirmed.");
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen px-4">

@@ -1,5 +1,5 @@
 import "../globals.css";
-import { ToastContainer } from "react-toastify";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
           />
         </div>
       </div>
-      <ToastContainer position="bottom-right" theme="dark" />
+
       <Footer />
     </div>
   );

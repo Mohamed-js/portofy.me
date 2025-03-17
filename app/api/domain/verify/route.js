@@ -110,7 +110,10 @@ export async function POST(req) {
         return NextResponse.json({ success: true, verified: true });
       }
     } catch (error) {
-      console.log("DNS check failed, user must add TXT record:", error.message);
+      console.error(
+        "DNS check failed, user must add TXT record:",
+        error.message
+      );
     }
 
     return NextResponse.json({

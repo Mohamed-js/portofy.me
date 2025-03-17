@@ -6,6 +6,8 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import MyAccountClient from "./MyAccountClient";
 
+export const dynamic = "force-dynamic"; // Ensure fresh render with query params
+
 export default async function MyAccount() {
   try {
     await dbConnect();
@@ -17,7 +19,7 @@ export default async function MyAccount() {
     }
 
     const user = await User.findById(userId).select("-password").lean();
-    console.log(user);
+
     if (!user) {
       notFound();
     }
@@ -53,7 +55,6 @@ export default async function MyAccount() {
       cover: portfolio.cover || "",
       createdAt: new Date(portfolio.createdAt).toISOString(),
       updatedAt: new Date(portfolio.updatedAt).toISOString(),
-      // Add other fields as needed (e.g., seoMeta, projects, etc.)
     }));
 
     const effectivePlan =
@@ -65,7 +66,6 @@ export default async function MyAccount() {
 
     return (
       <MyAccountClient
-        initialUser={plainUser}
         initialPortfolios={plainPortfolios}
         effectivePlan={effectivePlan}
       />

@@ -55,7 +55,7 @@ export async function POST(request) {
     }
 
     const { billingPeriod } = await request.json();
-    console.log("Received billingPeriod:", billingPeriod);
+
     if (!["monthly", "annual"].includes(billingPeriod)) {
       console.error("Invalid or missing billingPeriod:", billingPeriod);
       return NextResponse.json(
