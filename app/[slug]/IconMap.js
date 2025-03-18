@@ -20,13 +20,24 @@ import {
   FaSpotify,
   FaPatreon,
   FaLocationArrow,
+  // new
+  FaFigma,
+  FaCodepen,
+  FaAppStore,
+  FaDownload,
 } from "react-icons/fa6";
+import { FaExternalLinkAlt } from "react-icons/fa";
+import { TbBrandAdobe } from "react-icons/tb";
+import { BiLogoSketch } from "react-icons/bi";
+import { FiCodesandbox } from "react-icons/fi";
+import { PiReplitLogo } from "react-icons/pi";
+import { IoLogoGooglePlaystore } from "react-icons/io5";
 
 const iconMap = {
   github: FaGithub,
   behance: FaBehance,
-  facebook: FaFacebookF, // Fixed: was FaLinkedin
-  linkedin: FaLinkedin, // Fixed: swapped with facebook
+  facebook: FaFacebookF,
+  linkedin: FaLinkedin,
   dribbble: FaDribbble,
   instagram: FaInstagram,
   twitter: FaXTwitter,
@@ -44,6 +55,16 @@ const iconMap = {
   patreon: FaPatreon,
   website: FaLocationArrow,
   other: FaLink,
+  appstore: FaAppStore,
+  download: FaDownload,
+  figma: FaFigma,
+  codepen: FaCodepen,
+  live: FaExternalLinkAlt,
+  adobexd: TbBrandAdobe,
+  sketch: BiLogoSketch,
+  codesandbox: FiCodesandbox,
+  replit: PiReplitLogo,
+  playstore: IoLogoGooglePlaystore,
 };
 
 export default iconMap;
