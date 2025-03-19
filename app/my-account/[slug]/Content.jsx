@@ -78,6 +78,7 @@ export default function Content({ initialPortfolio }) {
     const socialLinksRestrictedTabs = ["skills", "experience", "projects"];
     if (effectivePlan === "free") {
       if (tab === "seo") return true; // SEO is restricted on free plan for both types
+      if (tab === "analytics") return true; // Analytics is restricted on free plan for both types
       if (
         portfolioType === "social-links" &&
         socialLinksRestrictedTabs.includes(tab)
@@ -221,7 +222,10 @@ export default function Content({ initialPortfolio }) {
             {label}
             {isRestrictedTab(key) && (
               <span className="ml-1 text-xs text-[#e45053]">
-                {effectivePlan === "free" && key === "seo" ? "(Pro)" : "(N/A)"}
+                {effectivePlan === "free" &&
+                (key === "seo" || key === "analytics")
+                  ? "(Pro)"
+                  : "(N/A)"}
               </span>
             )}
           </button>

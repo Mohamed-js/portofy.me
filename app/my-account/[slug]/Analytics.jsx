@@ -87,115 +87,123 @@ const Analytics = ({ portfolioId }) => {
         ))}
       </div>
 
-      {/* Line Chart */}
-      <div>
-        <h4 className="text-lg font-medium mb-2 text-gray-100">
-          Page Views Over Time
-        </h4>
-        <div className="w-full h-64 sm:h-72">
-          <ResponsiveContainer>
-            <LineChart data={lineData}>
-              <XAxis dataKey="date" stroke="#ccc" />
-              <YAxis stroke="#ccc" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1f2937",
-                  borderColor: "#374151",
-                  color: "#fff",
-                }}
-              />
-              <Legend />
-              <Line type="monotone" dataKey="views" stroke="#3b82f6" />
-            </LineChart>
-          </ResponsiveContainer>
+      <div className="grid md:grid-cols-2 gap-4 items-center">
+        {/* Line Chart */}
+        <div>
+          <h4 className="text-lg font-medium mb-2 text-gray-100">
+            Page Views Over Time
+          </h4>
+          <div className="w-full h-64 sm:h-72">
+            <ResponsiveContainer>
+              <LineChart data={lineData}>
+                <XAxis dataKey="date" stroke="#ccc" />
+                <YAxis stroke="#ccc" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1f2937",
+                    borderColor: "#374151",
+                    color: "#fff",
+                  }}
+                />
+                <Legend />
+                <Line type="monotone" dataKey="views" stroke="#3b82f6" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Pie Chart */}
+        <div className="w-full">
+          <h4 className="text-lg font-medium mb-2 text-gray-100">
+            Device Distribution
+          </h4>
+          <div className="w-full h-52 sm:h-64 flex justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={[
+                    { name: "Desktop", value: data.devices.desktop },
+                    { name: "Mobile", value: data.devices.mobile },
+                  ]}
+                  dataKey="value"
+                  outerRadius={80}
+                  label
+                >
+                  {COLORS.map((color, index) => (
+                    <Cell key={index} fill={color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "white",
+                    borderColor: "#374151",
+                    color: "black",
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
-      {/* Pie Chart */}
-      <div>
-        <h4 className="text-lg font-medium mb-2 text-gray-100">
-          Device Distribution
-        </h4>
-        <div className="w-full h-52 sm:h-64 flex justify-center">
-          <ResponsiveContainer width="80%" height="100%">
-            <PieChart>
-              <Pie
-                data={[
-                  { name: "Desktop", value: data.devices.desktop },
-                  { name: "Mobile", value: data.devices.mobile },
-                ]}
-                dataKey="value"
-                outerRadius={80}
-                label
+      <div className="grid md:grid-cols-2 gap-4">
+        {/* Top Referrers */}
+        <div>
+          <h4 className="text-lg font-medium mb-2 text-gray-100">
+            Top Referrers
+          </h4>
+          <ul className="list-disc ml-6 space-y-1 text-gray-300">
+            {data.referrers.slice(0, 5).map((ref, idx) => (
+              <li key={idx}>{ref || "Direct / None"}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Clicks */}
+        <div>
+          <h4 className="text-lg font-medium mb-2 text-gray-100">
+            Recent Clicks
+          </h4>
+          <ul className="divide-y divide-gray-700 text-gray-300">
+            {filteredClicks.slice(0, 10).map((click, idx) => (
+              <li
+                key={idx}
+                className="py-2 flex justify-between text-sm sm:text-base"
               >
-                {COLORS.map((color, index) => (
-                  <Cell key={index} fill={color} />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1f2937",
-                  borderColor: "#374151",
-                  color: "#fff",
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+                <span>{click.value}</span>
+                <span className="text-xs text-gray-500">
+                  {new Date(click.timestamp).toLocaleString()}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
-      {/* Top Referrers */}
-      <div>
-        <h4 className="text-lg font-medium mb-2 text-gray-100">
-          Top Referrers
-        </h4>
-        <ul className="list-disc ml-6 space-y-1 text-gray-300">
-          {data.referrers.slice(0, 5).map((ref, idx) => (
-            <li key={idx}>{ref || "Direct / None"}</li>
-          ))}
-        </ul>
-      </div>
+      <div className="grid md:grid-cols-2 gap-4">
+        {/* User Agents */}
+        <div>
+          <h4 className="text-lg font-medium mb-2 text-gray-100">
+            User Agents
+          </h4>
+          <ul className="list-disc ml-6 space-y-1 text-gray-300 text-sm sm:text-base">
+            {data.userAgents.slice(0, 5).map((ua, idx) => (
+              <li key={idx}>{ua}</li>
+            ))}
+          </ul>
+        </div>
 
-      {/* Clicks */}
-      <div>
-        <h4 className="text-lg font-medium mb-2 text-gray-100">
-          Recent Clicks
-        </h4>
-        <ul className="divide-y divide-gray-700 text-gray-300">
-          {filteredClicks.slice(0, 10).map((click, idx) => (
-            <li
-              key={idx}
-              className="py-2 flex justify-between text-sm sm:text-base"
-            >
-              <span>{click.value}</span>
-              <span className="text-xs text-gray-500">
-                {new Date(click.timestamp).toLocaleString()}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* User Agents */}
-      <div>
-        <h4 className="text-lg font-medium mb-2 text-gray-100">User Agents</h4>
-        <ul className="list-disc ml-6 space-y-1 text-gray-300 text-sm sm:text-base">
-          {data.userAgents.slice(0, 5).map((ua, idx) => (
-            <li key={idx}>{ua}</li>
-          ))}
-        </ul>
-      </div>
-
-      {/* IPs */}
-      <div>
-        <h4 className="text-lg font-medium mb-2 text-gray-100">
-          Unique Visitor IPs
-        </h4>
-        <ul className="list-disc ml-6 space-y-1 text-gray-300 text-sm sm:text-base">
-          {data.ips.slice(0, 5).map((ip, idx) => (
-            <li key={idx}>{ip}</li>
-          ))}
-        </ul>
+        {/* IPs */}
+        <div>
+          <h4 className="text-lg font-medium mb-2 text-gray-100">
+            Unique Visitor IPs
+          </h4>
+          <ul className="list-disc ml-6 space-y-1 text-gray-300 text-sm sm:text-base">
+            {data.ips.slice(0, 5).map((ip, idx) => (
+              <li key={idx}>{ip}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

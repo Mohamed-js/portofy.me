@@ -22,3 +22,7 @@ option {
 button {
   cursor: pointer;
 }
+
+.recharts-tooltip-item-list ul li {
+  color: white !important;
+}
