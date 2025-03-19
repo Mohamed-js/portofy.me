@@ -37,12 +37,12 @@ const Navbar = ({ portfolio, user }) => {
           <ul className="flex items-center">
             {links.map((link) => (
               <li className="group pl-6" key={link.id}>
-                <span
+                <a
                   onClick={() => triggerNavItem(link.id)}
                   className="cursor-pointer pt-0.5 font-header font-semibold uppercase text-white"
                 >
                   {link.label}
-                </span>
+                </a>
                 <span className="block h-0.5 w-full bg-transparent group-hover:bg-yellow"></span>
               </li>
             ))}

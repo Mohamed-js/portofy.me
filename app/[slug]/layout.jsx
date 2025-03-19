@@ -1,6 +1,6 @@
 import Animator from "./animator";
 
-export default async function PortfolioLayout({ children, params }) {
+export default async function PortfolioLayout({ children }) {
   return (
     <>
       <Animator />

@@ -10,6 +10,7 @@ import ExperienceForm from "./ExperienceForm";
 import SkillsForm from "./SkillsForm";
 import SeoForm from "./SeoForm";
 import SiteSettingsForm from "./SiteSettingsForm";
+import Analytics from "./Analytics";
 
 export default function Content({ initialPortfolio }) {
   const [portfolio, setPortfolio] = useState(JSON.parse(initialPortfolio));
@@ -174,6 +175,8 @@ export default function Content({ initialPortfolio }) {
             saving={saving}
           />
         );
+      case "analytics":
+        return <Analytics portfolioId={portfolio._id} />;
       default:
         return (
           <PersonalInfoForm
@@ -198,6 +201,7 @@ export default function Content({ initialPortfolio }) {
           { key: "experience", label: "Experience" },
           { key: "skills", label: "Skills/Services" },
           { key: "seo", label: "SEO" },
+          { key: "analytics", label: "Analytics" },
           { key: "settings", label: "Site Settings" },
         ].map(({ key, label }) => (
           <button
