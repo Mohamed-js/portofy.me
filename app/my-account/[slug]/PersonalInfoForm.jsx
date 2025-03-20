@@ -156,7 +156,7 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
         {/* Portfolio Details */}
         <div>
           <Label htmlFor="title" className="text-white">
-            Title
+            Title <small>(usually your name/business name)</small>
           </Label>
           <input
             id="title"
@@ -171,7 +171,7 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
         </div>
         <div>
           <Label htmlFor="subTitle" className="text-white">
-            Sub Title
+            SubTitle <small>(usually the job title)</small>
           </Label>
           <input
             id="subTitle"
@@ -187,7 +187,7 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
 
         <div>
           <Label htmlFor="slug" className="text-white">
-            Slug
+            Slug <small>(used in your url)</small>
           </Label>
           <input
             id="slug"
@@ -239,7 +239,7 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
 
         <div>
           <Label htmlFor="description" className="text-white">
-            Description
+            Description <small>("bio/about")</small>
           </Label>
           <textarea
             id="description"
@@ -254,7 +254,7 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
 
         <div>
           <Label htmlFor="email" className="text-white">
-            Contact Email
+            Contact Email <small>(will be available for your visitors)</small>
           </Label>
           <input
             id="email"
@@ -269,7 +269,7 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
         </div>
         <div>
           <Label htmlFor="phone" className="text-white">
-            Contact Phone
+            Contact Phone <small>(will be available for your visitors)</small>
           </Label>
           <input
             id="phone"
