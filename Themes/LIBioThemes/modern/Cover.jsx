@@ -15,10 +15,10 @@ const Cover = ({ portfolio }) => {
       <div className="container relative z-30 flex max-w-7xl mt-10 md:mt-0 justify-center md:justify-end pb-10 p-4 md:p-0">
         <div className="flex flex-col items-center justify-center lg:flex-row">
           <div>
-            <div>
+            <div className="flex flex-col items-center md:items-start">
               <img
                 src={avatar}
-                className="h-30 rounded-full sm:h-40 z-10 mb-4 hidden md:inline shadow-[0_0_8px_7px_#232323]"
+                className="h-30 rounded-full sm:h-40 z-10 mb-4  shadow-[0_0_8px_7px_#232323]"
                 alt={`${portfolio.slug}'s avatar`}
                 data-aos="fade-in"
                 data-aos-delay={1200}
@@ -40,7 +40,7 @@ const Cover = ({ portfolio }) => {
               </p>
               <div className="mt-2 mb-6 md:mb-8">
                 <p
-                  className="max-w-xl mx-auto text-balance"
+                  className="max-w-xl mx-auto text-center md:text-start"
                   data-aos="fade-up"
                   data-aos-duration={2000}
                 >
@@ -51,13 +51,13 @@ const Cover = ({ portfolio }) => {
 
             <div className="flex flex-col pt-3">
               <div className=" items-center justify-center pl-0 sm:justify-start md:pl-1 md:mb-3">
-                <div className="font-body text-lg uppercase text-white  flex-col items-center justify-center">
+                <div className="font-body text-lg uppercase text-white flex-col items-center justify-center text-center md:text-start">
                   <span>
                     {portfolio.socialLinksTitle || "Let&apos;s connect"}
                   </span>
                 </div>
               </div>
-              <div className="flex flex-wrap max-w-[300px] gap-6 items-center mt-4">
+              <div className="flex flex-wrap md:max-w-[300px] gap-6 items-center justify-center md:justify-start mt-4">
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
                   const time = (index + 2) * 200;
@@ -103,7 +103,7 @@ const Cover = ({ portfolio }) => {
           </div>
         </div>
       </div>
-      <div className="relative w-full h-[40vh] md:h-[80vh] overflow-x-hidden">
+      <div className="relative w-full h-[40vh] md:h-[80vh] overflow-x-hidden hidden md:block">
         <div
           className="h-full overflow-hidden md:rounded-xl"
           data-aos="fade-left"

@@ -49,10 +49,13 @@ export function Pricing() {
               </p>
               <ul className="text-left text-gray-300 space-y-3 mb-8">
                 <li>Unlimited Visitors</li>
+                <li>Unlimited Content</li>
+                <li>Access To One Theme</li>
+                <li>1 App</li>
+                <li>Social Links</li>
                 <li>Animated Page</li>
-                <li>1 Theme (Minimal)</li>
-                <li>URL (portofy.me/@username)</li>
-                <li>SEO</li>
+                <li>QR Code Access</li>
+                <li>Portofy Domain</li>
                 <li>20MB Storage</li>
               </ul>
             </div>
@@ -73,31 +76,52 @@ export function Pricing() {
             <p className="text-3xl font-bold mb-6">
               {isAnnual ? (
                 <>
-                  <span className="line-through text-gray-400 mr-2">$108</span>
-                  $90
+                  <span className="line-through text-gray-400 mr-2 text-sm">
+                    $144
+                  </span>
+                  $80
                 </>
               ) : (
-                "$9"
+                <>
+                  <span className="line-through text-gray-400 mr-2 text-sm">
+                    $12
+                  </span>
+                  $8
+                </>
               )}
               <span className="text-sm">{isAnnual ? "/year" : "/month"}</span>
               {isAnnual && (
                 <span className="block text-sm text-gray-400 mt-1">
-                  (~$7.50/month)
+                  (~$6.5/month)
                 </span>
               )}
             </p>
             <ul className="text-left text-gray-300 space-y-3 mb-8">
               <li>Unlimited Visitors</li>
-              <li>Unlimited Apps</li>
+              <li>Unlimited Content</li>
+              <li>Access To All Themes</li>
+              <li>5 Apps</li>
+              <li>Social Links</li>
+              <li>Full Portfolios</li>
               <li>Animated Page</li>
               <li>QR Code Access</li>
-              <li>All Themes</li>
-              <li>Custom Domain</li>
+              <li>Custom Domain / Portofy Domain</li>
               <li>SEO</li>
               <li>1GB Storage</li>
               <li>Hide Portofy.me Branding</li>
               <li>Priority Support</li>
               <li>Built-in Analytics</li>
+              <li>
+                Export Portfolio as Resume{" "}
+                <span className="text-sm">(Coming Soon)</span>
+              </li>
+              <li>
+                Custom Sections <span className="text-sm">(Coming Soon)</span>
+              </li>
+              <li>
+                Full Theme Styling{" "}
+                <span className="text-sm">(Coming Soon)</span>
+              </li>
             </ul>
             <Link
               href="/signup"

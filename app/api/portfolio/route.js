@@ -53,6 +53,12 @@ export async function POST(req) {
         { status: 403 }
       );
     }
+    if (effectivePlan === "pro" && portfolioCount >= 5) {
+      return NextResponse.json(
+        { error: "Cannot create more apps. Contact us for more quota." },
+        { status: 403 }
+      );
+    }
 
     const portfolio = new Portfolio({
       user: userId,

@@ -14,7 +14,7 @@ const Navbar = ({ portfolio, user }) => {
       : "free";
 
   return (
-    <nav className="top-0 left-0 w-full z-50 backdrop-blur-md p-4 md:px-4 text-white absolute">
+    <nav className="top-0 left-0 w-full z-50 backdrop-blur-md p-4 md:px-4 text-white absolute hidden">
       <div className="mx-auto flex items-center justify-between">
         {/* Logo */}
         {effectivePlan === "free" ? (

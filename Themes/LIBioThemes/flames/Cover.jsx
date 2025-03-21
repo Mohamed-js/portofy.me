@@ -11,7 +11,7 @@ const Cover = ({ portfolio }) => {
   const bio = portfolio.description || ""; // Using seoMeta.description as bio
 
   return (
-    <div className="relative p-4">
+    <div className="relative p-4 pt-0">
       <div className="relative w-full h-50 md:h-100 rounded-xl md:rounded-3xl">
         <div
           className="h-full rounded-lg md:rounded-3xl overflow-hidden"
@@ -75,15 +75,15 @@ const Cover = ({ portfolio }) => {
                     {portfolio.socialLinksTitle || "Let&apos;s connect"}
                   </span>
                   <span
-                    className="animate-bounce mt-4"
-                    data-aos="fade-down"
+                    className="animate-bounce mt-2 md:mt-4"
+                    // data-aos="fade-down"
                     data-aos-delay={2000}
                   >
                     <FaChevronDown />
                   </span>
                 </div>
               </div>
-              <div className="flex flex-wrap max-w-[300px] gap-6 items-center justify-center mt-10">
+              <div className="flex flex-wrap max-w-[300px] gap-6 items-center justify-center mt-4 md:mt-10">
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
                   const time = (index + 2) * 200;
@@ -99,7 +99,7 @@ const Cover = ({ portfolio }) => {
                       }
                       aria-label={site}
                       target="_blank"
-                      data-aos="flip-right"
+                      // data-aos="flip-right"
                       data-aos-delay={time}
                       data-aos-duration={2000}
                     >

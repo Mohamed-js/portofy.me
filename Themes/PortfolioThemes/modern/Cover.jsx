@@ -14,8 +14,8 @@ const Cover = ({ portfolio }) => {
       <div class="bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0 w-screen h-screen fixed -z-10 top-0"></div>
 
       <div className="container md:mt-20 relative z-30 flex max-w-7xl mt-10 md:mt-0 justify-center md:justify-end pb-10 p-4 md:p-0">
-        <div className="flex flex-col items-center justify-center lg:flex-row">
-          <div>
+        <div className="flex flex-col items-center justify-center lg:flex-row w-full">
+          <div className="">
             <div className="flex flex-col items-center md:items-start justify-center ralative">
               <img
                 src={avatar}
@@ -49,7 +49,7 @@ const Cover = ({ portfolio }) => {
                   </span>
                 </div>
               </div>
-              <div className="flex flex-wrap max-w-[300px] gap-6 items-center md:self-start mt-4">
+              <div className="flex flex-wrap max-w-[300px] gap-6 items-center justify-center md:justify-start md:self-start mt-4">
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
                   const time = (index + 2) * 200;

@@ -15,8 +15,8 @@ const Navbar = ({ portfolio, user }) => {
   return (
     <nav className="top-0 left-0 w-full z-50 backdrop-blur-md p-4 md:px-4 text-white">
       <TopBlur colors={["#e45053", "#fd9c46"]} />
-      <div className="mx-auto flex items-center justify-between">
-        {/* Logo */}
+      {/* <div className="mx-auto flex items-center justify-between">
+      
         {effectivePlan === "free" ? (
           <Link
             href="/"
@@ -41,7 +41,7 @@ const Navbar = ({ portfolio, user }) => {
           </Link>
         )}
 
-        {/* Navigation Links */}
+       
         {effectivePlan === "free" && (
           <div className="flex items-center gap-4">
             <Link
@@ -52,7 +52,7 @@ const Navbar = ({ portfolio, user }) => {
             </Link>
           </div>
         )}
-      </div>
+      </div> */}
     </nav>
   );
 };

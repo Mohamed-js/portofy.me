@@ -16,7 +16,7 @@ const Navbar = ({ portfolio, user }) => {
   return (
     <nav className="absolute top-0 left-0 w-full z-50 p-4 md:px-4 text-white">
       <TopBlur colors={["#e45053", "#fd9c46"]} />
-      <div className="mx-auto flex items-center justify-between">
+      <div className="mx-auto flex items-center justify-between hidden">
         {/* Logo */}
         {effectivePlan === "free" ? (
           <Link

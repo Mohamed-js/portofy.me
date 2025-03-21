@@ -1,7 +1,7 @@
 // app/[slug]/minimal/Cover.jsx
 "use client";
 
-import { FaLink, FaChevronRight } from "react-icons/fa6";
+import { FaLink, FaChevronRight, FaChevronDown } from "react-icons/fa6";
 import iconMap from "../../../app/[slug]/IconMap";
 
 const Cover = ({ portfolio }) => {
@@ -44,22 +44,23 @@ const Cover = ({ portfolio }) => {
               data-aos="fade-in"
               data-aos-delay={2000}
             />
-            <div className="flex items-center justify-center">
-              <div className="flex items-center justify-center pl-0 sm:justify-start md:pl-1">
-                <div className="font-body text-lg uppercase text-white flex items-center justify-center">
+            <div className="flex items-center justify-center flex-col md:flex-row gap-4">
+              <div className="flex items-center justify-center pl-0 md:justify-start md:pl-1">
+                <div className="font-body text-lg uppercase text-white flex items-center justify-center flex-col md:flex-row">
                   <span data-aos="fade-right" data-aos-duration={2000}>
                     Let's connect
                   </span>
                   <span
-                    className="animate-bounce ml-2 mt-1"
+                    className="animate-bounce md:ml-2 mt-1"
                     data-aos="fade-down"
                     data-aos-delay={2000}
                   >
-                    <FaChevronRight />
+                    <FaChevronRight className="hidden md:inline" />
+                    <FaChevronDown className="md:hidden" />
                   </span>
                 </div>
               </div>
-              <div className="ml-6 flex flex-wrap max-w-[300px] gap-6 items-center justify-center">
+              <div className="md:ml-6 flex flex-wrap max-w-[300px] gap-6 items-center justify-center">
                 {socialLinks.map(({ site, icon, url }, index) => {
                   const IconComponent = iconMap[site];
                   const time = (index + 2) * 200;
