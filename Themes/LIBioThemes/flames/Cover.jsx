@@ -12,7 +12,7 @@ const Cover = ({ portfolio }) => {
 
   return (
     <div className="relative p-4 pt-0">
-      <div className="relative w-full h-50 md:h-100 rounded-xl md:rounded-3xl">
+      <div className="relative w-full h-50 md:h-70 rounded-xl md:rounded-3xl">
         <div
           className="h-full rounded-lg md:rounded-3xl overflow-hidden"
           data-aos="fade-down"

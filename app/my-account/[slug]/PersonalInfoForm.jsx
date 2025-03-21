@@ -252,30 +252,56 @@ export default function PersonalInfoForm({ portfolio, setPortfolio, saving }) {
           />
         </div>
 
+        {portfolio.type === "portfolio" && (
+          <>
+            {" "}
+            <div>
+              <Label htmlFor="email" className="text-white">
+                Contact Email{" "}
+                <small>(will be available for your visitors)</small>
+              </Label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={portfolio.email || ""}
+                onChange={handleChange}
+                disabled={saving}
+                className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="phone" className="text-white">
+                Contact Phone{" "}
+                <small>(will be available for your visitors)</small>
+              </Label>
+              <input
+                id="phone"
+                name="phone"
+                type="text"
+                value={portfolio.phone || ""}
+                onChange={handleChange}
+                disabled={saving}
+                className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
+                required
+              />
+            </div>
+          </>
+        )}
+
         <div>
-          <Label htmlFor="email" className="text-white">
-            Contact Email <small>(will be available for your visitors)</small>
+          <Label htmlFor="whatsapp" className="text-white">
+            WhatsApp Number <small>(floating icon)</small>
+            <p>
+              <small>(include country code without any symbols)</small>
+            </p>
           </Label>
           <input
-            id="email"
-            name="email"
-            type="email"
-            value={portfolio.email || ""}
-            onChange={handleChange}
-            disabled={saving}
-            className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"
-            required
-          />
-        </div>
-        <div>
-          <Label htmlFor="phone" className="text-white">
-            Contact Phone <small>(will be available for your visitors)</small>
-          </Label>
-          <input
-            id="phone"
-            name="phone"
-            type="text"
-            value={portfolio.phone || ""}
+            id="whatsapp"
+            name="whatsapp"
+            type="number"
+            value={portfolio.whatsapp || ""}
             onChange={handleChange}
             disabled={saving}
             className="border border-gray-300 rounded w-full px-3 py-2 text-gray-900 bg-gray-50/80 focus:ring-2 focus:ring-[#e45053] focus:border-[#e45053] outline-none disabled:opacity-50"

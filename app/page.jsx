@@ -39,7 +39,7 @@ export function LandingPage() {
     <AppLayout>
       <div className="">
         <div className="relative isolate px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl py-32 sm:py-36">
+          <div className="mx-auto max-w-2xl py-20 pb-12 md::py-32">
             <div className="text-center">
               <h1 className="text-5xl font-semibold tracking-tight text-balance text-white sm:text-7xl">
                 Showcase Your Brilliance Online
@@ -58,6 +58,18 @@ export function LandingPage() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="max-w-4xl md:mx-auto rounded-xl overflow-hidden border-3 md:border-7 border-white mx-4">
+          <img
+            src="/gallery-2.png"
+            alt="Gallery Image"
+            className="w-full object-contain border-b-3 md:border-b-7 border-white"
+          />
+          <img
+            src="/gallery-1.png"
+            alt="Gallery Image"
+            className="w-full object-contain"
+          />
         </div>
         <Pricing />
         <ContactUs />

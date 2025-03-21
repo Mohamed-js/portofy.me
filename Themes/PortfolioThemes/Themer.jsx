@@ -3,6 +3,7 @@ import Flames from "./flames";
 import Modern from "./modern";
 import fontMap from "@/app/[slug]/FontMap";
 import PortfolioTracker from "@/components/PortfolioTracker";
+import WhatsappButton from "../WhatsappButton";
 
 const themes = {
   minimal: Minimal,
@@ -18,6 +19,7 @@ const Themer = ({ portfolio, user }) => {
     <div className={selectedFont.className}>
       <PortfolioTracker portfolioId={portfolio._id} />
       <SelectedTheme portfolio={portfolio} user={user} />
+      <WhatsappButton whatsapp={portfolio.whatsapp} />
     </div>
   );
 };

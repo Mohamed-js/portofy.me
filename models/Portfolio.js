@@ -23,6 +23,7 @@ const PortfolioSchema = new mongoose.Schema(
     phone: String,
     cover: String, // Cover image URL
     avatar: String, // Override user's avatar if needed
+    whatsapp: String,
 
     // SOCIAL LINKS
     socialLinksTitle: {
