@@ -267,6 +267,7 @@ function SortableItem({
             >
               <option value="">Select Site</option>
               {[
+                // "whatsapp",
                 "github",
                 "gitlab",
                 "bitbucket",

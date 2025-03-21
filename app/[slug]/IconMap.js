@@ -25,6 +25,7 @@ import {
   FaCodepen,
   FaAppStore,
   FaDownload,
+  FaWhatsapp,
 } from "react-icons/fa6";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { TbBrandAdobe } from "react-icons/tb";
@@ -65,6 +66,7 @@ const iconMap = {
   codesandbox: FiCodesandbox,
   replit: PiReplitLogo,
   playstore: IoLogoGooglePlaystore,
+  whatsapp: FaWhatsapp,
 };
 
 export default iconMap;

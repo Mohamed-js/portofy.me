@@ -34,6 +34,7 @@ const PortfolioSchema = new mongoose.Schema(
         site: {
           type: String,
           enum: [
+            "whatsapp",
             "github",
             "behance",
             "facebook",

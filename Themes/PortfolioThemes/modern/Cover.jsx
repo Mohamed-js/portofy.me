@@ -68,7 +68,6 @@ const Cover = ({ portfolio }) => {
                       data-aos="flip-right"
                       data-aos-delay={time}
                       data-aos-duration={2000}
-                      // className="animate-bounce"
                     >
                       {icon ? (
                         <img
